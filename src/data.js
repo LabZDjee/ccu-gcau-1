@@ -114,7 +114,7 @@ export function processTdsFile(fileContents) {
 }
 
 axios
-  .get(`./TDSP0APPMap.tsv`)
+  .get(`${process.env.BASE_URL}/TDSP0APPMap.tsv`)
   .then((response) => {
     const tsv = response.data;
     const lines = tsv.split("\n");
@@ -136,7 +136,7 @@ axios
     }
     initTdsData();
     initVue();
-    axios.get(`./template.tdsa`).then((reply) => {
+    axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
       processTdsFile(reply.data);
     });
   })

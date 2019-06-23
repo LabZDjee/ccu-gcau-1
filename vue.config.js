@@ -1,4 +1,4 @@
 module.exports = {
-  publicPath: "/ccu-gcau",
+  publicPath: "/ccu-gcau-1",
   outputDir: "docs",
 };
