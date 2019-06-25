@@ -11,6 +11,7 @@
     :hint="hint"
     :counter="maxLength"
     :maxLength="maxLength"
+    :mask="mask"
   />
 </template>
 
@@ -19,7 +20,7 @@ import { reacterAttach } from "../../mixins";
 
 export default {
   props: {
-    dataKey: { type: String, requied: true }, // key on reactiveData
+    dataKey: { type: String, required: true }, // key on reactiveData
     filter: Function /* parameter: value, return: false or {errorMessage: String[, filteredValue: String]} */,
     maxChars: [Number, String] /* display char count and controls max number of chars of string */,
     mask: String /* optional, pattern as defined in 'v-text-field' Vuetify input control, e.g.: "Annn_#" */,

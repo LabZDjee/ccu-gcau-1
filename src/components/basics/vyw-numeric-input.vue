@@ -18,7 +18,7 @@ import { reacterAttach } from "../../mixins";
 
 export default {
   props: {
-    dataKey: { type: String, requied: true }, // key on reactiveData
+    dataKey: { type: String, required: true }, // key on reactiveData
     scale: {
       type: Number, // multiplied by this upon input / divided by this upon output
       default: 1,

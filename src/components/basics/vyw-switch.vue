@@ -14,7 +14,7 @@ import { reacterAttach } from "../../mixins";
 
 export default {
   props: {
-    dataKey: { type: String, requied: true }, // key on reactiveData
+    dataKey: { type: String, required: true }, // key on reactiveData
     labels: {
       type: Array /* array of two strings: one for 'off' state on for 'on' state */,
       required: true,
