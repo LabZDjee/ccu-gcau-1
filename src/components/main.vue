@@ -147,10 +147,14 @@ export default {
   },
   created() {
     eventBus.$on("item-should-update", (item) => {
+      const isPartOfTda = item.dataKey.startsWith("meta_") === false;
       if (reactiveData[item.dataKey] !== item.value) {
         reactiveData[item.dataKey] = item.value;
+        if (isPartOfTda) {
+          this.contentsAltered = true;
+        }
       }
-      if (item.dataKey.startsWith("meta_") === false) {
+      if (isPartOfTda) {
         reactiveData["meta_testKey"] = item.dataKey;
         reactiveData["meta_testValue"] = item.value;
       }
