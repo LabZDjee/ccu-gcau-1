@@ -65,3 +65,23 @@ export function makeUrlTextFile(text, bWindowsLike) {
   urlTextFile = window.URL.createObjectURL(data);
   return urlTextFile;
 }
+
+/*
+  Removes first occurence of element 'elt' from array 'arr'
+  Returns true if found (and removed), false if not found
+ */
+export function removeEltInArray(elt, arr) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === elt) {
+      arr.splice(i, 1);
+      return true;
+    }
+  }
+  return false;
+}
+
+// turns Number 'n' into a string with at most 'd' decimals
+export function scrapDecimalsAsString(n, d) {
+  const factor = Math.pow(10, d);
+  return (Math.round(factor * n) / factor).toString();
+}

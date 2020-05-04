@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { reacterAttach } from "../../mixins";
+import { reacterAttach, implementValueChanged } from "../../mixins";
 
 export default {
   props: {
@@ -29,11 +29,10 @@ export default {
       // parameter is an object with following properties
       //  'dataKey' and 'value'
       //   type and format of value depends on what provided by ReacTer:
-      //    of boolean, a boolean is returned
+      //    if boolean, a boolean is returned
       //    if number, 0 or 1 is returned
       //    if string of value "true"/"false" either of those two values is returned
       //    if string of value "1"/"0" either of those two values is returned
-      default: function(/* keyValueObject */) {},
     },
   },
   data: () => ({
@@ -61,8 +60,11 @@ export default {
   },
   methods: {
     changed() {
+      const objectToDispatch = { dataKey: this.dataKey, value: this.typedValue };
       if (typeof this.onChanged === "function") {
-        this.onChanged({ dataKey: this.dataKey, value: this.typedValue });
+        this.onChanged(objectToDispatch);
+      } else {
+        this.defaultOnChanged(objectToDispatch);
       }
     },
     reactOnNewData(newData) {
@@ -85,9 +87,8 @@ export default {
       }
     },
   },
-  mixins: [reacterAttach],
+  mixins: [reacterAttach, implementValueChanged],
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

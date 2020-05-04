@@ -20,34 +20,26 @@
                   </v-card>
                 </v-flex>
                 <v-flex>
-                  <vyw-text-input
-                    data-key="Text_Projet"
-                    label="Project"
-                    hint="Main reference"
-                    :on-changed="valueChanged"
-                  />
+                  <vyw-text-input data-key="Text_Nom" label="Name" hint="Project manager" />
                 </v-flex>
                 <v-flex>
-                  <vyw-text-input
-                    data-key="Text_Nom"
-                    label="Name"
-                    hint="Project manager"
-                    :on-changed="valueChanged"
-                  />
+                  <vyw-text-input data-key="Text_Origine" label="Origin" />
                 </v-flex>
                 <v-flex>
-                  <vyw-text-input
-                    data-key="Text_Commande"
-                    label="Order"
-                    :on-changed="valueChanged"
-                  />
+                  <vyw-text-input data-key="Text_Devis" label="Quotation" />
                 </v-flex>
                 <v-flex>
-                  <vyw-text-input
-                    data-key="Text_Origine"
-                    label="Origin"
-                    :on-changed="valueChanged"
-                  />
+                  <vyw-text-input data-key="Text_Client" label="Customer" />
+                </v-flex>
+                <v-flex>
+                  <div class="d-flex">
+                    <div>
+                      <vyw-switch data-key="Check_APP" :labels="['Not approved', 'Approved']"></vyw-switch>
+                    </div>
+                    <div>
+                      <vyw-text-input data-key="Edit_CONTROL" label="Approver" />
+                    </div>
+                  </div>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -56,11 +48,22 @@
             <v-container pa-0>
               <v-layout column>
                 <v-flex>
+                  <v-flex>
+                    <vyw-text-input data-key="Text_Commande" label="Order" />
+                  </v-flex>
+                  <v-flex>
+                    <vyw-text-input data-key="Text_Projet" label="Project" />
+                  </v-flex>
+                  <v-flex>
+                    <vyw-text-input data-key="Text_ClientFinal" label="End user" />
+                  </v-flex>
+                  <v-flex>
+                    <vyw-text-input data-key="SystemId" label="Identification number" />
+                  </v-flex>
                   <vyw-text-area
                     data-key="Edit_COMMENT"
                     label="Notes"
                     hint="project notes/comments"
-                    :on-changed="valueChanged"
                   />
                 </v-flex>
               </v-layout>
@@ -75,15 +78,15 @@
 <script>
 import VywTextArea from "./basics/vyw-text-area";
 import VywTextInput from "./basics/vyw-text-input";
-import { implementValueChanged } from "../mixins";
+import VywSwitch from "./basics/vyw-switch";
 
 export default {
   props: { tdsFileName: String, contentsAltered: Boolean },
   components: {
     VywTextArea,
     VywTextInput,
+    VywSwitch,
   },
-  mixins: [implementValueChanged],
 };
 </script>
 

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { reacterAttach } from "../../mixins";
+import { reacterAttach, implementValueChanged } from "../../mixins";
 
 export default {
   props: {
@@ -31,7 +31,6 @@ export default {
       type: Function,
       // parameter is an object with following properties
       //  'dataKey', 'value', and 'index' (0-based in itemList)
-      default: function(/* keyValueObject */) {},
     },
   },
   data: () => ({
@@ -80,8 +79,11 @@ export default {
         this.editedValue = correctedValue;
         this.input();
       }
+      const objectToDispatch = { dataKey: this.dataKey, value: correctedValue };
       if (typeof this.onChanged === "function") {
-        this.onChanged({ dataKey: this.dataKey, value: correctedValue });
+        this.onChanged(objectToDispatch);
+      } else {
+        this.defaultOnChanged(objectToDispatch);
       }
     },
     reactOnNewData(newData) {
@@ -89,9 +91,8 @@ export default {
       this.editedValue = newData;
     },
   },
-  mixins: [reacterAttach],
+  mixins: [reacterAttach, implementValueChanged],
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

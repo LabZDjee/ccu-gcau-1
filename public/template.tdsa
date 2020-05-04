@@ -1,7 +1,7 @@
 <Projet>
 	<Objet>
 		<Label>Check_AC</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_AC_REL</Label>
@@ -17,7 +17,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_APP</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_AR_DRED</Label>
@@ -37,7 +37,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_CBH_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_CBH_REL</Label>
@@ -49,7 +49,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_CRH_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_CRH_REL</Label>
@@ -61,15 +61,15 @@
 	</Objet>
 	<Objet>
 		<Label>Check_DEF_CM</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_DEF_TARPE</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_DEF_TLCPE</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_DR</Label>
@@ -77,7 +77,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_DR_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_DR_REL</Label>
@@ -89,7 +89,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_DTM_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_DTM_REL</Label>
@@ -101,7 +101,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_DTP_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_DTP_REL</Label>
@@ -117,7 +117,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_R1_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_R1_REL</Label>
@@ -129,7 +129,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_R2_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_R2_REL</Label>
@@ -141,7 +141,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_R3_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_R3_REL</Label>
@@ -153,7 +153,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_R4_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_R4_REL</Label>
@@ -161,7 +161,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_RCDF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_SDM_AH</Label>
@@ -169,19 +169,19 @@
 	</Objet>
 	<Objet>
 		<Label>Check_SDM_TR</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_SDM_TU</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_SHUNT_SB</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TB</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TEOTDFL</Label>
@@ -189,7 +189,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_TEOTDFL_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TEOTDFL_REL</Label>
@@ -201,7 +201,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_TFB_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TFB_REL</Label>
@@ -213,7 +213,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_TH_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TH_REL</Label>
@@ -225,7 +225,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_TRTHOTB_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TRTHOTB_REL</Label>
@@ -237,7 +237,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_TUB_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TUB_REL</Label>
@@ -249,7 +249,7 @@
 	</Objet>
 	<Objet>
 		<Label>Check_TUH_AFF</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Check_TUH_REL</Label>
@@ -269,11 +269,11 @@
 	</Objet>
 	<Objet>
 		<Label>Combo_DEF_CP</Label>
-		<Donnee>12</Donnee>
+		<Donnee>None</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Combo_DEF_TDB</Label>
-		<Donnee>Open lead acid</Donnee>
+		<Donnee>None</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Combo_DR_REL</Label>
@@ -289,7 +289,7 @@
 	</Objet>
 	<Objet>
 		<Label>Combo_LANGUE</Label>
-		<Donnee>Dutch</Donnee>
+		<Donnee>Spanish</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Combo_R1_REL</Label>
@@ -321,7 +321,7 @@
 	</Objet>
 	<Objet>
 		<Label>Combo_RN_IDC</Label>
-		<Donnee>15</Donnee>
+		<Donnee>5</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Combo_RN_NDP</Label>
@@ -329,15 +329,15 @@
 	</Objet>
 	<Objet>
 		<Label>Combo_RN_UAC</Label>
-		<Donnee>380</Donnee>
+		<Donnee>110</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Combo_RN_UDC</Label>
-		<Donnee>48</Donnee>
+		<Donnee>12</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Combo_TB_TP</Label>
-		<Donnee>12</Donnee>
+		<Donnee>1</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Combo_TEOTDFL_REL</Label>
@@ -361,145 +361,143 @@
 	</Objet>
 	<Objet>
 		<Label>Combo_TUH_REL</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_ADJ_UMAX</Label>
-		<Donnee>66</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_ADJ_UMIN</Label>
-		<Donnee>11</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_BattName</Label>
-		<Donnee><BatteryName></Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_CBH_NH</Label>
-		<Donnee>11</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_CBH_TEMPS</Label>
-		<Donnee>4</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_COMMENT</Label>
-		<Donnee>{ProjectNotes:}
-  {Here...}
-{...AndHere}</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_CONTROL</Label>
-		<Donnee><Approver></Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_CRH_NH</Label>
-		<Donnee>16,5</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_CRH_TEMPS</Label>
-		<Donnee>4</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DC_CURA</Label>
-		<Donnee>12</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DC_CURP</Label>
-		<Donnee>25</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DC_DDLPDC</Label>
-		<Donnee>33</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DC_PDC</Label>
-		<Donnee>222</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DC_VMAXDLT</Label>
-		<Donnee>45,6</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DC_VMINDLT</Label>
-		<Donnee>42,37</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_CB</Label>
-		<Donnee>100</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_CDCC</Label>
-		<Donnee>500</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_CDCDF</Label>
-		<Donnee>20</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_CET</Label>
-		<Donnee>3</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_CET2</Label>
-		<Donnee>0,134529147982063</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TARPE</Label>
-		<Donnee>120</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TDCDF</Label>
-		<Donnee>24</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TDFDDPE</Label>
-		<Donnee>1,7</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TDFLPE</Label>
-		<Donnee>2,23</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TDFOPE</Label>
-		<Donnee>2,65</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TDREE</Label>
-		<Donnee>15</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TEPE</Label>
-		<Donnee>2,28</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_TLCPE</Label>
-		<Donnee>30</Donnee>
-	</Objet>
-	<Objet>
-		<Label>Edit_DEF_battFanDelay</Label>
 		<Donnee></Donnee>
 	</Objet>
 	<Objet>
+		<Label>Edit_CBH_NH</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_CBH_TEMPS</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_COMMENT</Label>
+		<Donnee></Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_CONTROL</Label>
+		<Donnee></Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_CRH_NH</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_CRH_TEMPS</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DC_CURA</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DC_CURP</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DC_DDLPDC</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DC_PDC</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DC_VMAXDLT</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DC_VMINDLT</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_CB</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_CDCC</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_CDCDF</Label>
+		<Donnee>1</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_CET</Label>
+		<Donnee>0,1</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_CET2</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TARPE</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TDCDF</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TDFDDPE</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TDFLPE</Label>
+		<Donnee>1</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TDFOPE</Label>
+		<Donnee>1,5</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TDREE</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TEPE</Label>
+		<Donnee>1</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_TLCPE</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
+		<Label>Edit_DEF_battFanDelay</Label>
+		<Donnee>0</Donnee>
+	</Objet>
+	<Objet>
 		<Label>Edit_DR_TEMPS</Label>
-		<Donnee>59</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_DTM_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_DTP_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_ENV_ALT</Label>
-		<Donnee>1234</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_ENV_TA</Label>
-		<Donnee>33</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_NUM_ESCLAVE</Label>
@@ -511,23 +509,23 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_OPBVO_DELTA</Label>
-		<Donnee></Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_OPBVO_TDC</Label>
-		<Donnee></Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_OPBVO_TETA</Label>
-		<Donnee></Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_QDB_NDB</Label>
-		<Donnee>20</Donnee>
+		<Donnee>1</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_QDB_NDC</Label>
-		<Donnee>20</Donnee>
+		<Donnee>1</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_R1_TDA</Label>
@@ -535,7 +533,7 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_R1_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_R2_TDA</Label>
@@ -543,7 +541,7 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_R2_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_R3_TDA</Label>
@@ -551,7 +549,7 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_R3_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_R4_TDA</Label>
@@ -559,15 +557,15 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_R4_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_RN_CN</Label>
-		<Donnee>3</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_SHUNT_CN</Label>
-		<Donnee>10</Donnee>
+		<Donnee>1</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_SHUNT_SB</Label>
@@ -579,71 +577,71 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_TB_NTA</Label>
-		<Donnee>35,5</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TB_PDD</Label>
-		<Donnee>15</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TB_TMT</Label>
-		<Donnee>37</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TEOTDFL_EG</Label>
-		<Donnee>47,88</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TEOTDFL_FL</Label>
-		<Donnee>46,83</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TEOTDFL_TEMPS</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TFB_NB</Label>
-		<Donnee>42,37</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TFB_TEMPS</Label>
-		<Donnee>1</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TH_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TRTHOTB_TEMP</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TRTHOTB_TMAX</Label>
-		<Donnee>418</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TRTHOTB_TMIN</Label>
-		<Donnee>323</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TUB_NB</Label>
-		<Donnee>34</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TUB_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TUH_NH</Label>
-		<Donnee>47,88</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_TUH_TEMPS</Label>
-		<Donnee>4</Donnee>
+		<Donnee>0</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Label_CCU_Jumper</Label>
-		<Donnee>48</Donnee>
+		<Donnee>12</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Option_1_elemt</Label>
@@ -671,34 +669,34 @@
 	</Objet>
 	<Objet>
 		<Label>SystemId</Label>
-		<Donnee>{###}</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_Client</Label>
-		<Donnee>{Customer}</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_ClientFinal</Label>
-		<Donnee>{User}</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_Commande</Label>
-		<Donnee>template</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_Devis</Label>
-		<Donnee>{Tender}</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_Nom</Label>
-		<Donnee>{FAE}</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_Origine</Label>
-		<Donnee>AEG Power Solutions</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_Projet</Label>
-		<Donnee>{Project}</Donnee>
+		<Donnee></Donnee>
 	</Objet>
 </Projet>

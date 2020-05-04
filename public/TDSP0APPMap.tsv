@@ -6,7 +6,7 @@ Edit_BattName	Battery	Battery name	x------x	x------x	x------x	9999	x------x	x---
 Edit_DEF_CDCC	Battery	Short circuit current	kA	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
 Edit_DEF_CET	Battery	Temperature compensation	mV/°C/cell	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
 Edit_DEF_CET2	Battery	Temperature compensation	%/°C	CompPerC	x------x	43	Float	0.1~0.4	85	Temperature Compensation	float	127	125	43	43	compPerC	
-Edit_DEF_TDFDDPE	Battery	Battery discharge end voltage	V/cell	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DEF_TDFDDPE	Battery	Battery discharge end voltage	V/cell	x------x	x------x	9999	Float	x------x	474	x------x	float	600	582	9999	9999	x------x	
 Edit_DEF_TDFLPE	Battery	Floating charge voltage per cell	V/cell	UflPerCell	x------x	16	Float	1~2.3	27	Charge Mode	float	50	48	16	16	uflPerCell	
 Edit_QDB_NDB	Battery	Number of groups	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
 Edit_QDB_NDC	Battery	Number of cells	x------x	NrOfCells	x------x	15	Byte	1~600	26	35:35:Charge Mode	word	48	46	15	15	nrOfCells	

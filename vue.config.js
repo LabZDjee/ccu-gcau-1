@@ -1,4 +1,5 @@
 module.exports = {
-  publicPath: "/ccu-gcau-1",
+  publicPath: "/Vue/ccu-gcau-1/docs",
   outputDir: "docs",
+  transpileDependencies: ["@labzdjee/reac-ter"],
 };

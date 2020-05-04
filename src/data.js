@@ -1,12 +1,16 @@
 /* jshint esversion: 6 */
 
 import ReacTer from "@labzdjee/reac-ter";
+import { analyzeAgcFile } from "@labzdjee/agc-util";
 import Vue from "vue";
 import axios from "axios";
 import { initVue } from "./main.js";
 
 export const tsvMap = {};
 export const tdsData = new ReacTer();
+// property is this SetupParm and value is the associated TDSTag, e.g.:
+//  TempComp: "Check_DEF_CET"
+export const tdsAlias = {};
 
 const privateTdsData = {};
 
@@ -37,6 +41,7 @@ export const selectChoices = {
     "Portuguese",
   ],
   relayNumbers: [...Array(17)].map((_, i) => i.toString()),
+  hrPeriodicTimes: ["None", "1", "6", "12"],
 };
 
 let initTdsDataDone = false;
@@ -45,6 +50,12 @@ function initTdsData() {
     Object.keys(tsvMap).forEach((key) => {
       privateTdsData[key] = null;
       reactiveData.addProperty(privateTdsData, key);
+      const setupKey = tsvMap[key].SetupParam;
+      if (setupKey.startsWith("x--") === false && setupKey !== key) {
+        reactiveData.addProperty(privateTdsData, key, setupKey);
+        tdsAlias[setupKey] = key;
+        dataKeys.push(setupKey);
+      }
       dataKeys.push(key);
     });
     initTdsDataDone = true;
@@ -81,6 +92,12 @@ export function processTdsFile(fileContents) {
     const resultData = trimmedLine.match(pattData);
     if (resultData) {
       data = resultData[1];
+      if (label === "Edit_TFB_TEMPS" || label === "Edit_TEOTDFL_TEMPS") {
+        try {
+          const t = parseInt(data, 10) * 60;
+          data = t.toString();
+        } catch (e) {}
+      }
       if (label.startsWith("Check_") && data !== "true" && data !== "false") {
         if (data === "1") {
           data = "true";
@@ -111,6 +128,20 @@ export function processTdsFile(fileContents) {
       }
     }
   });
+}
+
+export let agcFileData = { struct: null, lines: null, error: null };
+
+export function processAgcFile(data) {
+  try {
+    agcFileData.lines = data.split(/\r?\n/);
+    agcFileData.struct = analyzeAgcFile(agcFileData.lines);
+    agcFileData.error = null;
+  } catch (e) {
+    agcFileData.lines = null;
+    agcFileData.struct = null;
+    agcFileData.error = e;
+  }
 }
 
 axios

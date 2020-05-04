@@ -12,7 +12,7 @@
  *  makeContents(asString): makes the final file for saving. If asString is true, returns a single string, each line being separated by CR/LF
  *   otherwise returns an array of strings without any line separator
  *  resetDynConfig: resets object state back to what it was when constructed
- *
+ *  Note: probably not used, as deprecated by NPM package "@labzdjee/agc-util"
  */
 export class AgcUtility {
   // lines: an array of strings (without line terminators)

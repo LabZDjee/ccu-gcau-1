@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 
+import "@babel/polyfill";
 import Vue from "vue";
 import Vuetify from "vuetify/lib";
 import "vuetify/src/stylus/app.styl";

@@ -10,11 +10,12 @@
     :error="error"
     :error-messages="errorMessages"
     :hint="hint"
+    class="mw"
   />
 </template>
 
 <script>
-import { reacterAttach } from "../../mixins";
+import { reacterAttach, implementValueChanged } from "../../mixins";
 
 export default {
   props: {
@@ -36,7 +37,6 @@ export default {
       type: Function,
       // parameter is an object with following properties:
       //  'dataKey' and 'value' (which is a number or a string depending on the provided value type by ReacTer)
-      default: function(/* keyValueObject */) {},
     },
   },
   data: () => ({
@@ -94,9 +94,12 @@ export default {
       }
       this.editedValue = correctedValue;
       this.input();
+      const scaledValue = this.applyPrecision(correctedValue / this.scale);
+      const objectToDispatch = { dataKey: this.dataKey, value: this.isNumber ? scaledValue : scaledValue.toString() };
       if (typeof this.onChanged === "function") {
-        const scaledValue = this.applyPrecision(correctedValue / this.scale);
-        this.onChanged({ dataKey: this.dataKey, value: this.isNumber ? scaledValue : scaledValue.toString() });
+        this.onChanged(objectToDispatch);
+      } else {
+        this.defaultOnChanged(objectToDispatch);
       }
     },
     reactOnNewData(newData) {
@@ -120,9 +123,12 @@ export default {
       throw `unsupported scale: ${this.scale}`;
     }
   },
-  mixins: [reacterAttach],
+  mixins: [reacterAttach, implementValueChanged],
 };
 </script>
 
 <style scoped>
+.mw {
+  max-width: 90%;
+}
 </style>

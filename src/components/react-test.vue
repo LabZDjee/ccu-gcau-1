@@ -9,20 +9,10 @@
                 <v-chip color="red" text-color="white">Test</v-chip>
               </v-flex>
               <v-flex xs4 sm4 px-1>
-                <vyw-select-input
-                  data-key="meta_testKey"
-                  label="data key"
-                  :item-list="dataKeys"
-                  :on-changed="valueChanged"
-                  class="overflow-hidden"
-                />
+                <vyw-select-input data-key="meta_testKey" label="data key" :item-list="dataKeys" />
               </v-flex>
               <v-flex xs4>
-                <vyw-text-input
-                  data-key="meta_testValue"
-                  label="data value"
-                  :on-changed="valueChanged"
-                />
+                <vyw-text-input data-key="meta_testValue" label="data value" />
               </v-flex>
               <v-flex px-1>
                 <v-btn @click="applyTest">Apply</v-btn>
@@ -39,7 +29,7 @@
 import VywTextInput from "./basics/vyw-text-input";
 import VywSelectInput from "./basics/vyw-default-select";
 import { dataKeys, eventBus, reactiveData } from "../data";
-import { implementValueChanged } from "../mixins";
+import { removeEltInArray } from "../utils";
 
 export default {
   components: {
@@ -49,12 +39,14 @@ export default {
   data: () => ({
     dataKeys,
   }),
-  mixins: [implementValueChanged],
   methods: {
     applyTest() {
       reactiveData[reactiveData.meta_testKey] = reactiveData.meta_testValue;
       // eslint-disable-next-line no-console
       console.log(`new value for ${reactiveData.meta_testKey}=> ${reactiveData.meta_testValue}`);
+    },
+    dataKeySelected(v) {
+      reactiveData["meta_testValue"] = reactiveData[v];
     },
   },
   created() {
@@ -67,6 +59,10 @@ export default {
         reactiveData["meta_testValue"] = item.value;
       }
     });
+    reactiveData.$watchers["meta_testKey"].push(this.dataKeySelected.bind(this));
+  },
+  beforeDestroy() {
+    removeEltInArray(this.dataKeySelected.bind(this), reactiveData.$watchers["meta_testKey"]);
   },
 };
 </script>
