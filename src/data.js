@@ -1,13 +1,17 @@
 /* jshint esversion: 6 */
 
 import ReacTer from "@labzdjee/reac-ter";
-import { analyzeAgcFile } from "@labzdjee/agc-util";
+import {
+  analyzeAgcFile,
+  findInAgcFileStruct,
+} from "@labzdjee/agc-util";
 import Vue from "vue";
 import axios from "axios";
-import { initVue } from "./main.js";
+import {
+  initVue,
+} from "./main.js";
 
 export const tsvMap = {};
-export const tdsData = new ReacTer();
 // property is this SetupParm and value is the associated TDSTag, e.g.:
 //  TempComp: "Check_DEF_CET"
 export const tdsAlias = {};
@@ -45,6 +49,7 @@ export const selectChoices = {
 };
 
 let initTdsDataDone = false;
+
 function initTdsData() {
   if (initTdsDataDone === false) {
     Object.keys(tsvMap).forEach((key) => {
@@ -60,6 +65,26 @@ function initTdsData() {
     });
     initTdsDataDone = true;
   }
+}
+
+function alterAgcAttr(object, attribute, value) {
+  const hit = findInAgcFileStruct({
+    object,
+    attribute,
+  }, agcFileData.struct);
+  if (hit === null) {
+    return;
+  }
+  hit.value = value;
+  agcFileData.lines[hit.line - 1] = `${object}.${hit.readOnly?"!":""}${attribute} = "${value}"`;
+}
+
+export function translateCcu2gcau() {
+  let temperatureCompensation = 0.0;
+  if (reactiveData.TempComp === "true") {
+    temperatureCompensation = parseFloat(reactiveData.CompPerC);
+  }
+  alterAgcAttr("REGCOMP", "TemperatureCompensation", Math.round(temperatureCompensation * 100).toString());
 }
 
 const _metaData = {
@@ -130,7 +155,11 @@ export function processTdsFile(fileContents) {
   });
 }
 
-export let agcFileData = { struct: null, lines: null, error: null };
+export let agcFileData = {
+  struct: null,
+  lines: null,
+  error: null,
+};
 
 export function processAgcFile(data) {
   try {

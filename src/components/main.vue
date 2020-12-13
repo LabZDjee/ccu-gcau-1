@@ -97,8 +97,7 @@ import VywSystem from "./system";
 import VywBattery from "./battery";
 import VywAlarms from "./alarms";
 import VywReactTest from "./react-test";
-import { eventBus, processTdsFile, reactiveData, processAgcFile, agcFileData, tdsAlias } from "../data";
-import { makeUrlTextFile } from "../utils";
+import { eventBus, processTdsFile, reactiveData, processAgcFile, agcFileData, tdsAlias, translateCcu2gcau } from "../data";
 
 export default {
   components: {
@@ -186,10 +185,11 @@ export default {
       };
     },
     saveOutputFile() {
+      translateCcu2gcau();
       const sampleText = agcFileData.lines.reduce((acc, val) => acc + `${val}\r\n`, "");
       download(sampleText, this.agcFileName, "text/plain");
-      this.$refs.outputSave.href = makeUrlTextFile(sampleText, true);
-      this.$refs.outputSave.click();
+      // this.$refs.outputSave.href = makeUrlTextFile(sampleText, true);
+      // this.$refs.outputSave.click();
     },
   },
   created() {
