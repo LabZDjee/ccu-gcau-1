@@ -53,7 +53,7 @@ It takes `npm run build` to store output in the `docs` folder. This is done by h
 
 ```javascript
 module.exports = {
-  publicPath: "/ccu-gcau",
+  publicPath: "/ccu-gcau-1",
   outputDir: "docs",
 };
 ```

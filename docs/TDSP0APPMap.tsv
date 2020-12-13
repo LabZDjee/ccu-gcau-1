@@ -1,0 +1,227 @@
+TDSTag	Group	Details	TDSUnitAndScale	SetupParam	Note	SetupPos	SetupType	SetupRange	SetupOffset	P0Section	P0Type	P0Offset	P0V1Offset	AppPos	AppNum	AppName	AppType
+Check_DEF_CET	Battery	Temperature compensation enable	x------x	TempComp	x------x	42	Boolean	0;1	84	6:6:Temperature Compensation	bool16	125	123	42	42	tempComp	
+Check_SHUNT_SB	Battery	Battery shunt installed	x------x	BattShunt	x------x	6	Boolean	0;1	11	Shunt	bool16	20	20	6	6	battShunt	
+Combo_DEF_TDB	Battery	Battery type	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_BattName	Battery	Battery name	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DEF_CDCC	Battery	Short circuit current	kA	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DEF_CET	Battery	Temperature compensation	mV/°C/cell	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DEF_CET2	Battery	Temperature compensation	%/°C	CompPerC	x------x	43	Float	0.1~0.4	85	Temperature Compensation	float	127	125	43	43	compPerC	
+Edit_DEF_TDFDDPE	Battery	Battery discharge end voltage	V/cell	x------x	x------x	9999	Float	x------x	474	x------x	float	600	582	9999	9999	x------x	
+Edit_DEF_TDFLPE	Battery	Floating charge voltage per cell	V/cell	UflPerCell	x------x	16	Float	1~2.3	27	Charge Mode	float	50	48	16	16	uflPerCell	
+Edit_QDB_NDB	Battery	Number of groups	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_QDB_NDC	Battery	Number of cells	x------x	NrOfCells	x------x	15	Byte	1~600	26	35:35:Charge Mode	word	48	46	15	15	nrOfCells	
+Edit_SHUNT_CN	Battery	Battery current limit	Amps	IbattNom	x------x	7	Word	1~9999	12	Shunt	word	26	26	7	7	ibattNom	
+Edit_SHUNT_SB	Battery	Battery shunt value	Amps	BattShuntVal	x------x	8	Float	0.5~9999	14	Shunt	float	22	22	8	8	battShuntVal	
+Frame_DEF	Battery	Frame that encompasses battery definition	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Frame_QDB	Battery	Frame that encompasses battery cell organisation	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_DEF_TDFDDTOT2	Battery	Battery discharge end voltage	V	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_DEF_TDFLPETOT2	Battery	Total floating voltage	V	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_QDB_EG_MAX	Battery	Max. number of batteries for a floating regulation	x------x	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_QDB_MAX	Battery	Max. number of batteries to ensure an highrate charge in case of a 10% AC drop	x------x	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Option_1_elemt	Battery	1 cell per group	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Option_2_elemt	Battery	2 cells per group	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Option_3_elemt	Battery	3 cells per group	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Option_6_elemt	Battery	6 cells per group	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_RCDF	Battery commissioning	Commissioning enable	x------x	CommEnable	x------x	28	Boolean	0;1	51	Charge Mode	bool16	66	64	23	23	commEnable	
+Combo_RCDF_REL	Battery commissioning	Commissioning relay	x------x	CommRelayOutput	x------x	29	Byte	0~16	52	Charge Mode	byte	68	66	24	24	commRelayOutput	
+Edit_DEF_CDCDF	Battery commissioning	Commissioning charge current	Amps	CommCurrent	x------x	32	Word	1~9999	61	Charge Mode	word	73	71	32	32	commCurrent	
+Edit_DEF_TDCDF	Battery commissioning	Commissioning cycle time	h:3600:s	CommTime	x------x	31	Dword	0~356400	57	Charge Mode	dword	75	73	31	31	commTime	
+Edit_DEF_TDFOPE	Battery commissioning	Commissioning voltage per cell	V	UcommPerCell	x------x	30	Float	1.5~2.6	53	Charge Mode	float	69	67	25	25	ucommPerCell	
+Frame_RCDF	Battery commissioning	Frame that encompasses battery commissioning definition	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_DEF_TDFOTOT2	Battery commissioning	Commissioning voltage	V	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_DEF_CM	Battery highrate	Manual highrate charge enable	x------x	ManHrEnable	x------x	17	Boolean	0;1	31	Charge Mode	bool16	54	52	17	17	manHrEnable	
+Check_DEF_TARPE	Battery highrate	Auto start on mains fail	x------x	MfHrEnable	x------x	26	Boolean	0;1	49	Auto Charge	bool16	88	86	29	29	mfHrEnable	
+Check_DEF_TLCPE	Battery highrate	Auto start on current limit	x------x	ClHrEnable	x------x	24	Boolean	0;1	47	7:7:Auto Charge	bool16	85	83	27	27	clHrEnable	
+Combo_DEF_CP	Battery highrate	Periodic highrate	months:periodicHighRate	PeriodicHr	x------x	23	Byte	0;1;2;3	46	Auto Charge	byte	91	89	26	26	periodicHr	
+Combo_RCE_REL	Battery highrate	Highrate relay number	x------x	HrRelayOutput	x------x	18	Byte	0~16	32	Charge Mode	byte	56	54	18	18	hrRelayOutput	
+Edit_DEF_battFanDelay	Battery highrate	Battery fan delay	h:3600:s	BattFanDelay	x------x	19	Dword	0~86400	33	Charge Mode	dword	79	77	22	22	battFanDelay	
+Edit_DEF_TARPE	Battery highrate	Auto start on mains fail min. duration	s	MfHrTime	x------x	27	Byte	0~255	50	Auto Charge	byte	90	88	30	30	mfHrTime	
+Edit_DEF_TDREE	Battery highrate	Highrate charge time	h:3600:s	ChargeTime	x------x	21	Dword	0~356400	41	Charge Mode	dword	61	59	20	20	chargeTime	
+Edit_DEF_TEPE	Battery highrate	Highrate charge voltage per cell	V/cell	UhrPerCell	x------x	20	Float	1~2.4	37	Charge Mode	float	57	55	19	19	uhrPerCell	
+Edit_DEF_TLCPE	Battery highrate	Auto start on current limit min. duration	s	ClHrTime	x------x	25	Byte	0~255	48	Auto Charge	byte	87	85	28	28	clHrTime	
+Frame_AUTO_CHARGE	Battery highrate	Frame that encompasses highrate automatic charge	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Frame_DEF_EG	Battery highrate	Frame that encompasses highrate parameters	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Frame_RCE	Battery highrate	Frame that encompasses highrate definition	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_DEF_TDEPETOT2	Battery highrate	Highrate charge voltage	V	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Option_DEF_DIRECT	Battery highrate	Highrate 'direct' option	x------x	ChrgTimerMode	x------x	22	Byte	0;1	45	Charge Mode	byte	65	63	21	21	chrgTimerMode	
+Option_DEF_POST	Battery highrate	Highrate 'post' option	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_TB	Battery test	Test enable	x------x	BattTestEnable	x------x	45	Boolean	0;1	90	0:14:Battery Test	bool16	133	9999	45	148	Battery test is	
+Combo_TB_TP	Battery test	Periodic battery test	months	AutoTestPeriod	x------x	50	Byte	0~12	102	Battery Test	byte	146	9999	50	153	Periodic battery test	
+Edit_DEF_CB	Battery test	Capacity	Ah	BattCapacity	x------x	46	Word	0~9999	91	Battery Test	word	135	9999	46	149	Battery capacity	
+Edit_TB_NTA	Battery test	End voltage alarm threshold	V	EndVoltageAlarm	x------x	49	Float	0~650	98	Battery Test	float	142	9999	49	152	Discharge alarm voltage	
+Edit_TB_PDD	Battery test	Discharge percentage	%	DischrgPercent	x------x	47	Byte	0~30	93	Battery Test	byte	137	9999	47	150	Discharge percentage	
+Edit_TB_TMT	Battery test	Discharge end voltage	V	TestEndVoltage	x------x	48	Float	0~650	94	Battery Test	float	138	9999	48	151	Discharge end voltage	
+Frame_TB	Battery test	Frame that encompasses battery test parameters	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+x------x	Calibration	Battery current adjust	x------x	IbattAdjustCal	x------x	151	Float	x------x	462	Calibration	float	186	168	151	144	ibattAdjustCalibration	
+x------x	Calibration	Battery current factor	x------x	IbattCalibration	x------x	143	Float	0.8~1.2	430	44:44:Calibration	float	154	136	143	136	ibattCalibration	
+x------x	Calibration	Rectifier current adjust	x------x	IrectAdjustCal	x------x	150	Float	0.8~1.2	458	Calibration	float	182	164	150	143	irectAdjustCalibration	
+x------x	Calibration	Rectifier output current (startup)	x------x	IrectAdjustSetting	x------x	153	Float	x------x	470	Calibration	float	194	176	153	146	irectAdjustSetting	
+x------x	Calibration	Rectifier current factor	x------x	IrectCalibration	x------x	144	Float	0.8~1.2	434	Calibration	float	158	140	144	137	irectCalibration	
+x------x	Calibration	Temperature current factor	x------x	TempCalibration	x------x	145	Float	1.0~1.0	438	Calibration	float	162	144	145	138	tempCalibration	
+x------x	Calibration	Mains voltage factor	x------x	UacCalibration	x------x	147	Float	0.8~1.2	446	Calibration	float	170	152	147	140	uacCalibration	
+x------x	Calibration	Load voltage factor	x------x	UloadCalibration	x------x	146	Float	0.8~1.2	442	Calibration	float	166	148	146	139	uloadCalibration	
+x------x	Calibration	Rectifier voltage adjust	x------x	UrectAdjustCal	x------x	149	Float	0.8~1.2	454	Calibration	float	178	160	149	142	urectAdjustCalibration	
+x------x	Calibration	Rectifier output voltage (startup)	x------x	UrectAjustSetting	x------x	152	Float	x------x	466	Calibration	float	190	172	152	145	urectAdjustSetting	
+x------x	Calibration	Rectifier voltage factor	x------x	UrectCalibration	x------x	148	Float	0.8~1.2	450	Calibration	float	174	156	148	141	urectCalibration	
+Check_AC	Common alarm	Enable alarm	x------x	CM_Enabled	x------x	137	Boolean	0;1	346	Common Alarm	bool16	575	557	141	134	C_enabled	
+Check_AC_REL	Common alarm	Enable relay latch	x------x	CM_RelayLatch	x------x	138	Boolean	0;1	361	Common Alarm	bool16	577	559	142	135	C_relayLatch	
+Combo_BAUDRATE	Communications	Baudrate	x------x	Baudrate	x------x	52	Word	300;600;1200;2400;4800;9600;19200	104	Communications	word	150	132	52	45	baudrate	
+Edit_NUM_ESCLAVE	Communications	Slave number	x------x	SlaveAddress	x------x	51	Byte	1~255	103	3:3:Communications	byte	149	131	51	44	slaveAddress	
+Frame_COMMUNCATION	Communications	Frame that encompasses communications parameters	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_AR_DRED	Conditions for stopping rectifier	On rectifier fault	x------x	RfShtdnEnable	x------x	39	Boolean	0;1	81	Shutdown	bool16	119	117	39	39	rfShtdnEnable	
+Check_AR_DRES	Conditions for stopping rectifier	On mains fail	x------x	MfShtdnEnable	x------x	40	Boolean	0;1	82	6:6:Shutdown	bool16	117	115	40	40	mfShtdnEnable	
+Check_AR_TMDC	Conditions for stopping rectifier	On high DC voltage	x------x	HvShtdnEnable	x------x	41	Boolean	0;1	83	Shutdown	bool16	121	119	41	41	hvShtdnEnable	
+Frame_AR	Conditions for stopping rectifier	Frame that encompasses rect. stop conditions	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DC_CURA	Customer data	Current when mains if off	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DC_CURP	Customer data	Current when mains is on	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DC_DDLPDC	Customer data	Peak current duration	s	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DC_PDC	Customer data	Peak current	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DC_VMAXDLT	Customer data	High voltage limit	V	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_DC_VMINDLT	Customer data	Low voltage limit	V	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Frame_DC	Customer data	Frame that encompasses customer data	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_ENV_ALT	Environment	Altitude	m	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_ENV_TA	Environment	Room temperature	°C	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Frame_ENV	Environment	Frame that encompasses environment parameters	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_Derating_ALT	Environment	Altitude derating	x------x	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_Derating_temp	Environment	Room temperature derating	x------x	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_CBH_NH	High bat current alarm	Current threshold	Amps	HB_UpperLimit	x------x	126	Float	0~9999	319	High Battery Current Alarm	float	529	511	130	123	HB_upper	
+Edit_CBH_TEMPS	High bat current alarm	Delay	s	HB_Delay	x------x	127	Dword	0~59	323	High Battery Current Alarm	word	533	515	131	124	HB_delay	
+Check_CBH	High bat. current alarm	Enable alarm	x------x	HB_Enabled	x------x	125	Boolean	0;1	314	High Battery Current Alarm	bool16	525	507	129	122	HB_enabled	
+Check_CBH_AFF	High bat. current alarm	Enable display latch	x------x	HB_LcdLatch	x------x	129	Boolean	0;1	328	High Battery Current Alarm	word:bf:0	527	509	133	126	HB_lcdLatch	
+Check_CBH_REL	High bat. current alarm	Enable relay latch	x------x	HB_RelayLatch	x------x	130	Boolean	0;1	329	High Battery Current Alarm	word:bf:1	527	509	134	127	HB_relayLatch	
+Combo_CBH_REL	High bat. current alarm	Relay number	x------x	HB_RelayOutput	x------x	128	Byte	0~16	327	High Battery Current Alarm	word	535	517	132	125	HB_relayOutput	
+Frame_CBH	High bat. current alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_TEOTDFL	High charge voltage alarm	Enable alarm	x------x	HC_Enabled	x------x	60	Boolean	0;1	122	High Charge Voltage Alarm	bool16	225	207	60	53	HC_enabled	
+Check_TEOTDFL_AFF	High charge voltage alarm	Enable display latch	x------x	HC_LcdLatch	x------x	65	Boolean	0;1	136	High Charge Voltage Alarm	word:bf:0	227	209	65	58	HC_lcdLatch	
+Check_TEOTDFL_REL	High charge voltage alarm	Enable relay latch	x------x	HC_RelayLatch	x------x	66	Boolean	0;1	137	High Charge Voltage Alarm	word:bf:1	227	209	66	59	HC_relayLatch	
+Combo_TEOTDFL_REL	High charge voltage alarm	Relay number	x------x	HC_RelayOutput	x------x	64	Byte	0~16	135	High Charge Voltage Alarm	word	241	223	64	57	HC_relayOutput	
+Edit_TEOTDFL_EG	High charge voltage alarm	Highrate high voltage threshold	V	HC_UpperLimit	x------x	62	Float	0~650	127	High Charge Voltage Alarm	float	233	215	62	55	HC_upper	
+Edit_TEOTDFL_FL	High charge voltage alarm	Floating high voltage threshold	V	HC_LowerLimit	x------x	61	Float	0~650	123	High Charge Voltage Alarm	float	229	211	61	54	HC_lower	
+Edit_TEOTDFL_TEMPS	High charge voltage alarm	Delay	mn:60:s	HC_Delay	x------x	63	Dword	0~86399	131	High Charge Voltage Alarm	dword:hm	237	219	63	56	HC_delay	
+Frame_TEOTDFL	High charge voltage alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_TUH	High DC voltage alarm	Enable alarm	x------x	HD_Enabled	x------x	73	Boolean	0;1	154	High DC Voltage Alarm	bool16	275	257	73	66	HD_enabled	
+Check_TUH_AFF	High DC voltage alarm	Enable display latch	x------x	HD_LcdLatch	x------x	77	Boolean	0;1	168	High DC Voltage Alarm	word:bf:0	277	259	77	70	HD_lcdLatch	
+Check_TUH_REL	High DC voltage alarm	Enable relay latch	x------x	HD_RelayLatch	x------x	78	Boolean	0;1	169	High DC Voltage Alarm	word:bf:1	277	259	78	71	HD_relayLatch	
+Combo_TUH_REL	High DC voltage alarm	Relay number	x------x	HD_RelayOutput	x------x	76	Byte	0~16	167	High DC Voltage Alarm	word	285	267	76	69	HD_relayOutput	
+Edit_TUH_NH	High DC voltage alarm	High voltage threshold	V	HD_UpperLimit	x------x	74	Float	0~650	159	High DC Voltage Alarm	float	279	261	74	67	HD_upper	
+Edit_TUH_TEMPS	High DC voltage alarm	Delay	s	HD_Delay	x------x	75	Dword	0~59	163	High DC Voltage Alarm	word	283	265	75	68	HD_delay	
+Frame_TUH	High DC voltage alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_CRH	High rect. current alarm	Enable alarm	x------x	HR_Enabled	x------x	131	Boolean	0;1	330	High Rectifier Current Alarm	bool16	550	532	135	128	HR_enabled	
+Check_CRH_AFF	High rect. current alarm	Enable display latch	x------x	HR_LcdLatch	x------x	135	Boolean	0;1	344	High Rectifier Current Alarm	word:bf:0	552	534	139	132	HR_lcdLatch	
+Check_CRH_REL	High rect. current alarm	Enable relay latch	x------x	HR_RelayLatch	x------x	136	Boolean	0;1	345	High Rectifier Current Alarm	word:bf:1	552	534	140	133	HR_relayLatch	
+Combo_CRH_REL	High rect. current alarm	Relay number	x------x	HR_RelayOutput	x------x	134	Byte	0~16	343	High Rectifier Current Alarm	word	560	542	138	131	HR_relayOutput	
+Edit_CRH_NH	High rect. current alarm	Current threshold	Amps	HR_UpperLimit	x------x	132	Float	0~9999	335	High Rectifier Current Alarm	float	554	536	136	129	HR_upper	
+Edit_CRH_TEMPS	High rect. current alarm	Delay	s	HR_Delay	x------x	133	Dword	0~59	339	High Rectifier Current Alarm	word	558	540	137	130	HR_delay	
+Frame_CRH	High rect. current alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_TH	High temperature alarm	Enable alarm	x------x	HT_Enabled	x------x	120	Boolean	0;1	298	High Temperature Alarm	bool16	500	482	124	117	HT_enabled	
+Check_TH_AFF	High temperature alarm	Enable display latch	x------x	HT_LcdLatch	x------x	123	Boolean	0;1	312	High Temperature Alarm	word:bf:0	502	484	127	120	HT_lcdLatch	
+Check_TH_REL	High temperature alarm	Enable relay latch	x------x	HT_RelayLatch	x------x	124	Boolean	0;1	313	High Temperature Alarm	word:bf:1	502	484	128	121	HT_relayLatch	
+Combo_TH_REL	High temperature alarm	Relay number	x------x	HT_RelayOutput	x------x	122	Byte	0~16	311	High Temperature Alarm	word	506	488	126	119	HT_relayOutput	
+Edit_TH_TEMPS	High temperature alarm	Delay	s	HT_Delay	x------x	121	Dword	0~59	307	High Temperature Alarm	word	504	486	125	118	HT_delay	
+Frame_TH	High temperature alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Combo_LANGUE	Interface	Language	:language	Language	x------x	1	Byte	0~13	1	2:2:Language	word	4	4	1	1	language	
+Frame_LANGUE	Language	Frame that encompasses language parameters	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_TFB	Low charge voltage alarm	Enable alarm	x------x	LC_Enabled	x------x	67	Boolean	0;1	138	Low Charge Voltage Alarm	bool16	250	232	67	60	LC_enabled	
+Check_TFB_AFF	Low charge voltage alarm	Enable display latch	x------x	LC_LcdLatch	x------x	71	Boolean	0;1	152	Low Charge Voltage Alarm	word:bf:0	252	234	71	64	LC_lcdLatch	
+Check_TFB_REL	Low charge voltage alarm	Enable relay latch	x------x	LC_RelayLatch	x------x	72	Boolean	0;1	153	Low Charge Voltage Alarm	word:bf:1	252	234	72	65	LC_relayLatch	
+Combo_TFB_REL	Low charge voltage alarm	Relay number	x------x	LC_RelayOutput	x------x	70	Byte	0~16	151	Low Charge Voltage Alarm	word	262	244	70	63	LC_relayOutput	
+Edit_TFB_NB	Low charge voltage alarm	Low voltage threshold	V	LC_LowerLimit	x------x	68	Float	0~650	139	Low Charge Voltage Alarm	float	254	236	68	61	LC_lower	
+Edit_TFB_TEMPS	Low charge voltage alarm	Delay	mn:60:s	LC_Delay	x------x	69	Dword	0~86399	147	Low Charge Voltage Alarm	dword:hm	258	240	69	62	LC_delay	
+Frame_TFB	Low charge voltage alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_TUB	Low DC voltage alarm	Enable alarm	x------x	LD_Enabled	x------x	79	Boolean	0;1	170	Low DC Voltage Alarm	bool16	300	282	79	72	LD_enabled	
+Check_TUB_AFF	Low DC voltage alarm	Enable display latch	x------x	LD_LcdLatch	x------x	83	Boolean	0;1	184	Low DC Voltage Alarm	word:bf:0	302	284	83	76	LD_lcdLatch	
+Check_TUB_REL	Low DC voltage alarm	Enable relay latch	x------x	LD_RelayLatch	x------x	84	Boolean	0;1	185	Low DC Voltage Alarm	word:bf:1	302	284	84	77	LD_relayLatch	
+Combo_TUB_REL	Low DC voltage alarm	Relay number	x------x	LD_RelayOutput	x------x	82	Byte	0~16	183	Low DC Voltage Alarm	word	310	292	82	75	LD_relayOutput	
+Edit_TUB_NB	Low DC voltage alarm	Low voltage threshold	V	LD_LowerLimit	x------x	80	Float	0~650	171	Low DC Voltage Alarm	float	304	286	80	73	LD_lower	
+Edit_TUB_TEMPS	Low DC voltage alarm	Delay	s	LD_Delay	x------x	81	Dword	0~59	179	Low DC Voltage Alarm	word	308	290	81	74	LD_delay	
+Frame_TUB	Low DC voltage alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_TRTHOTB	Mains failure alarm	Enable alarm	x------x	MF_Enabled	x------x	53	Boolean	0;1	106	400:400:Mains Fail Alarm	bool16	200	182	53	46	MF_enabled	
+Check_TRTHOTB_AFF	Mains failure alarm	Enable display latch	x------x	MF_LcdLatch	x------x	58	Boolean	0;1	120	Mains Fail Alarm	word:bf:0	202	184	58	51	MF_lcdLatch	
+Check_TRTHOTB_REL	Mains failure alarm	Enable relay latch	x------x	MF_RelayLatch	x------x	59	Boolean	0;1	121	Mains Fail Alarm	word:bf:1	202	184	59	52	MF_relayLatch	
+Combo_TRTHOTB_REL	Mains failure alarm	Relay number	x------x	MF_RelayOutput	x------x	57	Byte	0~16	119	Mains Fail Alarm	word	214	196	57	50	MF_relayOutput	
+Edit_TRTHOTB_TEMP	Mains failure alarm	Delay	s	MF_Delay	x------x	56	Dword	0~59	115	Mains Fail Alarm	word	212	194	56	49	MF_delay	
+Edit_TRTHOTB_TMAX	Mains failure alarm	Maximum mains voltage	V	MF_UpperLimit	x------x	55	Float	0~850	111	Mains Fail Alarm	float	208	190	55	48	MF_upper	
+Edit_TRTHOTB_TMIN	Mains failure alarm	Minimum mains voltage	V	MF_LowerLimit	x------x	54	Float	0~850	107	Mains Fail Alarm	float	204	186	54	47	MF_lower	
+Frame_TRTHOTB	Mains failure alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_ADJ_MCV	Manual drive	Variable current mode	x------x	ManCurrAdjust	x------x	11	Boolean	0;1	20	8:8:Adjustement	bool16	38	36	11	11	manCurrAdjust	
+Check_ADJ_MTV	Manual drive	Variable voltage mode	x------x	ManVoltAdjust	x------x	12	Boolean	0;1	21	Adjustement	bool16	40	38	12	12	manVoltAdjust	
+Edit_ADJ_UMAX	Manual drive	Max voltage	V	VoltAdjustMax	x------x	14	Word	0~650	24	Adjustement	word	44	42	14	14	voltAdjustMax	
+Edit_ADJ_UMIN	Manual drive	Min voltage	V	VoltAdjustMin	x------x	13	Word	0~650	22	Adjustement	word	42	40	13	13	voltAdjustMin	
+Frame_ADJ	Manual drive	Frame that encompasses manual mode settings	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_SDM_AH	Meters	Capacity meter display enable	x------x	AhMeterDisplay	x------x	44	Byte	0;1	89	Measurement	bool16	34	9999	44	147	Battery AH metter is	
+Check_SDM_TR	Meters	Mains voltage meter display enable	x------x	AcMeter	x------x	9	Boolean	0;1	18	4:6:Measurement	bool16	30	30	9	9	acMeter	
+Check_SDM_TU	Meters	Load voltage meter display enable	x------x	LoadVoltMeter	x------x	10	Boolean	0;1	19	Measurement	bool16	32	32	10	10	loadVoltMeter	
+Frame_SDM	Meters	Frame that encompasses meter settings	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_DTM	Negative earthfault alarm	Enable alarm	x------x	EFM_Enabled	x------x	95	Boolean	0;1	218	Earth Fault Minus Alarm	bool16	375	357	95	88	EFM_enabled	
+Check_DTM_AFF	Negative earthfault alarm	Enable display latch	x------x	EFM_LcdLatch	x------x	98	Boolean	0;1	232	Earth Fault Minus Alarm	word:bf:0	377	359	98	91	EFM_lcdLatch	
+Check_DTM_REL	Negative earthfault alarm	Enable relay latch	x------x	EFM_RelayLatch	x------x	99	Boolean	0;1	233	Earth Fault Minus Alarm	word:bf:1	377	359	99	92	EFM_relayLatch	
+Combo_DTM_REL	Negative earthfault alarm	Relay number	x------x	EFM_RelayOutput	x------x	97	Byte	0~16	231	Earth Fault Minus Alarm	word	381	363	97	90	EFM_relayOutput	
+Edit_DTM_TEMPS	Negative earthfault alarm	Delay	s	EFM_Delay	x------x	96	Dword	0~59	227	Earth Fault Minus Alarm	word	379	361	96	89	EFM_delay	
+Frame_DTM	Negative earthfault alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Combo_RN_FREQ	Nominal settings	Mains frequency	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Combo_RN_IDC	Nominal settings	DC current	Amps	IdcNom	x------x	4	Word	1~9999	5	Nominal	word	12	12	4	4	idcNom	
+Combo_RN_NDP	Nominal settings	Number of phases	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Combo_RN_UAC	Nominal settings	AC voltage	V	UacNom	x------x	2	Word	1~700	2	6:6:Nominal	word	8	8	2	2	uacNom	
+Combo_RN_UDC	Nominal settings	DC voltage	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_RN_CN	Nominal settings	AC inrush current	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Frame_RN	Nominal settings	Frame that encompasses nominal settings	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Label_CCU_Jumper	Nominal settings	UDC nominal setting in CCU	V	UdcNom	Only calculated	3	Byte	12;24;32;48;60;110;125;220;250	4	Nominal	word	10	10	3	3	udcNom	
+Check_DTP	Positive earthfault alarm	Enable alarm	x------x	EFP_Enabled	x------x	90	Boolean	0;1	202	Earth Fault Plus Alarm	bool16	350	332	90	83	EFP_enabled	
+Check_DTP_AFF	Positive earthfault alarm	Enable display latch	x------x	EFP_LcdLatch	x------x	93	Boolean	0;1	216	Earth Fault Plus Alarm	word:bf:0	352	334	93	86	EFP_lcdLatch	
+Check_DTP_REL	Positive earthfault alarm	Enable relay latch	x------x	EFP_RelayLatch	x------x	94	Boolean	0;1	217	Earth Fault Plus Alarm	word:bf:1	352	334	94	87	EFP_relayLatch	
+Combo_DTP_REL	Positive earthfault alarm	Relay number	x------x	EFP_RelayOutput	x------x	92	Byte	0~16	215	Earth Fault Plus Alarm	word	356	338	92	85	EFP_relayOutput	
+Edit_DTP_TEMPS	Positive earthfault alarm	Delay	s	EFP_Delay	x------x	91	Dword	0~59	211	Earth Fault Plus Alarm	word	354	336	91	84	EFP_delay	
+Frame_DTP	Positive earthfault alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_APP	Project identification	If project if approved	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_MAJ	Project identification	ME 10 files followup	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_COMMENT	Project identification	Comments	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_CONTROL	Project identification	Who approved the project	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+SystemId	Project identification	Identification number	x------x	SystemId	x------x	38	String[9]	x------x	72	9:9:Identification	string:9	106	104	38	38	systemId	
+Text_Client	Project identification	Customer name	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Text_ClientFinal	Project identification	End user	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Text_Commande	Project identification	Order reference	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Text_Devis	Project identification	Quotation reference	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Text_Nom	Project identification	Name of project manager	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Text_Origine	Project identification	Manufacturer	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Text_Projet	Project identification	Project name	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_SHUNT_SR	Rectifier current sense	Rectifier shunt value	Amps	RectShuntVal	x------x	5	Float	0.5~9999	7	12:12:Shunt	float	16	16	5	5	rectShuntVal	
+Frame_SHUNT	Rectifier current sense	Frame that encompasses shunt settings	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_DR	Rectifier failure alarm	Enable alarm	x------x	RF_Enabled	x------x	85	Boolean	0;1	186	Rectifier Failure Alarm	bool16	325	307	85	78	RF_enabled	
+Check_DR_AFF	Rectifier failure alarm	Enable display latch	x------x	RF_LcdLatch	x------x	88	Boolean	0;1	200	Rectifier Failure Alarm	word:bf:0	327	309	88	81	RF_lcdLatch	
+Check_DR_REL	Rectifier failure alarm	Enable relay latch	x------x	RF_RelayLatch	x------x	89	Boolean	0;1	201	Rectifier Failure Alarm	word:bf:1	327	309	89	82	RF_relayLatch	
+Combo_DR_REL	Rectifier failure alarm	Relay number	x------x	RF_RelayOutput	x------x	87	Byte	0~16	199	Rectifier Failure Alarm	word	331	313	87	80	RF_relayOutput	
+Edit_DR_TEMPS	Rectifier failure alarm	Delay	s	RF_Delay	x------x	86	Dword	0~59	195	Rectifier Failure Alarm	word	329	311	86	79	RF_delay	
+Frame_DR	Rectifier failure alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_R1	Spare alarm #1	Enable alarm	x------x	S1_Enabled	x------x	100	Boolean	0;1	234	Spare 1 Alarm	bool16	400	382	100	93	S1_enabled	
+Check_R1_AFF	Spare alarm #1	Enable display latch	x------x	S1_LcdLatch	x------x	103	Boolean	0;1	248	Spare 1 Alarm	word:bf:0	402	384	104	97	S1_lcdLatch	
+Check_R1_REL	Spare alarm #1	Enable relay latch	x------x	S1_RelayLatch	x------x	104	Boolean	0;1	249	Spare 1 Alarm	word:bf:1	402	384	105	98	S1_relayLatch	
+Combo_R1_REL	Spare alarm #1	Relay number	x------x	S1_RelayOutput	x------x	102	Byte	0~16	247	Spare 1 Alarm	word	423	405	103	96	S1_relayOutput	
+Edit_R1_TDA	Spare alarm #1	Alarm text	x------x	S1_Text	x------x	139	String[17]	x------x	362	Spare 1 Alarm	string:17	404	386	101	94	S1_name	
+Edit_R1_TEMPS	Spare alarm #1	Delay	s	S1_Delay	x------x	101	Dword	0~59	243	Spare 1 Alarm	word	421	403	102	95	S1_delay	
+Frame_R1	Spare alarm #1	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_R2	Spare alarm #2	Enable alarm	x------x	S2_Enabled	x------x	105	Boolean	0;1	250	Spare 2 Alarm	bool16	425	407	106	99	S2_enabled	
+Check_R2_AFF	Spare alarm #2	Enable display latch	x------x	S2_LcdLatch	x------x	108	Boolean	0;1	264	Spare 2 Alarm	word:bf:0	427	409	110	103	S2_lcdLatch	
+Check_R2_REL	Spare alarm #2	Enable relay latch	x------x	S2_RelayLatch	x------x	109	Boolean	0;1	265	Spare 2 Alarm	word:bf:1	427	409	111	104	S2_relayLatch	
+Combo_R2_REL	Spare alarm #2	Relay number	x------x	S2_RelayOutput	x------x	107	Byte	0~16	263	Spare 2 Alarm	word	448	430	109	102	S2_relayOutput	
+Edit_R2_TDA	Spare alarm #2	Alarm text	x------x	S2_Text	x------x	140	String[17]	x------x	379	Spare 2 Alarm	string:17	429	411	107	100	S2_name	
+Edit_R2_TEMPS	Spare alarm #2	Delay	s	S2_Delay	x------x	106	Dword	0~59	259	Spare 2 Alarm	word	446	428	108	101	S2_delay	
+Frame_R2	Spare alarm #2	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_R3	Spare alarm #3	Enable alarm	x------x	S3_Enabled	x------x	110	Boolean	0;1	266	Spare 3 Alarm	bool16	450	432	112	105	S3_enabled	
+Check_R3_AFF	Spare alarm #3	Enable display latch	x------x	S3_LcdLatch	x------x	113	Boolean	0;1	280	Spare 3 Alarm	word:bf:0	452	434	116	109	S3_lcdLatch	
+Check_R3_REL	Spare alarm #3	Enable relay latch	x------x	S3_RelayLatch	x------x	114	Boolean	0;1	281	Spare 3 Alarm	word:bf:1	452	434	117	110	S3_relayLatch	
+Combo_R3_REL	Spare alarm #3	Relay number	x------x	S3_RelayOutput	x------x	112	Byte	0~16	279	Spare 3 Alarm	word	473	455	115	108	S3_relayOutput	
+Edit_R3_TDA	Spare alarm #3	Alarm text	x------x	S3_Text	x------x	141	String[17]	x------x	396	Spare 3 Alarm	string:17	454	436	113	106	S3_name	
+Edit_R3_TEMPS	Spare alarm #3	Delay	s	S3_Delay	x------x	111	Dword	0~59	275	Spare 3 Alarm	word	471	453	114	107	S3_delay	
+Frame_R3	Spare alarm #3	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Check_R4	Spare alarm #4	Enable alarm	x------x	S4_Enabled	x------x	115	Boolean	0;1	282	Spare 4 Alarm	bool16	475	457	118	111	S4_enabled	
+Check_R4_AFF	Spare alarm #4	Enable display latch	x------x	S4_LcdLatch	x------x	118	Boolean	0;1	296	Spare 4 Alarm	word:bf:0	477	459	122	115	S4_lcdLatch	
+Check_R4_REL	Spare alarm #4	Enable relay latch	x------x	S4_RelayLatch	x------x	119	Boolean	0;1	297	Spare 4 Alarm	word:bf:1	477	459	123	116	S4_relayLatch	
+Combo_R4_REL	Spare alarm #4	Relay number	x------x	S4_RelayOutput	x------x	117	Byte	0~16	295	Spare 4 Alarm	word	498	480	121	114	S4_relayOutput	
+Edit_R4_TDA	Spare alarm #4	Alarm text	x------x	S4_Text	x------x	142	String[17]	x------x	413	Spare 4 Alarm	string:17	479	461	119	112	S4_name	
+Edit_R4_TEMPS	Spare alarm #4	Delay	s	S4_Delay	x------x	116	Dword	0~59	291	Spare 4 Alarm	word	496	478	120	113	S4_delay	
+Frame_R4	Spare alarm #4	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	
+Edit_OPBVO_CL	VO management	Current limit	Amps	IbattLow	x------x	34	Word	1~9999	64	VO Application	word	96	94	34	34	IbattLow	
+Edit_OPBVO_DELTA	VO management	Differential temperature min threshold	°C	DTmin	x------x	36	Byte	0~20	67	VO Application	byte	99	97	36	36	dTmin	
+Edit_OPBVO_TDC	VO management	Extra time	h:3600:s	VoChargeTime	x------x	37	Dword	0~14400	68	VO Application	dword	100	98	37	37	VoChargeTime	
+Edit_OPBVO_TETA	VO management	Differential temperature max threshold	°C	DTmax	x------x	35	Byte	0~20	66	VO Application	byte	98	96	35	35	dTmax	
+Frame_OPBV	VO management	Frame that encompasses battery VO definition	x------x	VoApplEnable	x------x	33	Boolean	0;1	63	10:10:VO Application	bool16	94	92	33	33	voAppl	
