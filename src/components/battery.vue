@@ -481,8 +481,6 @@ export default {
             }
           }
         } else if (k === "Combo_DEF_TDB") {
-          // eslint-disable-next-line
-          console.log(k, v);
           reactiveData.VoApplEnable = v === "VO" ? "true" : "false";
         }
       }

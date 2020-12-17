@@ -301,6 +301,15 @@
               </div>
             </v-card-text>
           </v-card>
+          <v-card class="mt-1">
+            <v-card-title class="headline">Hardware configuration</v-card-title>
+            <v-card-text>
+              <div class="d-flex">
+               <div><vyw-switch data-key="meta_hasLedBox" :labels="['No LED box', 'LED box']"></vyw-switch></div>
+               <div><vyw-switch data-key="meta_duplicatedRelays" :labels="['Relays not duplicated', 'Relays duplicated']"></vyw-switch></div>
+              </div>
+            </v-card-text>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>

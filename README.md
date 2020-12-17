@@ -1,4 +1,4 @@
-# CCU-GCAU 1
+# CCU-GCAU-1
 
 This [SPA](https://en.wikipedia.org/wiki/Single-page_application) project is a revised version of the CCU to GCAU configuration converter based on [Vue.js](https://vuejs.org) (bootstrapped with [@vue/cli](https://cli.vuejs.org) ^3.8.0) components with [Vuetify](https://vuetifyjs.com) framework visual elements
 

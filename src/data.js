@@ -3,7 +3,6 @@
 import ReacTer from "@labzdjee/reac-ter";
 import {
   analyzeAgcFile,
-  findInAgcFileStruct,
 } from "@labzdjee/agc-util";
 import Vue from "vue";
 import axios from "axios";
@@ -67,29 +66,11 @@ function initTdsData() {
   }
 }
 
-function alterAgcAttr(object, attribute, value) {
-  const hit = findInAgcFileStruct({
-    object,
-    attribute,
-  }, agcFileData.struct);
-  if (hit === null) {
-    return;
-  }
-  hit.value = value;
-  agcFileData.lines[hit.line - 1] = `${object}.${hit.readOnly?"!":""}${attribute} = "${value}"`;
-}
-
-export function translateCcu2gcau() {
-  let temperatureCompensation = 0.0;
-  if (reactiveData.TempComp === "true") {
-    temperatureCompensation = parseFloat(reactiveData.CompPerC);
-  }
-  alterAgcAttr("REGCOMP", "TemperatureCompensation", Math.round(temperatureCompensation * 100).toString());
-}
-
 const _metaData = {
   testKey: "Text_Projet",
   testValue: "???",
+  hasLedBox: "false",
+  duplicatedRelays: "false",
 };
 
 Object.keys(_metaData).forEach((key) => {
@@ -143,10 +124,10 @@ export function processTdsFile(fileContents) {
         data = resultDataStart[1];
         partial = true;
       } else if (partial) {
-        const resulDataEnd = trimmedLine.match(pattDataEnd);
-        if (resulDataEnd) {
+        const resultDataEnd = trimmedLine.match(pattDataEnd);
+        if (resultDataEnd) {
           partial = false;
-          reactiveData[label] = `${data}\r${resulDataEnd[1]}`;
+          reactiveData[label] = `${data}\r${resultDataEnd[1]}`;
         } else {
           data = `${data}\r${trimmedLine}`;
         }

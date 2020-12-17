@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.12.10",
-    "@labzdjee/agc-util": "^1.6.2",
+    "@labzdjee/agc-util": "^1.6.6",
     "@labzdjee/reac-ter": "^1.0.2",
     "axios": "^0.19.2",
     "core-js": "^2.6.12",
