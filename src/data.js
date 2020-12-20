@@ -1,14 +1,17 @@
 /* jshint esversion: 6 */
 
+import Vue from "vue";
+import axios from "axios";
 import ReacTer from "@labzdjee/reac-ter";
 import {
   analyzeAgcFile,
 } from "@labzdjee/agc-util";
-import Vue from "vue";
-import axios from "axios";
 import {
   initVue,
-} from "./main.js";
+} from "./main";
+import {
+  generateNumericArray,
+} from "./utils";
 
 export const tsvMap = {};
 // property is this SetupParm and value is the associated TDSTag, e.g.:
@@ -28,6 +31,33 @@ export const eventBus = new Vue({
   },
 });
 
+export const selectChoicesAgcMap = {
+  languages: {
+    English: "French",
+    Dutch: "Dutch",
+    Spanish: "Spanish",
+    Italian: "Italian",
+    Finnish: "French",
+    Swedish: "Swedish",
+    French: "French",
+    German: "German",
+    Slovakian: "French",
+    USA: "French",
+    Norwegian: "French",
+    Portuguese: "Portuguese",
+  },
+  batteryType: {
+    "None": "0",
+    "VO": "3",
+    "Ni CD (SBH-SBM)": "1",
+    "Ni CD (SBL)": "2",
+    "Ni CD (SPH)": "2",
+    "Ni CD (SLM)": "2",
+    "Sealed lead acid": "0",
+    "Open lead acid": "1",
+  },
+};
+
 export const selectChoices = {
   languages: [
     "English",
@@ -43,7 +73,7 @@ export const selectChoices = {
     "Norwegian",
     "Portuguese",
   ],
-  relayNumbers: [...Array(17)].map((_, i) => i.toString()),
+  relayNumbers: generateNumericArray(17, x => x.toString()),
   hrPeriodicTimes: ["None", "1", "6", "12"],
 };
 

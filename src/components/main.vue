@@ -100,10 +100,6 @@ import VywReactTest from "./react-test";
 import { eventBus, processTdsFile, reactiveData, processAgcFile, agcFileData, tdsAlias } from "../data";
 import {translateCcu2gcau} from "../cfg-trans";
 
-import {
-   findInAgcFileStruct,
-} from "@labzdjee/agc-util";
-
 export default {
   components: {
     VywAdmin,
@@ -191,10 +187,6 @@ export default {
     },
     saveOutputFile() {
       translateCcu2gcau();
-      // eslint-disable-next-line
-      console.log("check*** " + findInAgcFileStruct({
-        metaTag: "ProjectName",
-      }, agcFileData.struct)[0].value);
       const fileContents = agcFileData.lines.reduce((acc, val) => acc + `${val}\r\n`, "");
       download(fileContents, this.agcFileName, "text/plain");
     },

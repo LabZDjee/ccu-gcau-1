@@ -1,12 +1,5 @@
 <template>
-  <v-select
-    :label="label"
-    :items="itemList"
-    box
-    @change="changed"
-    :hint="hint"
-    v-model="editedValue"
-  />
+<v-select :label="label" :items="itemList" box @change="changed" :hint="hint" v-model="editedValue" />
 </template>
 
 <script>
