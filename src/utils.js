@@ -179,3 +179,48 @@ export function setBitInHexString(bool, pos, hexString) {
   }
   return `${hexString.substring(0, index)}${val.toString(16).toUpperCase()}${hexString.substring(index+1)}`;
 }
+
+// insert an integer (if a float is it rounded) into an array of integers
+// array is sorted (asscending) from minimum to maximum, duplicates are not inserted
+export function insertIntInSortedArray(val, array) {
+  val = Math.round(val);
+  if (array.indexOf(val) === -1) {
+    array.push(val);
+    array.sort((x, y) => parseInt(x, 10) - parseInt(y, 10));
+  }
+}
+
+// take an array of sorted (ascending) integers
+// and return a condensed list of those with '~' as the interval marker and ';' as the separator
+// examples:
+//  on [1,3,5,6,7, 8,9,10,13], returns "1;3;5~10;13"
+//  on [1,2, 3,5,6,7, 8,9,10], returns "1~3;5~10"
+export function extractListFromSortedArrayOfInts(array) {
+  let result = "";
+  let inInterval = false;
+  let lastVal;
+  for (let i = 0; i < array.length; i++) {
+    if (i === 0) {
+      result = array[i].toString();
+    } else {
+      if (array[i] === lastVal + 1) {
+        if (inInterval === false) {
+          result += "~";
+          inInterval = true;
+        }
+        if (i === array.length - 1) {
+          result += array[i].toString();
+        }
+      } else {
+        if (inInterval) {
+          result += `${lastVal};${array[i]}`;
+          inInterval = false;
+        } else {
+          result += `;${array[i]}`;
+        }
+      }
+    }
+    lastVal = array[i];
+  }
+  return result;
+}

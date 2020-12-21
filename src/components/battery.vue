@@ -1,379 +1,220 @@
 <template>
-  <v-container pt-3>
-    <v-layout wrap>
-      <v-flex xs12 sm6 px-1 align-content-center>
-        <v-card>
-          <v-card-title class="headline">Cell arrangement</v-card-title>
-          <v-card-text>
-            <vyw-radios :dataKeysAndLabels="elementRadioDefs" />
-            <div class="d-flex">
-              <div>
-                <vyw-integer-input
-                  data-key="Edit_QDB_NDB"
-                  label="Number of blocks"
-                  :bottom="Number(1)"
-                  :top="Number(1000)"
-                  hint="Nb of cells = number of bloks x nb cell(s) per block"
-                ></vyw-integer-input>
-              </div>
-              <div class="align-self-center">
-                Number of cells:
-                <vyw-read-only-text data-key="NrOfCells"></vyw-read-only-text>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-card class="py-1 px-2 mt-1">
+<v-container pt-3>
+  <v-layout wrap>
+    <v-flex xs12 sm6 px-1 align-content-center>
+      <v-card>
+        <v-card-title class="headline">Cell arrangement</v-card-title>
+        <v-card-text>
+          <vyw-radios :dataKeysAndLabels="elementRadioDefs" />
           <div class="d-flex">
-            <div class="pr-2 half">
-              <vyw-default-select
-                data-key="Combo_DEF_TDB"
-                label="Battery type"
-                :item-list="batteryTypes"
-              ></vyw-default-select>
+            <div>
+              <vyw-integer-input data-key="Edit_QDB_NDB" label="Number of blocks" :bottom="Number(1)" :top="Number(1000)" hint="Nb of cells = number of bloks x nb cell(s) per block"></vyw-integer-input>
+            </div>
+            <div class="align-self-center">
+              Number of cells:
+              <vyw-read-only-text data-key="NrOfCells"></vyw-read-only-text>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-card class="py-1 px-2 mt-1">
+        <div class="d-flex">
+          <div class="pr-2 half">
+            <vyw-default-select data-key="Combo_DEF_TDB" label="Battery type" :item-list="batteryTypes"></vyw-default-select>
+          </div>
+          <div>
+            <vyw-text-input data-key="Edit_BattName" label="Battery name" :maxChars="Number(16)"></vyw-text-input>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <vyw-numeric-input data-key="BattCapacity" label="Battery capacity" suffix="Ah" :bottom="Number(0)" :top="Number(9999)"></vyw-numeric-input>
+          </div>
+          <div>
+            <vyw-numeric-input data-key="Edit_DEF_CDCC" label="Short circuit current" suffix="kA"></vyw-numeric-input>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <vyw-numeric-input data-key="UflPerCell" label="Floating charge voltage per cell" suffix="V/cell" :bottom="Number(0)" :top="Number(24)" hint="[0~24]"></vyw-numeric-input>
+          </div>
+          <div class="align-self-center">
+            Total:
+            <vyw-read-only-text data-key="Label_DEF_TDFLPETOT2"></vyw-read-only-text>&nbsp;V
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <vyw-numeric-input data-key="IbattNom" label="Current limit" suffix="A" :bottom="Number(1)" :top="Number(9999)" hint="[1~9,999]">
+            </vyw-numeric-input>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <vyw-switch data-key="TempComp" :labels="['No', 'Yes']"></vyw-switch>
+          </div>
+          <div>
+            <vyw-numeric-input data-key="CompPerC" label="Temperature compensation" :bottom="Number(0)" :top="Number(0.6)" suffix="%/C"></vyw-numeric-input>
+          </div>
+          <div>
+            <div>
+              <vyw-read-only-text data-key="Edit_DEF_CET"></vyw-read-only-text>&nbsp;mV/C/Cell
+            </div>
+            <div>{{vPerC}} mV/C</div>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <vyw-switch data-key="BattShunt" :labels="['No battery shunt', 'Has battery shunt']"></vyw-switch>
+          </div>
+          <div>
+            <vyw-numeric-input data-key="BattShuntVal" label="Shunt value @ 100 mV" suffix="A" :bottom="Number(0.5)" :top="Number(9999)" hint="[0.5~9999]"></vyw-numeric-input>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <vyw-numeric-input data-key="Edit_DEF_TDFDDPE" label="Discharge end voltage / cell" :bottom="Number(0)" :top="Number(1000)" suffix="V"></vyw-numeric-input>
+          </div>
+          <div class="align-self-center">
+            Total:
+            <vyw-read-only-text data-key="Label_DEF_TDFDDTOT2"></vyw-read-only-text>&nbsp;V
+          </div>
+        </div>
+      </v-card>
+      <v-card class="mt-1" :class="{grey: voDisabled, 'lighten-3': voDisabled}">
+        <v-card-title class="headline">VO settings</v-card-title>
+        <v-card-text>
+          <div class="d-flex">
+            <div>
+              <vyw-numeric-input data-key="DTmin" label="ΔΘ min" suffix="C" :bottom="Number(0)" :top="Number(20)"></vyw-numeric-input>
             </div>
             <div>
-              <vyw-text-input data-key="Edit_BattName" label="Battery name" :maxChars="Number(16)"></vyw-text-input>
+              <vyw-numeric-input data-key="DTmax" label="ΔΘ max" suffix="C" :bottom="Number(0)" :top="Number(20)"></vyw-numeric-input>
             </div>
           </div>
           <div class="d-flex">
             <div>
-              <vyw-numeric-input
-                data-key="BattCapacity"
-                label="Battery capacity"
-                suffix="Ah"
-                :bottom="Number(0)"
-                :top="Number(9999)"
-              ></vyw-numeric-input>
+              <vyw-numeric-input data-key="IbattLow" label="Current limit" suffix="A" :bottom="Number(1)" :top="Number(9999)"></vyw-numeric-input>
             </div>
             <div>
-              <vyw-numeric-input data-key="Edit_DEF_CDCC" label="Short circuit current" suffix="kA"></vyw-numeric-input>
+              <vyw-numeric-input data-key="VoChargeTime" label="Extra time" suffix="h" :bottom="Number(0)" :top="Number(20)"></vyw-numeric-input>
             </div>
           </div>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+    <v-flex xs12 sm6 px-1 align-content-center>
+      <v-card :class="{grey: highrateDisabled, 'lighten-3': highrateDisabled}">
+        <v-card-title class="headline">Highrate</v-card-title>
+        <v-card-text>
           <div class="d-flex">
             <div>
-              <vyw-numeric-input
-                data-key="UflPerCell"
-                label="Floating charge voltage per cell"
-                suffix="V/cell"
-                :bottom="Number(0)"
-                :top="Number(24)"
-                hint="[0~24]"
-              ></vyw-numeric-input>
+              <vyw-numeric-input data-key="UhrPerCell" label="Highrate charge voltage / cell" suffix="V/cell" :bottom="Number(0)" :top="Number(24)"></vyw-numeric-input>
             </div>
             <div class="align-self-center">
               Total:
-              <vyw-read-only-text data-key="Label_DEF_TDFLPETOT2"></vyw-read-only-text>&nbsp;V
+              <vyw-read-only-text data-key="Label_DEF_TDEPETOT2"></vyw-read-only-text>&nbsp;V
             </div>
           </div>
           <div class="d-flex">
             <div>
-              <vyw-switch data-key="TempComp" :labels="['No', 'Yes']"></vyw-switch>
+              <vyw-radios :dataKeysAndLabels="hrModeRadioDefs" />
             </div>
             <div>
-              <vyw-numeric-input
-                data-key="CompPerC"
-                label="Temperature compensation"
-                :bottom="Number(0)"
-                :top="Number(0.6)"
-                suffix="%/C"
-              ></vyw-numeric-input>
-            </div>
-            <div>
-              <div>
-                <vyw-read-only-text data-key="Edit_DEF_CET"></vyw-read-only-text>&nbsp;mV/C/Cell
-              </div>
-              <div>{{vPerC}} mV/C</div>
+              <vyw-default-select data-key="HrRelayOutput" label="Relay number" :item-list="relayNumbers" hint="0: no relay" />
             </div>
           </div>
           <div class="d-flex">
             <div>
-              <vyw-switch data-key="BattShunt" :labels="['No battery shunt', 'Has battery shunt']"></vyw-switch>
+              <vyw-switch data-key="ManHrEnable" :labels="['Manual start disabled', 'Manual start enabled']"></vyw-switch>
             </div>
             <div>
-              <vyw-numeric-input
-                data-key="BattShuntVal"
-                label="Shunt value @ 100 mV"
-                suffix="A"
-                :bottom="Number(0.5)"
-                :top="Number(9999)"
-                hint="[0.5~9999]"
-              ></vyw-numeric-input>
+              <vyw-default-select data-key="PeriodicHr" :item-list="hrPeriodicTimes" label="Periodic time (months)"></vyw-default-select>
             </div>
           </div>
           <div class="d-flex">
             <div>
-              <vyw-numeric-input
-                data-key="Edit_DEF_TDFDDPE"
-                label="Discharge end volatage / cell"
-                :bottom="Number(0)"
-                :top="Number(1000)"
-                suffix="V"
-              ></vyw-numeric-input>
+              <vyw-switch data-key="ClHrEnable" :labels="['No start on current limit', 'Starts on current limit']"></vyw-switch>
+            </div>
+            <div>
+              <vyw-integer-input data-key="ClHrTime" label="Delay" suffix="s" :bottom="Number(0)" :top="Number(255)"></vyw-integer-input>
+            </div>
+          </div>
+          <div class="d-flex">
+            <div>
+              <vyw-switch data-key="MfHrEnable" :labels="['No start on mains failure', 'Starts on mains failure']"></vyw-switch>
+            </div>
+            <div>
+              <vyw-integer-input data-key="MfHrTime" label="Delay" suffix="s" :bottom="Number(0)" :top="Number(255)"></vyw-integer-input>
+            </div>
+          </div>
+          <div class="d-flex">
+            <div>
+              <vyw-numeric-input data-key="ChargeTime" label="Charge time" suffix="h" :bottom="Number(0)" :top="Number(99)"></vyw-numeric-input>
+            </div>
+            <div>
+              <vyw-numeric-input data-key="BattFanDelay" label="Fan delay" suffix="h" :bottom="Number(0)" :top="Number(24)"></vyw-numeric-input>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-card class="mt-1" :class="{grey: commissioningDisabled, 'lighten-3': commissioningDisabled}">
+        <v-card-title class="headline">Commissioning</v-card-title>
+        <v-card-text>
+          <div class="d-flex">
+            <div>
+              <vyw-switch data-key="CommEnable" :labels="['Commissioning disabled', 'Commissioning enabled']"></vyw-switch>
+            </div>
+            <div>
+              <vyw-default-select data-key="CommRelayOutput" label="Relay number" :item-list="relayNumbers" hint="0: no relay" />
+            </div>
+          </div>
+          <div class="d-flex">
+            <div>
+              <vyw-numeric-input data-key="UcommPerCell" label="Commissioning charge voltage / cell" suffix="V/cell" :bottom="Number(0)" :top="Number(24)"></vyw-numeric-input>
             </div>
             <div class="align-self-center">
               Total:
-              <vyw-read-only-text data-key="Label_DEF_TDFDDTOT2"></vyw-read-only-text>&nbsp;V
+              <vyw-read-only-text data-key="Label_DEF_TDFOTOT2"></vyw-read-only-text>&nbsp;V
             </div>
           </div>
-        </v-card>
-        <v-card class="mt-1" :class="{grey: voDisabled, 'lighten-3': voDisabled}">
-          <v-card-title class="headline">VO settings</v-card-title>
-          <v-card-text>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input
-                  data-key="DTmin"
-                  label="ΔΘ min"
-                  suffix="C"
-                  :bottom="Number(0)"
-                  :top="Number(20)"
-                ></vyw-numeric-input>
-              </div>
-              <div>
-                <vyw-numeric-input
-                  data-key="DTmax"
-                  label="ΔΘ max"
-                  suffix="C"
-                  :bottom="Number(0)"
-                  :top="Number(20)"
-                ></vyw-numeric-input>
-              </div>
+          <div class="d-flex">
+            <div>
+              <vyw-numeric-input data-key="CommCurrent" label="Commiss. charge current" suffix="A" :bottom="Number(1)" :top="Number(9999)"></vyw-numeric-input>
             </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input
-                  data-key="IbattLow"
-                  label="Current limit"
-                  suffix="A"
-                  :bottom="Number(1)"
-                  :top="Number(9999)"
-                ></vyw-numeric-input>
-              </div>
-              <div>
-                <vyw-numeric-input
-                  data-key="VoChargeTime"
-                  label="Extra time"
-                  suffix="h"
-                  :bottom="Number(0)"
-                  :top="Number(20)"
-                ></vyw-numeric-input>
-              </div>
+            <div>
+              <vyw-numeric-input data-key="CommTime" label="Commiss. charge time" suffix="h" :bottom="Number(0)" :top="Number(24)"></vyw-numeric-input>
             </div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 sm6 px-1 align-content-center>
-        <v-card :class="{grey: highrateDisabled, 'lighten-3': highrateDisabled}">
-          <v-card-title class="headline">Highrate</v-card-title>
-          <v-card-text>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input
-                  data-key="UhrPerCell"
-                  label="Highrate charge voltage / cell"
-                  suffix="V/cell"
-                  :bottom="Number(0)"
-                  :top="Number(24)"
-                ></vyw-numeric-input>
-              </div>
-              <div class="align-self-center">
-                Total:
-                <vyw-read-only-text data-key="Label_DEF_TDEPETOT2"></vyw-read-only-text>&nbsp;V
-              </div>
+          </div>
+        </v-card-text>
+      </v-card>
+      <v-card class="mt-1" :class="{grey: battTestDisabled, 'lighten-3': battTestDisabled}">
+        <v-card-title class="headline">Battery test</v-card-title>
+        <v-card-text>
+          <div class="d-flex">
+            <div class="one-third">
+              <vyw-switch data-key="BattTestEnable" :labels="['Disabled', 'Enabled']"></vyw-switch>
             </div>
-            <div class="d-flex">
-              <div>
-                <vyw-radios :dataKeysAndLabels="hrModeRadioDefs" />
-              </div>
-              <div>
-                <vyw-default-select
-                  data-key="HrRelayOutput"
-                  label="Relay number"
-                  :item-list="relayNumbers"
-                  hint="0: no relay"
-                />
-              </div>
+            <div class="px-1">
+              <vyw-default-select data-key="AutoTestPeriod" :itemList="months" label="Period (months)"></vyw-default-select>
             </div>
-            <div class="d-flex">
-              <div>
-                <vyw-switch
-                  data-key="ManHrEnable"
-                  :labels="['Manual start disabled', 'Manual start enabled']"
-                ></vyw-switch>
-              </div>
-              <div>
-                <vyw-default-select
-                  data-key="PeriodicHr"
-                  :item-list="hrPeriodicTimes"
-                  label="Periodic time (months)"
-                ></vyw-default-select>
-              </div>
+            <div class="one-third">
+              <vyw-numeric-input data-key="DischrgPercent" label="Discharge" suffix="%" :bottom="Number(0)" :top="Number(30)"></vyw-numeric-input>
             </div>
-            <div class="d-flex">
-              <div>
-                <vyw-switch
-                  data-key="ClHrEnable"
-                  :labels="['No start on current limit', 'Starts on current limit']"
-                ></vyw-switch>
-              </div>
-              <div>
-                <vyw-integer-input
-                  data-key="ClHrTime"
-                  label="Delay"
-                  suffix="s"
-                  :bottom="Number(0)"
-                  :top="Number(255)"
-                ></vyw-integer-input>
-              </div>
+          </div>
+          <div class="d-flex">
+            <div>
+              <vyw-numeric-input data-key="TestEndVoltage" label="Test end voltage" suffix="V" :bottom="Number(0)" :top="Number(650)"></vyw-numeric-input>
             </div>
-            <div class="d-flex">
-              <div>
-                <vyw-switch
-                  data-key="MfHrEnable"
-                  :labels="['No start on mains failure', 'Starts on mains failure']"
-                ></vyw-switch>
-              </div>
-              <div>
-                <vyw-integer-input
-                  data-key="MfHrTime"
-                  label="Delay"
-                  suffix="s"
-                  :bottom="Number(0)"
-                  :top="Number(255)"
-                ></vyw-integer-input>
-              </div>
+            <div>
+              <vyw-numeric-input data-key="EndVoltageAlarm" label="Discharge end voltage alarm" suffix="V" :bottom="Number(0)" :top="Number(650)"></vyw-numeric-input>
             </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input
-                  data-key="ChargeTime"
-                  label="Charge time"
-                  suffix="h"
-                  :bottom="Number(0)"
-                  :top="Number(99)"
-                ></vyw-numeric-input>
-              </div>
-              <div>
-                <vyw-numeric-input
-                  data-key="BattFanDelay"
-                  label="Fan delay"
-                  suffix="h"
-                  :bottom="Number(0)"
-                  :top="Number(24)"
-                ></vyw-numeric-input>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-card
-          class="mt-1"
-          :class="{grey: commissioningDisabled, 'lighten-3': commissioningDisabled}"
-        >
-          <v-card-title class="headline">Commissioning</v-card-title>
-          <v-card-text>
-            <div class="d-flex">
-              <div>
-                <vyw-switch
-                  data-key="CommEnable"
-                  :labels="['Commissioning disabled', 'Commissioning enabled']"
-                ></vyw-switch>
-              </div>
-              <div>
-                <vyw-default-select
-                  data-key="CommRelayOutput"
-                  label="Relay number"
-                  :item-list="relayNumbers"
-                  hint="0: no relay"
-                />
-              </div>
-            </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input
-                  data-key="UcommPerCell"
-                  label="Commissioning charge voltage / cell"
-                  suffix="V/cell"
-                  :bottom="Number(0)"
-                  :top="Number(24)"
-                ></vyw-numeric-input>
-              </div>
-              <div class="align-self-center">
-                Total:
-                <vyw-read-only-text data-key="Label_DEF_TDFOTOT2"></vyw-read-only-text>&nbsp;V
-              </div>
-            </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input
-                  data-key="CommCurrent"
-                  label="Commiss. charge current"
-                  suffix="A"
-                  :bottom="Number(1)"
-                  :top="Number(9999)"
-                ></vyw-numeric-input>
-              </div>
-              <div>
-                <vyw-numeric-input
-                  data-key="CommTime"
-                  label="Commiss. charge time"
-                  suffix="h"
-                  :bottom="Number(0)"
-                  :top="Number(24)"
-                ></vyw-numeric-input>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-card class="mt-1" :class="{grey: battTestDisabled, 'lighten-3': battTestDisabled}">
-          <v-card-title class="headline">Battery test</v-card-title>
-          <v-card-text>
-            <div class="d-flex">
-              <div class="one-third">
-                <vyw-switch data-key="BattTestEnable" :labels="['Disabled', 'Enabled']"></vyw-switch>
-              </div>
-              <div class="px-1">
-                <vyw-default-select
-                  data-key="AutoTestPeriod"
-                  :itemList="months"
-                  label="Period (months)"
-                ></vyw-default-select>
-              </div>
-              <div class="one-third">
-                <vyw-numeric-input
-                  data-key="DischrgPercent"
-                  label="Discharge"
-                  suffix="%"
-                  :bottom="Number(0)"
-                  :top="Number(30)"
-                ></vyw-numeric-input>
-              </div>
-            </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input
-                  data-key="TestEndVoltage"
-                  label="Test end voltage"
-                  suffix="V"
-                  :bottom="Number(0)"
-                  :top="Number(650)"
-                ></vyw-numeric-input>
-              </div>
-              <div>
-                <vyw-numeric-input
-                  data-key="EndVoltageAlarm"
-                  label="Discharge end voltage alarm"
-                  suffix="V"
-                  :bottom="Number(0)"
-                  :top="Number(650)"
-                ></vyw-numeric-input>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+  </v-layout>
+</v-container>
 </template>
 
 <script>
@@ -487,10 +328,10 @@ export default {
       this.voDisabled = reactiveData.VoApplEnable === "false";
       if (!this.voDisabled)
         this.highrateDisabled =
-          reactiveData.ManHrEnable === "false" &&
-          reactiveData.PeriodicHr === "None" &&
-          reactiveData.ClHrEnable === "false" &&
-          reactiveData.MfHrEnable === "false";
+        reactiveData.ManHrEnable === "false" &&
+        reactiveData.PeriodicHr === "None" &&
+        reactiveData.ClHrEnable === "false" &&
+        reactiveData.MfHrEnable === "false";
       this.commissioningDisabled = reactiveData.CommEnable === "false";
       this.battTestDisabled = reactiveData.BattTestEnable === "false";
     },
@@ -524,6 +365,7 @@ export default {
 .half {
   max-width: 48%;
 }
+
 .one-third {
   max-width: 31%;
 }
