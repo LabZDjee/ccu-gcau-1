@@ -529,7 +529,7 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_R1_TDA</Label>
-		<Donnee>SPARE1</Donnee>
+		<Donnee>SPARE 1</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_R1_TEMPS</Label>

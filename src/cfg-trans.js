@@ -1,4 +1,4 @@
-/* jshint esversion: 6 */
+/* jshint esversion: 9 */
 
 import {
   analyzeAgcFile,
@@ -89,6 +89,10 @@ function alterMeta(metaTag, value, insert = false) {
 }
 
 function zeroOne(falseTrue) {
+  if (falseTrue === undefined) {
+    // eslint-disable-next-line
+    console.log("Failure in call to function zeroOne!");
+  }
   return falseTrue.toLowerCase() === "true" ? "1" : "0";
 }
 
@@ -166,7 +170,7 @@ function setEvt(num, evtDef, updateSysvar = true) {
   }
   for (const attribute in evtDef) {
     if (attribute === "RelayNumber") {
-      setRelay(evtName, evtDef[attribute]);
+      setRelay(evtName, (evtDef.Function === "OF" && updateSysvar) ? "0" : evtDef[attribute]);
     } else {
       alterObjAttr(evtName, attribute, evtDef[attribute]);
     }
@@ -213,7 +217,7 @@ export function translateCcu2gcau() {
   alterObjAttr("SYSVAR", "CommunicationMenuEnable", "17");
   alterObjAttr("SYSVAR", "PasswordMenuEnable", "03");
   alterObjAttr("SYSVAR", "MeterEnable", "07");
-  alterObjAttr("SYSVAR", "SuperUserMenus", "3FFF");
+  alterObjAttr("SYSVAR", "SuperUserMenus", "7FFF");
   for (let i = 1; i <= 32; i++) {
     switch (i) {
       case 23: // TEMP SENSE ERROR
@@ -257,7 +261,6 @@ export function translateCcu2gcau() {
   const maxPowerAsFloat = 1.4 * parseFloat(nominalCurrent) * parseFloat(nominalVoltage);
   alterObjAttr("SYSTEM", "MaxPower", toIntAsStr(maxPowerAsFloat * 0.1));
   alterObjAttr("NOMINAL", "OutputPower", toIntAsStr(maxPowerAsFloat * 0.1));
-  debugOn = true;
   alterMeta("CstmChgName", `${nominalVoltage}V ${chargerType} ${nominalCurrent}A`);
   alterObjAttr("HIGHVOLT", "ExternalDividers", (parseInt(nominalVoltage, 10) >= 200) ? "1" : "0");
   alterObjAttr("HIGHVOLT", "UNomDivider", "200");
@@ -267,12 +270,11 @@ export function translateCcu2gcau() {
   alterObjAttr("HIGHVOLT", "EFGamma", "884");
   alterObjAttr("HIGHVOLT", "EFR3", "0");
   alterObjAttr("HIGHVOLT", "VLvdDivider", "200");
-  debugOn = false;
   alterObjAttr("NOMINAL", "ACVolts", toIntAsStr(reactiveData.UacNom, 10));
   setHexBitField(reactiveData.AcMeter, "SYSVAR", "MeterEnable", 0);
   setHexBitField(reactiveData.AhMeterDisplay, "SYSVAR", "MeterEnable", 2);
-  alterObjAttr("MANADJ", "ManualCurrentAdjustment", reactiveData.ManCurrAdjust === "true" ? "1" : "0");
-  alterObjAttr("MANADJ", "ManualVoltageAdjustment", reactiveData.ManVoltAdjust === "true" ? "1" : "0");
+  alterObjAttr("MANADJ", "ManualCurrentAdjustment", zeroOne(reactiveData.ManCurrAdjust));
+  alterObjAttr("MANADJ", "ManualVoltageAdjustment", zeroOne(reactiveData.ManVoltAdjust));
   alterObjAttr("MANADJ", "LowerLimit", toIntAsStr(reactiveData.VoltAdjustMin, 10));
   alterObjAttr("MANADJ", "UpperLimit", toIntAsStr(reactiveData.VoltAdjustMax, 10));
   alterMeta("VLowLimit", reactiveData.Edit_DC_VMINDLT);
@@ -302,7 +304,7 @@ export function translateCcu2gcau() {
   alterObjAttr("NOMINAL", "BatteryCurrent", toIntAsStr(reactiveData.IbattNom, 10));
   alterObjAttr("NOMINAL", "HighrateVolts", toIntAsStr(reactiveData.UhrPerCell, nbOfCells * 10));
   alterObjAttr("HIGHRATE", "TimerMode", reactiveData.ChrgTimerMode === "1" ? "D" : "P");
-  alterObjAttr("HIGHRATE", "ManualHighrate", reactiveData.ManHrEnable === "true" ? "1" : "0");
+  alterObjAttr("HIGHRATE", "ManualHighrate", zeroOne(reactiveData.ManHrEnable));
   alterObjAttr("HIGHRATE", "Periodic", reactiveData.PeriodicHr === "None" ? "0" : reactiveData.PeriodicHr);
   setRelay("HIGHRATE", reactiveData.HrRelayOutput, ["RelayNb", "NumberOfRelays", "LedNb"]);
   alterObjAttr("HIGHRATE", "OnCurrentLimit", reactiveData.ClHrEnable === "true" ? reactiveData.ClHrTime : "0");
@@ -344,6 +346,233 @@ export function translateCcu2gcau() {
     setHexBitField("true", "SYSVAR", "MenuGroupEnable", 7);
     alterMeta("Notes", "Warning: battery test enabled! Behavior from CCU may differ. Review settings & discuss with end user.");
   }
+  const commonAlarmEnabled = zeroOne(reactiveData.CM_Enabled);
+  const mfEvtDef = { // mains out-of-range
+    LCDLatch: zeroOne(reactiveData.MF_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.MF_RelayLatch),
+    Shutdown: zeroOne(reactiveData.MfShtdnEnable),
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.MF_RelayOutput,
+    Delay: reactiveData.MF_Delay,
+  };
+  if (reactiveData.MF_Enabled === "true") {
+    const evtDef = {
+      ...mfEvtDef,
+      Function: "AL",
+    };
+    setEvt(1, {
+      ...evtDef,
+      Value: toIntAsStr(reactiveData.MF_UpperLimit, 10),
+    });
+    setEvt(2, {
+      ...evtDef,
+      Value: toIntAsStr(reactiveData.MF_LowerLimit, 10),
+    });
+  } else {
+    const evtDef = {
+      ...mfEvtDef,
+      Function: "OF",
+    };
+    setEvt(1, {
+      ...evtDef,
+      Value: toIntAsStr(reactiveData.MF_UpperLimit, 10),
+    });
+    setEvt(2, {
+      ...evtDef,
+      Value: toIntAsStr(reactiveData.MF_LowerLimit, 10),
+    });
+  }
+  const hcEvtDef = { // high charger voltage
+    LCDLatch: zeroOne(reactiveData.HC_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.HC_RelayLatch),
+    Shutdown: zeroOne(reactiveData.HvShtdnEnable),
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.HC_RelayOutput,
+    Delay: reactiveData.HC_Delay,
+    Value: toIntAsStr(reactiveData.HC_UpperLimit, 10),
+  };
+  setEvt(4, {
+    ...hcEvtDef,
+    Function: reactiveData.HC_Enabled === "true" ? "AL" : "OF",
+  });
+  const lcEvtDef = { // low charger voltage
+    LCDLatch: zeroOne(reactiveData.LC_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.LC_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.LC_RelayOutput,
+    Delay: reactiveData.LC_Delay,
+    Value: toIntAsStr(reactiveData.LC_LowerLimit, 10),
+  };
+  setEvt(5, {
+    ...lcEvtDef,
+    Function: reactiveData.LC_Enabled === "true" ? "AL" : "OF",
+  });
+  const hdEvtDef = { // high dc load voltage
+    LCDLatch: zeroOne(reactiveData.HD_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.HD_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.HD_RelayOutput,
+    Delay: reactiveData.HD_Delay,
+    Value: toIntAsStr(reactiveData.HD_UpperLimit, 10),
+  };
+  setEvt(6, {
+    ...hdEvtDef,
+    Function: reactiveData.HD_Enabled === "true" ? "AL" : "OF",
+  });
+  const ldEvtDef = { // low dc load voltage
+    LCDLatch: zeroOne(reactiveData.LD_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.LD_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.LD_RelayOutput,
+    Delay: reactiveData.LD_Delay,
+    Value: toIntAsStr(reactiveData.LD_LowerLimit, 10),
+  };
+  setEvt(7, {
+    ...ldEvtDef,
+    Function: reactiveData.LD_Enabled === "true" ? "AL" : "OF",
+  });
+  const rfEvtDef = { // rectifier fault
+    LCDLatch: zeroOne(reactiveData.RF_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.RF_RelayLatch),
+    Shutdown: zeroOne(reactiveData.RfShtdnEnable),
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.RF_RelayOutput,
+    Delay: reactiveData.RF_Delay,
+  };
+  setEvt(3, {
+    ...rfEvtDef,
+    Function: reactiveData.RF_Enabled === "true" ? "AL" : "OF",
+  });
+  const earthFaultThresholdForAgc = toIntAsStr(reactiveData.meta_earthFaultThreshold, parseFloat(nominalVoltage) / 100);
+  const efpEvtDef = { // earth fault +
+    LCDLatch: zeroOne(reactiveData.EFP_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.EFP_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.EFP_RelayOutput,
+    Delay: reactiveData.EFP_Delay,
+    Value: earthFaultThresholdForAgc,
+  };
+  setEvt(8, {
+    ...efpEvtDef,
+    Function: reactiveData.EFP_Enabled === "true" ? "AL" : "OF",
+  });
+  const efmEvtDef = { // earth fault -
+    LCDLatch: zeroOne(reactiveData.EFM_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.EFM_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.EFM_RelayOutput,
+    Delay: reactiveData.EFM_Delay,
+    Value: earthFaultThresholdForAgc,
+  };
+  setEvt(9, {
+    ...efmEvtDef,
+    Function: reactiveData.EFM_Enabled === "true" ? "AL" : "OF",
+  });
+  const s1EvtDef = { // spare 1
+    LCDLatch: zeroOne(reactiveData.S1_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.S1_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.S1_RelayOutput,
+    Delay: reactiveData.S1_Delay,
+    Value: "0",
+    Text: reactiveData.S1_Text,
+    LocalText: reactiveData.S1_Text,
+  };
+  setEvt(10, {
+    ...s1EvtDef,
+    Function: reactiveData.S1_Enabled === "true" ? "AL" : "OF",
+  });
+  const s2EvtDef = { // spare 2
+    LCDLatch: zeroOne(reactiveData.S2_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.S2_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.S2_RelayOutput,
+    Delay: reactiveData.S2_Delay,
+    Value: "0",
+    Text: reactiveData.S2_Text,
+    LocalText: reactiveData.S2_Text,
+  };
+  setEvt(11, {
+    ...s2EvtDef,
+    Function: reactiveData.S2_Enabled === "true" ? "AL" : "OF",
+  });
+  const s3EvtDef = { // spare 3
+    LCDLatch: zeroOne(reactiveData.S3_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.S3_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.S3_RelayOutput,
+    Delay: reactiveData.S3_Delay,
+    Value: "0",
+    Text: reactiveData.S3_Text,
+    LocalText: reactiveData.S3_Text,
+  };
+  setEvt(12, {
+    ...s3EvtDef,
+    Function: reactiveData.S3_Enabled === "true" ? "AL" : "OF",
+  });
+  const s4EvtDef = { // spare 4
+    LCDLatch: zeroOne(reactiveData.S4_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.S4_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.S4_RelayOutput,
+    Delay: reactiveData.S4_Delay,
+    Value: "0",
+    Text: reactiveData.S4_Text,
+    LocalText: reactiveData.S4_Text,
+  };
+  setEvt(13, {
+    ...s4EvtDef,
+    Function: reactiveData.S4_Enabled === "true" ? "AL" : "OF",
+  });
+  debugOn = true;
+  const htEvtDef = { // high temperature (on SCR bridge)
+    LCDLatch: zeroOne(reactiveData.HT_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.HT_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.HT_RelayOutput,
+    Delay: reactiveData.HT_Delay,
+  };
+  setEvt(22, {
+    ...htEvtDef,
+    Function: reactiveData.HT_Enabled === "true" ? "AL" : "OF",
+  });
+  const hbEvtDef = { // high battery current
+    LCDLatch: zeroOne(reactiveData.HB_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.HB_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.HB_RelayOutput,
+    Delay: reactiveData.HB_Delay,
+    Value: toIntAsStr(reactiveData.HB_UpperLimit, 10),
+  };
+  setEvt(21, {
+    ...hbEvtDef,
+    Function: reactiveData.HB_Enabled === "true" ? "AL" : "OF",
+  });
+  const hrEvtDef = { // high rectifier/charger current
+    LCDLatch: zeroOne(reactiveData.HR_LcdLatch),
+    RelayLatch: zeroOne(reactiveData.HR_RelayLatch),
+    Shutdown: "0",
+    CommonAlarm: commonAlarmEnabled,
+    RelayNumber: reactiveData.HR_RelayOutput,
+    Delay: reactiveData.HR_Delay,
+    Value: toIntAsStr(reactiveData.HR_UpperLimit, 10),
+  };
+  setEvt(20, {
+    ...hrEvtDef,
+    Function: reactiveData.HR_Enabled === "true" ? "AL" : "OF",
+  });
+  alterObjAttr("SYSTEM", "ShutdownInput", zeroOne(reactiveData.meta_shutdownThermostat));
   if (reactiveData.meta_hasLedBox && usedLeds.length > 0) {
     alterMeta("Notes", `Has one LED box with LEDs: ${extractListFromSortedArrayOfInts(usedLeds)}`, true);
     alterMeta("NbLEDCards", "1");

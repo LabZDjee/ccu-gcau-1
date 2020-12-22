@@ -101,6 +101,8 @@ const _metaData = {
   testValue: "???",
   hasLedBox: "false",
   duplicatedRelays: "false",
+  earthFaultThreshold: "250",
+  shutdownThermostat: "true",
 };
 
 Object.keys(_metaData).forEach((key) => {
@@ -115,6 +117,10 @@ export function processTdsFile(fileContents) {
   const pattDataEnd = /(.*)<\/Donnee>/i;
   const commaFloatPattern = /(\d*),(\d*)/;
   const rightTrimPattern = /\s*$/;
+  reactiveData.meta_hasLedBox = "false";
+  reactiveData.meta_duplicateRelays = "false";
+  reactiveData.meta_earthFaultThreshold = "250";
+  reactiveData.shutdownThermostat = "true";
   let label;
   let data;
   let partial;
