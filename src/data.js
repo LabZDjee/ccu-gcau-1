@@ -75,6 +75,7 @@ export const selectChoices = {
   ],
   relayNumbers: generateNumericArray(17, x => x.toString()),
   hrPeriodicTimes: ["None", "1", "6", "12"],
+  spareInputs: ["no", "normal", "inverted"],
 };
 
 let initTdsDataDone = false;
@@ -99,15 +100,54 @@ function initTdsData() {
 const _metaData = {
   testKey: "Text_Projet",
   testValue: "???",
-  hasLedBox: "false",
-  duplicatedRelays: "false",
-  earthFaultThreshold: "250",
-  shutdownThermostat: "true",
+  hasLedBox: null,
+  duplicatedRelays: null,
+  earthFaultThreshold: null,
+  shutdownThermostat: null,
+  forcedFloatInput: null,
+  highrateInput: null,
+  commissioningInput: null,
+  alarmAcknowledgmentInput: null,
 };
+
+function initMeta() {
+  reactiveData.meta_hasLedBox = "false";
+  reactiveData.meta_duplicateRelays = "false";
+  reactiveData.meta_earthFaultThreshold = "250";
+  reactiveData.meta_shutdownThermostat = "true";
+  reactiveData.meta_forcedFloatInput = selectChoices.spareInputs[0];
+  reactiveData.meta_highrateInput = selectChoices.spareInputs[0];
+  reactiveData.meta_commissioningInput = selectChoices.spareInputs[0];
+  reactiveData.meta_alarmAcknowledgmentInput = selectChoices.spareInputs[0];
+}
+
+const importedFileName = {
+  fullFileName: "",
+  shortFileName: "",
+  extension: "",
+};
+
+export function setImportedFileName(fileName) {
+  if (typeof fileName === "string") {
+    const matches = /^(.*)(\..*)$/.exec(fileName);
+    if (matches !== null) {
+      importedFileName.fullFileName = matches[0];
+      importedFileName.shortFileName = matches[1];
+      importedFileName.extension = matches[2];
+    } else {
+      importedFileName.fullFileName = fileName;
+      importedFileName.shortFileName = fileName;
+      importedFileName.extension = "";
+    }
+  }
+  return importedFileName;
+}
 
 Object.keys(_metaData).forEach((key) => {
   reactiveData.addProperty(_metaData, key, `meta_${key}`);
 });
+
+initMeta();
 
 export function processTdsFile(fileContents) {
   const lines = fileContents.toString().split("\n");
@@ -117,13 +157,10 @@ export function processTdsFile(fileContents) {
   const pattDataEnd = /(.*)<\/Donnee>/i;
   const commaFloatPattern = /(\d*),(\d*)/;
   const rightTrimPattern = /\s*$/;
-  reactiveData.meta_hasLedBox = "false";
-  reactiveData.meta_duplicateRelays = "false";
-  reactiveData.meta_earthFaultThreshold = "250";
-  reactiveData.shutdownThermostat = "true";
   let label;
   let data;
   let partial;
+  initMeta();
   lines.forEach((line) => {
     const trimmedLine = line.replace(rightTrimPattern, "");
     const resultLabel = trimmedLine.match(pattLabel);
@@ -163,9 +200,9 @@ export function processTdsFile(fileContents) {
         const resultDataEnd = trimmedLine.match(pattDataEnd);
         if (resultDataEnd) {
           partial = false;
-          reactiveData[label] = `${data}\r${resultDataEnd[1]}`;
+          reactiveData[label] = `${data}\n${resultDataEnd[1]}`;
         } else {
-          data = `${data}\r${trimmedLine}`;
+          data = `${data}\n${trimmedLine}`;
         }
       }
     }
@@ -176,11 +213,13 @@ export let agcFileData = {
   struct: null,
   lines: null,
   error: null,
+  refLines: null,
 };
 
 export function processAgcFile(data) {
   try {
     agcFileData.lines = data.split(/\r?\n/);
+    agcFileData.refLines = data.split(/\r?\n/);
     agcFileData.struct = analyzeAgcFile(agcFileData.lines);
     agcFileData.error = null;
   } catch (e) {

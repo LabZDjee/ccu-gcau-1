@@ -7,6 +7,7 @@ import {
 import {
   agcFileData,
   reactiveData,
+  selectChoices,
   selectChoicesAgcMap,
 } from "./data";
 import {
@@ -199,7 +200,9 @@ export function translateCcu2gcau() {
   alterMeta("Project", reactiveData.Text_Projet);
   alterMeta("EndUser", reactiveData.Text_ClientFinal);
   alterMeta("IDNum", reactiveData.SystemId);
-  alterMeta("Notes", reactiveData.Edit_COMMENT, true);
+  reactiveData.Edit_COMMENT.split("\n").forEach(str => {
+    alterMeta("Notes", str, true);
+  });
   alterMeta("AmbTemp", toIntAsStr(reactiveData.Edit_ENV_TA));
   alterMeta("MaxAltitude", toIntAsStr(reactiveData.Edit_ENV_ALT));
   const language = selectChoicesAgcMap.languages[reactiveData.Language];
@@ -533,7 +536,6 @@ export function translateCcu2gcau() {
     ...s4EvtDef,
     Function: reactiveData.S4_Enabled === "true" ? "AL" : "OF",
   });
-  debugOn = true;
   const htEvtDef = { // high temperature (on SCR bridge)
     LCDLatch: zeroOne(reactiveData.HT_LcdLatch),
     RelayLatch: zeroOne(reactiveData.HT_RelayLatch),
@@ -572,6 +574,37 @@ export function translateCcu2gcau() {
     ...hrEvtDef,
     Function: reactiveData.HR_Enabled === "true" ? "AL" : "OF",
   });
+  [{
+    cmd: "FF",
+    select: reactiveData.meta_forcedFloatInput,
+  }, {
+    cmd: "HC",
+    select: reactiveData.meta_highrateInput,
+  }, {
+    cmd: "CC",
+    select: reactiveData.meta_commissioningInput,
+  }, {
+    cmd: "AA",
+    select: reactiveData.meta_alarmAcknowledgmentInput,
+  }].forEach(({
+    cmd,
+    select,
+  }, idx) => {
+    setEvt(idx + 14, {
+      LCDLatch: "0",
+      RelayLatch: "0",
+      Shutdown: "0",
+      CommonAlarm: "0",
+      RelayNumber: "0",
+      Delay: "1",
+      Text: `INPUT X9.${idx+1}`,
+      LocalText: `INPUT X9.${idx+1}`,
+      Function: select === selectChoices.spareInputs[0] ? "OF" : cmd,
+    }, false);
+    setHexBitField(select === selectChoices.spareInputs[2] ? "true" : "false", "SYSTEM", "InRevPol", idx + 4);
+    setHexBitField("true", "SYSVAR", "EventEnable", idx + 13);
+  });
+
   alterObjAttr("SYSTEM", "ShutdownInput", zeroOne(reactiveData.meta_shutdownThermostat));
   if (reactiveData.meta_hasLedBox && usedLeds.length > 0) {
     alterMeta("Notes", `Has one LED box with LEDs: ${extractListFromSortedArrayOfInts(usedLeds)}`, true);

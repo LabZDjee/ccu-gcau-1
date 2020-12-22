@@ -91,13 +91,16 @@
 </template>
 
 <script>
+import {
+  analyzeAgcFile,
+} from "@labzdjee/agc-util";
 import download from "downloadjs";
 import VywAdmin from "./admin";
 import VywSystem from "./system";
 import VywBattery from "./battery";
 import VywAlarms from "./alarms";
 import VywReactTest from "./react-test";
-import { eventBus, processTdsFile, reactiveData, processAgcFile, agcFileData, tdsAlias } from "../data";
+import { eventBus, processTdsFile, reactiveData, processAgcFile, agcFileData, tdsAlias, setImportedFileName } from "../data";
 import {translateCcu2gcau} from "../cfg-trans";
 
 export default {
@@ -159,6 +162,7 @@ export default {
         const fileContents = e.target.result;
         processTdsFile(fileContents);
         this.tdsFileName = file.name;
+        setImportedFileName(file.name);
         this.contentsAltered = false;
       };
     },
@@ -186,9 +190,14 @@ export default {
       };
     },
     saveOutputFile() {
+      const importedFileName = setImportedFileName(null);
+      const appSuffix = reactiveData.Check_APP === "true" ? "_APP.agc" : "_NAP.agc";
+      const agcFileName = importedFileName.shortFileName.length ? `${importedFileName.shortFileName}${appSuffix}` : this.agcFileName;
       translateCcu2gcau();
       const fileContents = agcFileData.lines.reduce((acc, val) => acc + `${val}\r\n`, "");
-      download(fileContents, this.agcFileName, "text/plain");
+      download(fileContents, agcFileName, "text/plain");
+      agcFileData.lines = agcFileData.refLines.map(l => l);
+      agcFileData.struct = analyzeAgcFile(agcFileData.lines);
     },
   },
   created() {

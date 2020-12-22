@@ -18,12 +18,27 @@
               <div>
                 <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
               </div>
-            </div>
-            <div class="d-flex">
               <div>
                 <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermosat', 'Has a shutdown bridge thermosat']"></vyw-switch>
               </div>
             </div>
+            <div class="d-flex">
+              <div class="pr-1">
+                <vyw-select-input data-key="meta_forcedFloatInput" label="Forced float input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+              </div>
+              <div>
+                <vyw-select-input data-key="meta_highrateInput" label="Highrate input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="pr-1">
+                <vyw-select-input data-key="meta_commissioningInput" label="Commissioning input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+              </div>
+              <div>
+                <vyw-select-input data-key="meta_alarmAcknowledgmentInput" label="Alarm ack. input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+              </div>
+            </div>
+
           </v-card-text>
         </v-card>
         <v-card class="mt-1">
