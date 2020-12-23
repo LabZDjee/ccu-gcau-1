@@ -11,7 +11,10 @@ import {
 } from "./main";
 import {
   generateNumericArray,
+  float32Endianess,
 } from "./utils";
+
+export const appVersion = "0.9.0";
 
 export const tsvMap = {};
 // property is this SetupParm and value is the associated TDSTag, e.g.:
@@ -75,7 +78,7 @@ export const selectChoices = {
   ],
   relayNumbers: generateNumericArray(17, x => x.toString()),
   hrPeriodicTimes: ["None", "1", "6", "12"],
-  spareInputs: ["no", "normal", "inverted"],
+  spareInputs: ["no", "active low", "active high"],
 };
 
 let initTdsDataDone = false;
@@ -98,13 +101,15 @@ function initTdsData() {
 }
 
 const _metaData = {
+  // debug/test stuff
   testKey: "Text_Projet",
   testValue: "???",
-  hasLedBox: null,
-  duplicatedRelays: null,
-  earthFaultThreshold: null,
-  shutdownThermostat: null,
-  forcedFloatInput: null,
+  // hardware stuff
+  hasLedBox: null, // from 1 to 16
+  duplicatedRelays: null, // CCU relay 1 ... 8  => gCAU relays 1 and 2 ... 15 and 16
+  earthFaultThreshold: null, // in Ohm per Volt
+  shutdownThermostat: null, // to X8.3 of the gCAU
+  forcedFloatInput: null, // CCU: X9.1, gCAU x8.4, etc
   highrateInput: null,
   commissioningInput: null,
   alarmAcknowledgmentInput: null,
@@ -122,9 +127,9 @@ function initMeta() {
 }
 
 const importedFileName = {
-  fullFileName: "",
-  shortFileName: "",
-  extension: "",
+  fullFileName: "", // example: abcdef.efg.tdsa
+  shortFileName: "", // example: abcdef.efg
+  extension: "", // example: .tdsa
 };
 
 export function setImportedFileName(fileName) {
@@ -206,6 +211,79 @@ export function processTdsFile(fileContents) {
         }
       }
     }
+  });
+}
+
+function floatValueFromUint8Array(byteArrayBuffer, offset) {
+  const arrayBuffer = new ArrayBuffer(4);
+  const byteArray = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < 4; i++) {
+    byteArray[float32Endianess[i]] = byteArrayBuffer[offset + i];
+  }
+  const floatArray = new Float32Array(arrayBuffer);
+  return floatArray[0];
+}
+
+export function processP0File(fileContentsAsArrayBuffer) {
+  axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
+    processTdsFile(reply.data);
+    const byteArray = new Uint8Array(fileContentsAsArrayBuffer);
+    const p0OffsetFieldName = byteArray.length === 600 ? "P0Offset" : "P0V1Offset";
+    for (const key in tsvMap) {
+      const tsvEntry = tsvMap[key];
+      const p0TypeSplitter = /^(?:(.+):(.*))|(?:.*)$/.exec(tsvEntry.P0Type);
+      const offset = parseInt(tsvEntry[p0OffsetFieldName], 10);
+      if (p0TypeSplitter !== null) {
+        const p0MajorType = p0TypeSplitter[p0TypeSplitter[1] === undefined ? 0 : 1];
+        const p0AssociatedValue = p0TypeSplitter[2] === undefined ? NaN : parseInt(p0TypeSplitter[2], 10);
+        const grabWord = (offset) => byteArray[offset] + 256 * byteArray[offset + 1];
+        let value = null,
+          dw;
+        switch (p0MajorType) {
+          case "byte":
+            value = byteArray[offset].toString();
+            break;
+          case "bool16":
+            value = grabWord(offset) ? "true" : "false";
+            break;
+          case "word":
+            value = grabWord(offset).toString();
+            break;
+          case "word:bf":
+            value = (grabWord(offset) & (1 << p0AssociatedValue)) ? "true" : "false";
+            break;
+          case "dword":
+            dw = (grabWord(offset) + 65536 * grabWord(offset + 2));
+            if (tsvEntry.TDSUnitAndScale === "h:3600:s") {
+              dw = Math.round(dw / 3600.0);
+            }
+            value = dw.toString();
+            break;
+          case "float":
+            value = floatValueFromUint8Array(byteArray, offset).toString();
+            break;
+          case "string":
+            value = "";
+            for (let i = 0; i < p0MajorType; i++) {
+              const code = byteArray[offset + i];
+              if (code > 0) {
+                value += String.fromCharCode();
+              } else {
+                break;
+              }
+            }
+            break;
+        }
+        if (value != null) {
+          reactiveData[tsvEntry.SetupParam] = value;
+        }
+      }
+      // eslint-disable-next-line
+      console.log(tsvEntry.P0Type, tsvEntry[p0OffsetFieldName]);
+    }
+
+    // eslint-disable-next-line
+    console.log(floatValueFromUint8Array(byteArray, 22));
   });
 }
 

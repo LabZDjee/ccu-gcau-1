@@ -1,93 +1,84 @@
 <template>
-  <v-container px-0 :class="{ 'py-0': isScrolledDown }">
-    <v-layout justify-center>
-      <v-flex xs12 lg11 xl7>
-        <div ref="header" :class="{ headerMargin: !isScrolledDown }">
-          <v-toolbar>
-            <v-toolbar-title class="headline text-uppercase">
-              <span>CCU>GCAU</span>
-              <span class="font-weight-light">Config. translator</span>
-            </v-toolbar-title>
-          </v-toolbar>
-          <v-container :class="{ hide: isScrolledDown }" pa-0>
-            <v-layout justify-center>
-              <v-flex xs2>
-                <v-btn small @click="$refs.inputTds.click()">Load</v-btn>
-                <input
-                  v-show="false"
-                  ref="inputTds"
-                  type="file"
-                  accept=".tdsa, .tdsn"
-                  @change="loadTds"
-                />
-              </v-flex>
-              <v-flex xs2>
-                <v-btn small @click="$refs.inputAgc.click()">Load AGC</v-btn>
-                <input v-show="false" ref="inputAgc" type="file" accept=".agc" @change="loadAgc" />
-              </v-flex>
-              <v-flex xs2>
-                <v-btn small @click="saveOutputFile()" :disabled="agcFileName === null">Save AGC</v-btn>
-                <!-- <a ref="outputSave" v-show="false" href download="sample.agc">Save</a> -->
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </div>
-        <div
-          ref="tabBar"
-          :class="{ tabBarFixed: tabBarFixed }"
-          :style="{ left: `${tabBarDynamicLeftOffset}px` }"
-        >
-          <v-tabs @change="menuItemSelect">
-            <v-tab>Admin</v-tab>
-            <v-tab>System</v-tab>
-            <v-tab>Battery</v-tab>
-            <v-tab>Alarms</v-tab>
-          </v-tabs>
-        </div>
+<v-container px-0 :class="{ 'py-0': isScrolledDown }">
+  <v-layout justify-center>
+    <v-flex xs12 lg11 xl7>
+      <div ref="header" :class="{ headerMargin: !isScrolledDown }">
+        <v-toolbar class="lime lighten-5">
+          <v-toolbar-title class="headline text-uppercase">
+            <span>CCU>GCAU</span>
+            <span class="font-weight-light">Config. translator</span>
+            <span class="caption text-lowercase">  - v{{appVersion}}</span>
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-container :class="{ hide: isScrolledDown }" pa-0 class="lime lighten-5">
+          <v-layout justify-center>
+            <v-flex xs2>
+              <v-btn small @click="$refs.inputTds.click()">Load</v-btn>
+              <input v-show="false" ref="inputTds" type="file" accept=".tdsa, .tdsn" @change="loadTds" />
+            </v-flex>
+            <v-flex xs2>
+              <v-btn small @click="$refs.inputAgc.click()">Load AGC</v-btn>
+              <input v-show="false" ref="inputAgc" type="file" accept=".agc" @change="loadAgc" />
+            </v-flex>
+            <v-flex xs2>
+              <v-btn small @click="saveOutputFile()" :disabled="agcFileName === null">Save AGC</v-btn>
+              <!-- <a ref="outputSave" v-show="false" href download="sample.agc">Save</a> -->
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </div>
+      <div ref="tabBar" :class="{ tabBarFixed: tabBarFixed }" :style="{ left: `${tabBarDynamicLeftOffset}px` }">
+        <v-tabs @change="menuItemSelect">
+          <v-tab>Admin</v-tab>
+          <v-tab>System</v-tab>
+          <v-tab>Battery</v-tab>
+          <v-tab>Alarms</v-tab>
+        </v-tabs>
+      </div>
 
-        <div :class="{ hide: !tabBarFixed }">
-          <v-tabs>
-            <v-tab />
-            <v-tab />
-            <v-tab />
-          </v-tabs>
-        </div>
+      <div :class="{ hide: !tabBarFixed }">
+        <v-tabs>
+          <v-tab />
+          <v-tab />
+          <v-tab />
+        </v-tabs>
+      </div>
 
-        <div ref="contentFrame">
-          <v-tabs v-model="menuItemSelected" height="0">
-            <v-tab />
-            <v-tab />
-            <v-tab />
-            <v-tab />
-            <v-tab-item>
-              <vyw-admin :tdsFileName="tdsFileName" :contentsAltered="contentsAltered" />
-            </v-tab-item>
-            <v-tab-item>
-              <vyw-system />
-            </v-tab-item>
-            <v-tab-item>
-              <vyw-battery />
-            </v-tab-item>
-            <v-tab-item>
-              <vyw-alarms />
-            </v-tab-item>
-          </v-tabs>
-          <vyw-react-test v-if="nodeEnv === 'development'" />
-        </div>
-      </v-flex>
-      <v-dialog v-model="agcFileErrorDialog" max-width="400">
-        <v-card>
-          <v-card-title class="headline">AGC File Error</v-card-title>
-          <v-card-text>{{ agcErrorDetails }}</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn text @click="agcFileErrorDialog = false">OK</v-btn>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-layout>
-  </v-container>
+      <div ref="contentFrame">
+        <v-tabs v-model="menuItemSelected" height="0">
+          <v-tab />
+          <v-tab />
+          <v-tab />
+          <v-tab />
+          <v-tab-item>
+            <vyw-admin :tdsFileName="tdsFileName" :contentsAltered="contentsAltered" />
+          </v-tab-item>
+          <v-tab-item>
+            <vyw-system />
+          </v-tab-item>
+          <v-tab-item>
+            <vyw-battery />
+          </v-tab-item>
+          <v-tab-item>
+            <vyw-alarms />
+          </v-tab-item>
+        </v-tabs>
+        <vyw-react-test v-if="nodeEnv === 'development'" />
+      </div>
+    </v-flex>
+    <v-dialog v-model="agcFileErrorDialog" max-width="400">
+      <v-card>
+        <v-card-title class="headline">AGC File Error</v-card-title>
+        <v-card-text>{{ agcErrorDetails }}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="agcFileErrorDialog = false">OK</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-layout>
+</v-container>
 </template>
 
 <script>
@@ -100,8 +91,8 @@ import VywSystem from "./system";
 import VywBattery from "./battery";
 import VywAlarms from "./alarms";
 import VywReactTest from "./react-test";
-import { eventBus, processTdsFile, reactiveData, processAgcFile, agcFileData, tdsAlias, setImportedFileName } from "../data";
-import {translateCcu2gcau} from "../cfg-trans";
+import { eventBus, processTdsFile, reactiveData, processAgcFile, processP0File, agcFileData, tdsAlias, setImportedFileName, appVersion } from "../data";
+import { translateCcu2gcau } from "../cfg-trans";
 
 export default {
   components: {
@@ -126,6 +117,7 @@ export default {
     agcFileErrorDialog: false,
     agcErrorDetails: "??",
     nodeEnv: process.env.NODE_ENV,
+    appVersion,
   }),
   methods: {
     menuItemSelect(v) {
@@ -157,12 +149,21 @@ export default {
         return;
       }
       const reader = new FileReader();
-      reader.readAsText(file);
+      const typeIsP0 = /.P0$/i.test(file.name);
+      if (typeIsP0) {
+        reader.readAsArrayBuffer(file);
+      } else {
+        reader.readAsText(file);
+      }
       reader.onload = (e) => {
         const fileContents = e.target.result;
-        processTdsFile(fileContents);
         this.tdsFileName = file.name;
         setImportedFileName(file.name);
+        if (typeIsP0) {
+          processP0File(fileContents);
+        } else {
+          processTdsFile(fileContents);
+        }
         this.contentsAltered = false;
       };
     },

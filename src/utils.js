@@ -224,3 +224,31 @@ export function extractListFromSortedArrayOfInts(array) {
   }
   return result;
 }
+
+// finds where the 4 bytes of a float32 are stored in as ArrayBuffer when viewed as a Float32Array
+// returns an array with four offsets [0, 3]
+//  first element of array gives the offset to the LSB
+//  second element of array gives the offset of byte next to LSB
+//  third elemeent of array gives the offset of byte next to MSB
+//  fourth elemebt of array gives te offset of the MSB
+// So, a little endian machine will return [0, 1, 2, 3]
+// and a big endian machine will return [3, 2, 1, 0]
+export function evaluateFloat32Endianess() {
+  const arrayBuffer = new ArrayBuffer(4);
+  const flt32Array = new Float32Array(arrayBuffer);
+  flt32Array[0] = 1024.25; // 0x44800800
+  const byteArray = new Uint8Array(arrayBuffer);
+  const map = {
+    0x44: 3,
+    0x80: 2,
+    0x08: 1,
+    0x00: 0,
+  };
+  const result = new Array(4);
+  for (let i = 0; i < 4; i++) {
+    result[i] = map[byteArray[i]];
+  }
+  return result;
+}
+
+export const float32Endianess = evaluateFloat32Endianess();

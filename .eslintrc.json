@@ -5,7 +5,9 @@
   },
   "extends": ["plugin:vue/essential", "eslint:recommended"],
   "rules": {
-    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "indent": ["warn", 2, {
+      "SwitchCase": 1
+    }],
     "linebreak-style": ["error", "unix"],
     "semi": ["error", "always"],
     "comma-dangle": ["error", "always-multiline"],
@@ -17,10 +19,11 @@
     "no-octal-escape": "warn",
     "radix": "warn",
     "require-await": "warn",
-    "camelcase": "warn",
+    "camelcase": "off",
     "max-statements-per-line": "warn",
     "new-cap": "error",
-    "no-tabs": "warn"
+    "no-tabs": "warn",
+    "no-unused-vars": "warn"
   },
   "parserOptions": {
     "parser": "babel-eslint"
