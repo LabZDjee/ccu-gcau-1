@@ -12,6 +12,7 @@ import {
 import {
   generateNumericArray,
   float32Endianess,
+  isBetween,
 } from "./utils";
 
 export const appVersion = "0.9.0";
@@ -47,7 +48,9 @@ export const selectChoicesAgcMap = {
     Slovakian: "French",
     USA: "French",
     Norwegian: "French",
-    Portuguese: "Portuguese",
+    "Portuguese CCU_N": "Portuguese",
+    "Free1 CCU_N": "French",
+    "Free2 CCU_N": "French",
   },
   batteryType: {
     "None": "0",
@@ -74,7 +77,9 @@ export const selectChoices = {
     "Slovakian",
     "USA",
     "Norwegian",
-    "Portuguese",
+    "Portuguese CCU_N",
+    "Free1 CCU_N",
+    "Free2 CCU_N",
   ],
   relayNumbers: generateNumericArray(17, x => x.toString()),
   hrPeriodicTimes: ["None", "1", "6", "12"],
@@ -214,7 +219,49 @@ export function processTdsFile(fileContents) {
   });
 }
 
-function floatValueFromUint8Array(byteArrayBuffer, offset) {
+// note: nbOfCells necessary because of the reactive system, as it is, involving Option_x_elemnt, Edit_QDB_NDB
+//       needs a bulk refresh of them all in order to work well...
+function postProcessDataGotFromP0orApp(nbOfCells) {
+  reactiveData.Option_6_elemnt = "false";
+  reactiveData.Option_3_elemnt = "false";
+  reactiveData.Option_2_elemnt = "false";
+  reactiveData.Option_1_elemnt = "true";
+  reactiveData.NrOfCells = nbOfCells;
+  reactiveData.Edit_QDB_NDB = nbOfCells;
+  reactiveData.Option_DEF_POST = reactiveData.ChrgTimerMode === "0" ? "1" : "0";
+  reactiveData.Text_Projet = `${importedFileName.shortFileName} (imported from ${importedFileName.extension})`;
+  reactiveData.Combo_RN_UDC = reactiveData.UdcNom;
+  const fltPerCell = parseFloat(reactiveData.UflPerCell);
+  if (reactiveData.VoApplEnable === "true") {
+    reactiveData.Combo_DEF_TDB = "VO";
+  } else if (isBetween(1.35, fltPerCell, 1.389)) {
+    reactiveData.Combo_DEF_TDB = "Ni CD (SPH)";
+  } else if (isBetween(1.39, fltPerCell, 1.4049)) {
+    reactiveData.Combo_DEF_TDB = "Ni CD (SBH-SBM)";
+  } else if (isBetween(1.405, fltPerCell, 1.4149)) {
+    reactiveData.Combo_DEF_TDB = "Ni CD (SLM)";
+  } else if (isBetween(1.415, fltPerCell, 1.43)) {
+    reactiveData.Combo_DEF_TDB = "Ni CD (SBL)";
+  } else if (isBetween(2.20, fltPerCell, 2.249)) {
+    reactiveData.Combo_DEF_TDB = "Open lead acid";
+  } else if (isBetween(2.25, fltPerCell, 2.35)) {
+    reactiveData.Combo_DEF_TDB = "Sealed lead acid";
+  } else {
+    reactiveData.Combo_DEF_TDB = "None";
+  }
+  reactiveData.Edit_BattName = "?";
+}
+
+function setNoBatteryTest() {
+  reactiveData.BattTestEnable = "false";
+  reactiveData.AutoTestPeriod = "12";
+  reactiveData.DischrgPercent = "0";
+  reactiveData.TestEndVoltage = "0";
+  reactiveData.EndVoltageAlarm = "0";
+}
+
+// takes an ArrayBuffer and find value of a float (4 bytes) at any offset in this ArrayBuffer (not neccesarily aligned on 4)
+function floatValueFromArrayBuffer(byteArrayBuffer, offset) {
   const arrayBuffer = new ArrayBuffer(4);
   const byteArray = new Uint8Array(arrayBuffer);
   for (let i = 0; i < 4; i++) {
@@ -227,15 +274,20 @@ function floatValueFromUint8Array(byteArrayBuffer, offset) {
 export function processP0File(fileContentsAsArrayBuffer) {
   axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
     processTdsFile(reply.data);
+    let nbOfCells;
     const byteArray = new Uint8Array(fileContentsAsArrayBuffer);
     const p0OffsetFieldName = byteArray.length === 600 ? "P0Offset" : "P0V1Offset";
+    if (p0OffsetFieldName === "P0V1Offset") {
+      setNoBatteryTest();
+    }
     for (const key in tsvMap) {
       const tsvEntry = tsvMap[key];
       const p0TypeSplitter = /^(?:(.+):(.*))|(?:.*)$/.exec(tsvEntry.P0Type);
       const offset = parseInt(tsvEntry[p0OffsetFieldName], 10);
-      if (p0TypeSplitter !== null) {
+      if (p0TypeSplitter !== null && offset < byteArray.length) { // some offsets are in excess (battery test for example with P0 v1)
         const p0MajorType = p0TypeSplitter[p0TypeSplitter[1] === undefined ? 0 : 1];
-        const p0AssociatedValue = p0TypeSplitter[2] === undefined ? NaN : parseInt(p0TypeSplitter[2], 10);
+        const p0MinorType = p0TypeSplitter[2];
+        const p0AssociatedValue = p0TypeSplitter[2] === undefined ? NaN : parseInt(p0MinorType, 10);
         const grabWord = (offset) => byteArray[offset] + 256 * byteArray[offset + 1];
         let value = null,
           dw;
@@ -253,21 +305,27 @@ export function processP0File(fileContentsAsArrayBuffer) {
             value = (grabWord(offset) & (1 << p0AssociatedValue)) ? "true" : "false";
             break;
           case "dword":
-            dw = (grabWord(offset) + 65536 * grabWord(offset + 2));
+            if (p0MinorType === "hm") {
+              dw = 60 * grabWord(offset) + grabWord(offset + 2);
+            } else {
+              dw = (grabWord(offset) + 65536 * grabWord(offset + 2));
+            }
             if (tsvEntry.TDSUnitAndScale === "h:3600:s") {
               dw = Math.round(dw / 3600.0);
+            } else if (tsvEntry.TDSUnitAndScale === "mn:60:s") {
+              dw *= 60;
             }
             value = dw.toString();
             break;
           case "float":
-            value = floatValueFromUint8Array(byteArray, offset).toString();
+            value = floatValueFromArrayBuffer(byteArray, offset).toString();
             break;
           case "string":
             value = "";
-            for (let i = 0; i < p0MajorType; i++) {
+            for (let i = 0; i < p0AssociatedValue; i++) {
               const code = byteArray[offset + i];
               if (code > 0) {
-                value += String.fromCharCode();
+                value += String.fromCharCode(code);
               } else {
                 break;
               }
@@ -275,15 +333,20 @@ export function processP0File(fileContentsAsArrayBuffer) {
             break;
         }
         if (value != null) {
+          if (tsvEntry.TDSUnitAndScale === ":language") {
+            value = selectChoices.languages[parseInt(value, 10)];
+          }
+          if (tsvEntry.TDSUnitAndScale === "months:periodicHighRate") {
+            value = selectChoices.hrPeriodicTimes[parseInt(value, 10)];
+          }
           reactiveData[tsvEntry.SetupParam] = value;
+          if (tsvEntry.SetupParam === "NrOfCells") {
+            nbOfCells = value;
+          }
         }
       }
-      // eslint-disable-next-line
-      console.log(tsvEntry.P0Type, tsvEntry[p0OffsetFieldName]);
     }
-
-    // eslint-disable-next-line
-    console.log(floatValueFromUint8Array(byteArray, 22));
+    postProcessDataGotFromP0orApp(nbOfCells);
   });
 }
 
@@ -340,3 +403,107 @@ axios
     // eslint-disable-next-line
     console.log(error);
   });
+
+const app2Language2tdsIndex = {
+  English: 0,
+  Dutch: 1,
+  Spanish: 2,
+  Italian: 3,
+  Finnish: 4,
+  Swedish: 5,
+  French: 6,
+  German: 7,
+  Slovakian: 8,
+  USA: 9,
+  Norwegian: 10,
+  Portuguese: 11,
+  "Free 1": 12,
+  "Free 2": 13,
+};
+
+function appTransformValueIfNum(tsvRowObj, value) {
+  const appType = typeof tsvRowObj.AppType === "string" ? tsvRowObj.AppType.toLowerCase() : null;
+  if (appType !== null) {
+    if (appType.startsWith("integer") || appType.startsWith("float")) {
+      let multiplier = 1;
+      if (appType === "integer:s2h") {
+        multiplier = 1 / 3600;
+      }
+      const resultAsNum = parseFloat(value) * multiplier;
+      if (isNaN(resultAsNum)) {
+        return value;
+      }
+      if (appType.startsWith("integer")) {
+        return Math.round(resultAsNum);
+      }
+      return resultAsNum;
+    }
+  }
+  return value;
+}
+
+function getAppHrPeriodicity(value) {
+  switch (value.toLowerCase()) {
+    default:
+      return ("None");
+    case "1":
+    case "one_month":
+      return ("1");
+    case "2":
+    case "six_months":
+      return ("6");
+    case "3":
+    case "one_year":
+      return ("12");
+  }
+}
+
+function getAppHrPostOrDirect(value) {
+  switch (value.toLowerCase()) {
+    default:
+      return ("0");
+    case "direct":
+    case "1":
+      return ("1");
+  }
+}
+
+export function processAppFile(fileContents) {
+  axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
+    processTdsFile(reply.data);
+    let nbOfCells = 1;
+    const lines = fileContents.toString().split("\n");
+    const pattern = /^\D*(\d+):\W+(.+)\W{2,}(.*)\r?/;
+    lines.forEach((line, offset) => {
+      const match = pattern.match(line);
+      if (match !== null) {
+        // eslint-disable-next-line
+        const appPos = offset + 1;
+        const appNum = match[1];
+        const appName = match[2];
+        const appValue = match[3];
+        for (let i = 0; i < tsvMap.length; i++) {
+          if (tsvMap[i].AppNum === appNum) {
+            const tsvRowObjet = tsvMap[i];
+            switch (appName.toLowerCase()) {
+              case "language":
+                reactiveData.Language = selectChoices.languages[app2Language2tdsIndex[appValue]];
+                break;
+              case "periodichr":
+                reactiveData.PeriodicHr = getAppHrPeriodicity(appValue);
+                break;
+              case "chrgtimermode":
+                reactiveData.ChrgTimerMode = getAppHrPostOrDirect(appValue);
+                break;
+              default:
+                reactiveData[tsvRowObjet.SetupParam] = appTransformValueIfNum(tsvRowObjet, appValue);
+                break;
+            }
+            break;
+          }
+        }
+      }
+    });
+    postProcessDataGotFromP0orApp(nbOfCells);
+  });
+}

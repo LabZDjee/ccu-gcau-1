@@ -229,8 +229,8 @@ export function extractListFromSortedArrayOfInts(array) {
 // returns an array with four offsets [0, 3]
 //  first element of array gives the offset to the LSB
 //  second element of array gives the offset of byte next to LSB
-//  third elemeent of array gives the offset of byte next to MSB
-//  fourth elemebt of array gives te offset of the MSB
+//  third element of array gives the offset of byte next to MSB
+//  fourth element of array gives te offset of the MSB
 // So, a little endian machine will return [0, 1, 2, 3]
 // and a big endian machine will return [3, 2, 1, 0]
 export function evaluateFloat32Endianess() {
@@ -252,3 +252,8 @@ export function evaluateFloat32Endianess() {
 }
 
 export const float32Endianess = evaluateFloat32Endianess();
+
+// returns true onsly if value sits between min and max
+export function isBetween(min, value, max) {
+  return value >= Math.min(min, max) && value <= Math.max(min, max);
+}

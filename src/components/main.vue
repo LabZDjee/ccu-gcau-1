@@ -14,7 +14,7 @@
           <v-layout justify-center>
             <v-flex xs2>
               <v-btn small @click="$refs.inputTds.click()">Load</v-btn>
-              <input v-show="false" ref="inputTds" type="file" accept=".tdsa, .tdsn" @change="loadTds" />
+              <input v-show="false" ref="inputTds" type="file" accept=".tdsa, .tdsn, .P0" @change="loadTds" />
             </v-flex>
             <v-flex xs2>
               <v-btn small @click="$refs.inputAgc.click()">Load AGC</v-btn>
