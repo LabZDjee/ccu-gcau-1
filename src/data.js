@@ -15,7 +15,7 @@ import {
   isBetween,
 } from "./utils";
 
-export const appVersion = "0.9.0";
+export const applicationVersion = "0.9.0";
 
 export const tsvMap = {};
 // property is this SetupParm and value is the associated TDSTag, e.g.:
@@ -219,6 +219,77 @@ export function processTdsFile(fileContents) {
   });
 }
 
+export let agcFileData = {
+  struct: null,
+  lines: null,
+  error: null,
+  refLines: null,
+};
+
+export function processAgcFile(data) {
+  try {
+    agcFileData.lines = data.split(/\r?\n/);
+    agcFileData.refLines = data.split(/\r?\n/);
+    agcFileData.struct = analyzeAgcFile(agcFileData.lines);
+    agcFileData.error = null;
+  } catch (e) {
+    agcFileData.lines = null;
+    agcFileData.struct = null;
+    agcFileData.error = e;
+  }
+}
+
+axios
+  .get(`${process.env.BASE_URL}/TDSP0APPMap.tsv`)
+  .then((response) => {
+    const tsv = response.data;
+    const lines = tsv.split("\n");
+    const headers = lines[0].replace(/\r$/, "").split("\t");
+    let key;
+    let object;
+    for (let i = 1; i < lines.length; i++) {
+      object = {};
+      const currentline = lines[i].replace(/\r$/, "").split("\t");
+      for (let j = 0; j < headers.length; j++) {
+        object[headers[j]] = currentline[j];
+        if (headers[j] === "TDSTag") {
+          key = currentline[j];
+        }
+      }
+      if (key.length > 0 && key.startsWith("x--") === false) {
+        tsvMap[key] = object;
+      }
+    }
+    initTdsData();
+    initVue();
+    axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
+      processTdsFile(reply.data);
+    });
+  })
+  .catch((error) => {
+    document.getElementById("app").innerHTML =
+      "panic: cannot initialize app from definition files like TDSP0APPMap.tsv or template.tdsa";
+    // eslint-disable-next-line
+    console.log(error);
+  });
+
+const app2Language2tdsIndex = {
+  English: 0,
+  Dutch: 1,
+  Spanish: 2,
+  Italian: 3,
+  Finnish: 4,
+  Swedish: 5,
+  French: 6,
+  German: 7,
+  Slovakian: 8,
+  USA: 9,
+  Norwegian: 10,
+  Portuguese: 11,
+  "Free 1": 12,
+  "Free 2": 13,
+};
+
 // note: nbOfCells necessary because of the reactive system, as it is, involving Option_x_elemnt, Edit_QDB_NDB
 //       needs a bulk refresh of them all in order to work well...
 function postProcessDataGotFromP0orApp(nbOfCells) {
@@ -250,6 +321,7 @@ function postProcessDataGotFromP0orApp(nbOfCells) {
     reactiveData.Combo_DEF_TDB = "None";
   }
   reactiveData.Edit_BattName = "?";
+  console.log(`IdcNom = "${reactiveData.IdcNom}"`);
 }
 
 function setNoBatteryTest() {
@@ -350,80 +422,12 @@ export function processP0File(fileContentsAsArrayBuffer) {
   });
 }
 
-export let agcFileData = {
-  struct: null,
-  lines: null,
-  error: null,
-  refLines: null,
-};
-
-export function processAgcFile(data) {
-  try {
-    agcFileData.lines = data.split(/\r?\n/);
-    agcFileData.refLines = data.split(/\r?\n/);
-    agcFileData.struct = analyzeAgcFile(agcFileData.lines);
-    agcFileData.error = null;
-  } catch (e) {
-    agcFileData.lines = null;
-    agcFileData.struct = null;
-    agcFileData.error = e;
-  }
-}
-
-axios
-  .get(`${process.env.BASE_URL}/TDSP0APPMap.tsv`)
-  .then((response) => {
-    const tsv = response.data;
-    const lines = tsv.split("\n");
-    const headers = lines[0].replace(/\r$/, "").split("\t");
-    let key;
-    let object;
-    for (let i = 1; i < lines.length; i++) {
-      object = {};
-      const currentline = lines[i].replace(/\r$/, "").split("\t");
-      for (let j = 0; j < headers.length; j++) {
-        object[headers[j]] = currentline[j];
-        if (headers[j] === "TDSTag") {
-          key = currentline[j];
-        }
-      }
-      if (key.length > 0 && key.startsWith("x--") === false) {
-        tsvMap[key] = object;
-      }
-    }
-    initTdsData();
-    initVue();
-    axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
-      processTdsFile(reply.data);
-    });
-  })
-  .catch((error) => {
-    document.getElementById("app").innerHTML =
-      "panic: cannot initialize app from definition files like TDSP0APPMap.tsv or template.tdsa";
-    // eslint-disable-next-line
-    console.log(error);
-  });
-
-const app2Language2tdsIndex = {
-  English: 0,
-  Dutch: 1,
-  Spanish: 2,
-  Italian: 3,
-  Finnish: 4,
-  Swedish: 5,
-  French: 6,
-  German: 7,
-  Slovakian: 8,
-  USA: 9,
-  Norwegian: 10,
-  Portuguese: 11,
-  "Free 1": 12,
-  "Free 2": 13,
-};
-
 function appTransformValueIfNum(tsvRowObj, value) {
   const appType = typeof tsvRowObj.AppType === "string" ? tsvRowObj.AppType.toLowerCase() : null;
   if (appType !== null) {
+    if (tsvRowObj.SetupType === "Boolean") {
+      return value === "0" ? "false" : "true";
+    }
     if (appType.startsWith("integer") || appType.startsWith("float")) {
       let multiplier = 1;
       if (appType === "integer:s2h") {
@@ -434,9 +438,9 @@ function appTransformValueIfNum(tsvRowObj, value) {
         return value;
       }
       if (appType.startsWith("integer")) {
-        return Math.round(resultAsNum);
+        return Math.round(resultAsNum).toString();
       }
-      return resultAsNum;
+      return resultAsNum.toString();
     }
   }
   return value;
@@ -471,20 +475,21 @@ function getAppHrPostOrDirect(value) {
 export function processAppFile(fileContents) {
   axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
     processTdsFile(reply.data);
-    let nbOfCells = 1;
+    let nbOfCells = "1";
     const lines = fileContents.toString().split("\n");
-    const pattern = /^\D*(\d+):\W+(.+)\W{2,}(.*)\r?/;
+    const pattern = /^\W*(\d+):\W+(.+)\W{2,}(.*)\r?$/;
     lines.forEach((line, offset) => {
-      const match = pattern.match(line);
+      const match = pattern.exec(line);
       if (match !== null) {
         // eslint-disable-next-line
         const appPos = offset + 1;
         const appNum = match[1];
-        const appName = match[2];
+        const appName = match[2].trimRight();
         const appValue = match[3];
-        for (let i = 0; i < tsvMap.length; i++) {
-          if (tsvMap[i].AppNum === appNum) {
-            const tsvRowObjet = tsvMap[i];
+        for (const k in tsvMap) {
+          if (tsvMap[k].AppNum === appNum) {
+            const tsvRowObjet = tsvMap[k];
+            // console.log(`${appName} = ${appValue} (${appTransformValueIfNum(tsvRowObjet, appValue)})`);
             switch (appName.toLowerCase()) {
               case "language":
                 reactiveData.Language = selectChoices.languages[app2Language2tdsIndex[appValue]];
@@ -495,8 +500,12 @@ export function processAppFile(fileContents) {
               case "chrgtimermode":
                 reactiveData.ChrgTimerMode = getAppHrPostOrDirect(appValue);
                 break;
+              case "nrofcells":
+                nbOfCells = appValue;
+                // no break on purpose: we need to assign value to reactiveData in this case too
+                // eslint-disable-next-line
               default:
-                reactiveData[tsvRowObjet.SetupParam] = appTransformValueIfNum(tsvRowObjet, appValue);
+                reactiveData[tsvRowObjet.SetupParam.startsWith("x--") ? tsvRowObjet.TDSTag : tsvRowObjet.SetupParam] = appTransformValueIfNum(tsvRowObjet, appValue);
                 break;
             }
             break;
@@ -504,6 +513,7 @@ export function processAppFile(fileContents) {
         }
       }
     });
+    console.log(`IdcNom = #${reactiveData.IdcNom}# ${typeof reactiveData.IdcNom}`);
     postProcessDataGotFromP0orApp(nbOfCells);
   });
 }

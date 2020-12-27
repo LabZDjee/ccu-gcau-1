@@ -19,23 +19,23 @@
                 <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
               </div>
               <div>
-                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermosat', 'Has a shutdown bridge thermosat']"></vyw-switch>
+                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermosat (X9.5)', 'Shutdown bridge thermosat (X9.5)']"></vyw-switch>
               </div>
             </div>
             <div class="d-flex">
               <div class="pr-1">
-                <vyw-select-input data-key="meta_forcedFloatInput" label="Forced float input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+                <vyw-select-input data-key="meta_forcedFloatInput" label="Forced float (X9.1)" :item-list="selectChoices.spareInputs"></vyw-select-input>
               </div>
               <div>
-                <vyw-select-input data-key="meta_highrateInput" label="Highrate input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+                <vyw-select-input data-key="meta_highrateInput" label="Highrate (X9.2)" :item-list="selectChoices.spareInputs"></vyw-select-input>
               </div>
             </div>
             <div class="d-flex">
               <div class="pr-1">
-                <vyw-select-input data-key="meta_commissioningInput" label="Commissioning input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+                <vyw-select-input data-key="meta_commissioningInput" label="Commissioning (X9.3)" :item-list="selectChoices.spareInputs"></vyw-select-input>
               </div>
               <div>
-                <vyw-select-input data-key="meta_alarmAcknowledgmentInput" label="Alarm ack. input" :item-list="selectChoices.spareInputs"></vyw-select-input>
+                <vyw-select-input data-key="meta_alarmAcknowledgmentInput" label="Alarm ack. (X9.4)" :item-list="selectChoices.spareInputs"></vyw-select-input>
               </div>
             </div>
 
@@ -62,7 +62,7 @@
                 <vyw-integer-input data-key="SlaveAddress" label="Slave number" :bottom="Number(1)" :top="Number(255)" hint="[1~255]"></vyw-integer-input>
               </div>
               <div>
-                <vyw-select-input data-key="Baudrate" label="Communication velocity" :item-list="baudrates" hint="bauds"></vyw-select-input>
+                <vyw-select-input data-key="Baudrate" label="Communication velocity (bps)" :item-list="baudrates" hint="bauds"></vyw-select-input>
               </div>
             </div>
           </v-card-text>
@@ -82,18 +82,18 @@
           <v-card-text>
             <div class="d-flex">
               <div class="pr-1">
-                <vyw-select-input data-key="Combo_RN_NDP" label="Phase number" :item-list="['1', '3']" hint="phase(s)"></vyw-select-input>
+                <vyw-select-input data-key="Combo_RN_NDP" label="Number of phases" :item-list="['1', '3']" hint="phase(s)"></vyw-select-input>
               </div>
               <div>
-                <vyw-select-input data-key="Combo_RN_FREQ" label="Frequency" :item-list="['50', '60']" hint="Hz"></vyw-select-input>
+                <vyw-select-input data-key="Combo_RN_FREQ" label="Frequency (Hz)" :item-list="['50', '60']" hint="Hz"></vyw-select-input>
               </div>
             </div>
             <div class="d-flex">
               <div class="pr-1">
-                <vyw-select-input data-key="UacNom" label="AC voltage" :item-list="acVoltages" hint="A"></vyw-select-input>
-              </div>
+                <vyw-integer-input data-key="UacNom" label="AC voltage" :bottom="Number(1)" :top="Number(700)" hint="[1~700]" suffix="Vac"></vyw-integer-input>
+               </div>
               <div>
-                <vyw-select-input data-key="IdcNom" label="DC current" :item-list="dcCurrents" hint="A"></vyw-select-input>
+                <vyw-integer-input data-key="IdcNom" label="DC current" :bottom="Number(1)" :top="Number(9999)" hint="[1~9,999]" suffix="Adc"></vyw-integer-input>
               </div>
             </div>
             <div class="d-flex">
@@ -231,10 +231,10 @@ export default {
       return ["1200", "2400", "4800", "9600", "19200"];
     },
     acVoltages() {
-      return ["110", "120", "127", "208", "220", "230", "240", "380"];
+      return ["110", "120", "127", "208", "220", "230", "240", "380", "400"];
     },
     dcCurrents() {
-      return ["5", "10", "15", "25", "35", "50", "75", "10"];
+      return ["5", "10", "15", "25", "35", "50", "75", "100"];
     },
     dcVoltages() {
       return ["12", "24", "48", "60", "110", "125", "220"];

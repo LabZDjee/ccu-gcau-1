@@ -7,14 +7,14 @@
           <v-toolbar-title class="headline text-uppercase">
             <span>CCU>GCAU</span>
             <span class="font-weight-light">Config. translator</span>
-            <span class="caption text-lowercase">  - v{{appVersion}}</span>
+            <span class="caption text-lowercase"> - v{{applicationVersion}}</span>
           </v-toolbar-title>
         </v-toolbar>
         <v-container :class="{ hide: isScrolledDown }" pa-0 class="lime lighten-5">
           <v-layout justify-center>
             <v-flex xs2>
               <v-btn small @click="$refs.inputTds.click()">Load</v-btn>
-              <input v-show="false" ref="inputTds" type="file" accept=".tdsa, .tdsn, .P0" @change="loadTds" />
+              <input v-show="false" ref="inputTds" type="file" accept=".tdsa, .tdsn, .P0, .APP" @change="loadTds" />
             </v-flex>
             <v-flex xs2>
               <v-btn small @click="$refs.inputAgc.click()">Load AGC</v-btn>
@@ -91,7 +91,7 @@ import VywSystem from "./system";
 import VywBattery from "./battery";
 import VywAlarms from "./alarms";
 import VywReactTest from "./react-test";
-import { eventBus, processTdsFile, reactiveData, processAgcFile, processP0File, agcFileData, tdsAlias, setImportedFileName, appVersion } from "../data";
+import { eventBus, processTdsFile, reactiveData, processAgcFile, processP0File, processAppFile, agcFileData, tdsAlias, setImportedFileName, applicationVersion } from "../data";
 import { translateCcu2gcau } from "../cfg-trans";
 
 export default {
@@ -117,7 +117,7 @@ export default {
     agcFileErrorDialog: false,
     agcErrorDetails: "??",
     nodeEnv: process.env.NODE_ENV,
-    appVersion,
+    applicationVersion,
   }),
   methods: {
     menuItemSelect(v) {
@@ -150,6 +150,7 @@ export default {
       }
       const reader = new FileReader();
       const typeIsP0 = /.P0$/i.test(file.name);
+      const typeIsApp = /.APP$/i.test(file.name);
       if (typeIsP0) {
         reader.readAsArrayBuffer(file);
       } else {
@@ -161,6 +162,8 @@ export default {
         setImportedFileName(file.name);
         if (typeIsP0) {
           processP0File(fileContents);
+        } else if (typeIsApp) {
+          processAppFile(fileContents);
         } else {
           processTdsFile(fileContents);
         }

@@ -189,7 +189,7 @@ export default {
     },
     alarmS1() {
       return {
-        title: "Spare 1",
+        title: "Spare 1 (X8.1)",
         params: {
           enabledId: "S1_Enabled",
           relayNbId: "S1_RelayOutput",
@@ -201,7 +201,7 @@ export default {
     },
     alarmS2() {
       return {
-        title: "Spare 2",
+        title: "Spare 2 (X8.2)",
         params: {
           enabledId: "S2_Enabled",
           relayNbId: "S2_RelayOutput",
@@ -213,7 +213,7 @@ export default {
     },
     alarmS3() {
       return {
-        title: "Spare 3",
+        title: "Spare 3 (X8.3)",
         params: {
           enabledId: "S3_Enabled",
           relayNbId: "S3_RelayOutput",
@@ -225,7 +225,7 @@ export default {
     },
     alarmS4() {
       return {
-        title: "Spare 4",
+        title: "Spare 4 (X8.4)",
         params: {
           enabledId: "S4_Enabled",
           relayNbId: "S4_RelayOutput",

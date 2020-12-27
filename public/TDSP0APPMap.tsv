@@ -25,7 +25,7 @@ Option_6_elemt	Battery	6 cells per group	x------x	x------x	x------x	9999	x------
 Check_RCDF	Battery commissioning	Commissioning enable	x------x	CommEnable	x------x	28	Boolean	0;1	51	Charge Mode	bool16	66	64	23	23	commEnable	Integer
 Combo_RCDF_REL	Battery commissioning	Commissioning relay	x------x	CommRelayOutput	x------x	29	Byte	0~16	52	Charge Mode	byte	68	66	24	24	commRelayOutput	Integer
 Edit_DEF_CDCDF	Battery commissioning	Commissioning charge current	Amps	CommCurrent	x------x	32	Word	1~9999	61	Charge Mode	word	73	71	32	32	commCurrent	Integer
-Edit_DEF_TDCDF	Battery commissioning	Commissioning cycle time	h:3600:s	CommTime	x------x	31	Dword	0~356400	57	Charge Mode	dword	75	73	31	31	commTime	Integer:s2h
+Edit_DEF_TDCDF	Battery commissioning	Commissioning cycle time	h:3600:s	CommTime	x------x	31	Dword	0~356400	57	Charge Mode	dword	75	73	31	31	commTime	Integer
 Edit_DEF_TDFOPE	Battery commissioning	Commissioning voltage per cell	V	UcommPerCell	x------x	30	Float	1.5~2.6	53	Charge Mode	float	69	67	25	25	ucommPerCell	Float:2
 Frame_RCDF	Battery commissioning	Frame that encompasses battery commissioning definition	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Label_DEF_TDFOTOT2	Battery commissioning	Commissioning voltage	V	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
@@ -34,9 +34,9 @@ Check_DEF_TARPE	Battery highrate	Auto start on mains fail	x------x	MfHrEnable	x-
 Check_DEF_TLCPE	Battery highrate	Auto start on current limit	x------x	ClHrEnable	x------x	24	Boolean	0;1	47	7:7:Auto Charge	bool16	85	83	27	27	clHrEnable	Integer
 Combo_DEF_CP	Battery highrate	Periodic highrate	months:periodicHighRate	PeriodicHr	x------x	23	Byte	0;1;2;3	46	Auto Charge	byte	91	89	26	26	periodicHr	Enum:0:none:1:one_month:2:six_months:3:one_year
 Combo_RCE_REL	Battery highrate	Highrate relay number	x------x	HrRelayOutput	x------x	18	Byte	0~16	32	Charge Mode	byte	56	54	18	18	hrRelayOutput	Integer
-Edit_DEF_battFanDelay	Battery highrate	Battery fan delay	h:3600:s	BattFanDelay	x------x	19	Dword	0~86400	33	Charge Mode	dword	79	77	22	22	battFanDelay	Integer:s2h
+Edit_DEF_battFanDelay	Battery highrate	Battery fan delay	h:3600:s	BattFanDelay	x------x	19	Dword	0~86400	33	Charge Mode	dword	79	77	22	22	battFanDelay	Integer
 Edit_DEF_TARPE	Battery highrate	Auto start on mains fail min. duration	s	MfHrTime	x------x	27	Byte	0~255	50	Auto Charge	byte	90	88	30	30	mfHrTime	Integer
-Edit_DEF_TDREE	Battery highrate	Highrate charge time	h:3600:s	ChargeTime	x------x	21	Dword	0~356400	41	Charge Mode	dword	61	59	20	20	chargeTime	Integer:s2h
+Edit_DEF_TDREE	Battery highrate	Highrate charge time	h:3600:s	ChargeTime	x------x	21	Dword	0~356400	41	Charge Mode	dword	61	59	20	20	chargeTime	Integer
 Edit_DEF_TEPE	Battery highrate	Highrate charge voltage per cell	V/cell	UhrPerCell	x------x	20	Float	1~2.4	37	Charge Mode	float	57	55	19	19	uhrPerCell	Float:2
 Edit_DEF_TLCPE	Battery highrate	Auto start on current limit min. duration	s	ClHrTime	x------x	25	Byte	0~255	48	Auto Charge	byte	87	85	28	28	clHrTime	Integer
 Frame_AUTO_CHARGE	Battery highrate	Frame that encompasses highrate automatic charge	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
