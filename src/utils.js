@@ -125,6 +125,9 @@ export function scrapDecimalsAsStringZPad(n, d) {
 //  toIntAsStr(-5.6) => "-6"
 export function toIntAsStr(floatValueOrString, coeffOrLambda) {
   let floatValue = typeof floatValueOrString === "string" ? parseFloat(floatValueOrString) : floatValueOrString;
+  if (isNaN(floatValue)) {
+    floatValue = 0;
+  }
   switch (typeof coeffOrLambda) {
     case "number":
       floatValue *= coeffOrLambda;

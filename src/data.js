@@ -118,17 +118,21 @@ const _metaData = {
   highrateInput: null,
   commissioningInput: null,
   alarmAcknowledgmentInput: null,
+  displayAmbientTemperature: null,
+  displayBatteryTemperature: null,
 };
 
 function initMeta() {
   reactiveData.meta_hasLedBox = "false";
   reactiveData.meta_duplicateRelays = "false";
   reactiveData.meta_earthFaultThreshold = "250";
-  reactiveData.meta_shutdownThermostat = "true";
+  reactiveData.meta_shutdownThermostat = "false";
   reactiveData.meta_forcedFloatInput = selectChoices.spareInputs[0];
   reactiveData.meta_highrateInput = selectChoices.spareInputs[0];
   reactiveData.meta_commissioningInput = selectChoices.spareInputs[0];
   reactiveData.meta_alarmAcknowledgmentInput = selectChoices.spareInputs[0];
+  reactiveData.meta_displayAmbientTemperature = "false";
+  reactiveData.meta_displayBatteryTemperature = "false";
 }
 
 const importedFileName = {
@@ -194,7 +198,7 @@ export function processTdsFile(fileContents) {
           data = "false";
         }
       }
-      if (tsvMap[label].P0Type === "float") {
+      if (tsvMap[label].P0Type.toLowerCase() === "float" || tsvMap[label].SetupType.toLowerCase() === "float") {
         const matches = data.match(commaFloatPattern);
         if (matches) {
           data = `${matches[1]}.${matches[2]}`;
@@ -300,8 +304,10 @@ function postProcessDataGotFromP0orApp(nbOfCells) {
   reactiveData.NrOfCells = nbOfCells;
   reactiveData.Edit_QDB_NDB = nbOfCells;
   reactiveData.Option_DEF_POST = reactiveData.ChrgTimerMode === "0" ? "1" : "0";
-  reactiveData.Text_Projet = `${importedFileName.shortFileName} (imported from ${importedFileName.extension})`;
+  reactiveData.Text_Projet = `${importedFileName.shortFileName}`;
   reactiveData.Combo_RN_UDC = reactiveData.UdcNom;
+  reactiveData.Edit_DC_VMAXDLT = reactiveData.HC_UpperLimit;
+  reactiveData.Edit_DC_VMINDLT = reactiveData.LC_LowerLimit;
   const fltPerCell = parseFloat(reactiveData.UflPerCell);
   if (reactiveData.VoApplEnable === "true") {
     reactiveData.Combo_DEF_TDB = "VO";
@@ -320,8 +326,10 @@ function postProcessDataGotFromP0orApp(nbOfCells) {
   } else {
     reactiveData.Combo_DEF_TDB = "None";
   }
-  reactiveData.Edit_BattName = "?";
-  console.log(`IdcNom = "${reactiveData.IdcNom}"`);
+  reactiveData.Edit_BattName = "--";
+  reactiveData.Edit_COMMENT = `Import from ${importedFileName.extension} file type`;
+  reactiveData.Edit_ENV_TA = "25";
+  reactiveData.Edit_ENV_ALT = "2000";
 }
 
 function setNoBatteryTest() {
@@ -503,6 +511,7 @@ export function processAppFile(fileContents) {
               case "nrofcells":
                 nbOfCells = appValue;
                 // no break on purpose: we need to assign value to reactiveData in this case too
+                /* falls through */
                 // eslint-disable-next-line
               default:
                 reactiveData[tsvRowObjet.SetupParam.startsWith("x--") ? tsvRowObjet.TDSTag : tsvRowObjet.SetupParam] = appTransformValueIfNum(tsvRowObjet, appValue);
@@ -513,7 +522,6 @@ export function processAppFile(fileContents) {
         }
       }
     });
-    console.log(`IdcNom = #${reactiveData.IdcNom}# ${typeof reactiveData.IdcNom}`);
     postProcessDataGotFromP0orApp(nbOfCells);
   });
 }

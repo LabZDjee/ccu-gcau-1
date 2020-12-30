@@ -56,7 +56,7 @@ function alterObjAttr(object, attribute, value) {
 //   also if value in composed LF substrings, each substring will be distributed as
 //   many meta tags
 //  if false, value will simply replace the first defined metaTag
-// in any case returns the value (before alteration) as an array of strings
+// in any case returns the array returned by findInAgcFileStruct (after a potential alteration)
 function alterMeta(metaTag, value, insert = false) {
   const hit = findInAgcFileStruct({
     metaTag,
@@ -66,7 +66,6 @@ function alterMeta(metaTag, value, insert = false) {
     console.log(`cannot locate $${metaTag} in GCAUConfigurationData of agcFileData!`);
     return null;
   }
-  const previousValue = hit.value;
   const firstHit = hit[0];
   const lastHit = hit[hit.length - 1];
   if (value !== undefined && value !== null) {
@@ -86,7 +85,7 @@ function alterMeta(metaTag, value, insert = false) {
       agcFileData.struct = analyzeAgcFile(agcFileData.lines);
     }
   }
-  return previousValue;
+  return hit;
 }
 
 function zeroOne(falseTrue) {
@@ -200,11 +199,25 @@ export function translateCcu2gcau() {
   alterMeta("Project", reactiveData.Text_Projet);
   alterMeta("EndUser", reactiveData.Text_ClientFinal);
   alterMeta("IDNum", reactiveData.SystemId);
+  alterMeta("VInterfCard", "1");
+  if (parseFloat(reactiveData.UacNom) != 0) {
+    let inputCurrent = parseFloat(reactiveData.Label_DEF_TDFLPETOT2) * parseFloat(reactiveData.IdcNom) / 0.8 / 0.8 / parseFloat(reactiveData.UacNom);
+    inputCurrent = Math.round(10 * inputCurrent) / 10;
+    alterMeta("InputCurrent", inputCurrent.toString());
+  }
+  let noNotes = false;
+  const initialNotes = alterMeta("Notes");
+  if (initialNotes.length === 1 && initialNotes[0].value.trim().length === 0) {
+    noNotes = true;
+  }
+  alterMeta("Notes", "Translated from a CCU configuration", noNotes ? false : true);
   reactiveData.Edit_COMMENT.split("\n").forEach(str => {
     alterMeta("Notes", str, true);
   });
-  alterMeta("AmbTemp", toIntAsStr(reactiveData.Edit_ENV_TA));
-  alterMeta("MaxAltitude", toIntAsStr(reactiveData.Edit_ENV_ALT));
+  alterMeta("AmbTemp", (Math.round(reactiveData.Edit_ENV_TA * 10) / 10).toString());
+  alterMeta("MaxAltitude", Math.round(reactiveData.Edit_ENV_ALT)).toString();
+  alterMeta("DerateTemp", (-parseFloat(reactiveData.Label_Derating_temp)).toString());
+  alterMeta("DerateAltitude", (-parseFloat(reactiveData.Label_Derating_ALT)).toString());
   const language = selectChoicesAgcMap.languages[reactiveData.Language];
   alterMeta("Lang2Ctrl", language);
   alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
@@ -250,7 +263,7 @@ export function translateCcu2gcau() {
   alterObjAttr("NOMINAL", "Language", language === "English" ? "E" : "L");
   alterObjAttr("REGISTRY", "LocalLanguage", language);
   alterMeta("Frequency", reactiveData.Combo_RN_FREQ);
-  alterMeta("InrushCurrent", reactiveData.Combo_RN_CN);
+  alterMeta("InrushCurrent", reactiveData.Edit_RN_CN);
   const chargerShunt = 0.1 / parseFloat(reactiveData.RectShuntVal);
   alterObjAttr("SYSTEM", "ChargerShunt", Math.round(chargerShunt * 1e6).toString());
   alterObjAttr("SYSTEM", "RectShuntVolt", "100");
@@ -298,8 +311,9 @@ export function translateCcu2gcau() {
   alterMeta("ShortCircuitCurrent", reactiveData.Edit_DEF_CDCC);
   alterObjAttr("NOMINAL", "FloatVolts", toIntAsStr(reactiveData.UflPerCell, nbOfCells * 10));
   alterObjAttr("REGCOMP", "TemperatureCompensation", reactiveData.TempComp === "true" ? toIntAsStr(reactiveData.CompPerC, 100) : "0");
-  setHexBitField(reactiveData.TempComp, "SYSVAR", "MeterEnable", 3);
   alterObjAttr("SYSTEM", "TempCompOnBattSens", "0"); // legacy
+  setHexBitField(reactiveData.meta_displayAmbientTemperature, "SYSVAR", "MeterEnable", 3);
+  setHexBitField(reactiveData.meta_displayBatteryTemperature, "SYSVAR", "MeterEnable", 4);
   const batteryShunt = reactiveData.BattShunt === "true" ? 0.1 / parseFloat(reactiveData.BattShuntVal) : 0;
   alterObjAttr("SYSTEM", "BatteryShunt", Math.floor(batteryShunt * 1e6).toString());
   alterObjAttr("SYSTEM", "BattShuntVolt", "100");
@@ -325,8 +339,6 @@ export function translateCcu2gcau() {
   if (isVOBatteryType) {
     const voCurrentLimit = parseFloat(reactiveData.IbattLow);
     setHexBitField("true", "SYSVAR", "MenuGroupEnable", 6);
-    setHexBitField("true", "SYSVAR", "MeterEnable", 3);
-    setHexBitField("true", "SYSVAR", "MeterEnable", 4);
     let voSecurityTimer = 3 * (batteryCapacity / voCurrentLimit + parseFloat(reactiveData.VoChargeTime));
     if (voSecurityTimer > 36) {
       voSecurityTimer = 36;
@@ -347,7 +359,7 @@ export function translateCcu2gcau() {
   alterObjAttr("BATTTEST", "EndVoltage", toIntAsStr(reactiveData.TestEndVoltage, 10));
   if (batteryTestEnabled) {
     setHexBitField("true", "SYSVAR", "MenuGroupEnable", 7);
-    alterMeta("Notes", "Warning: battery test enabled! Behavior from CCU may differ. Review settings & discuss with end user.");
+    alterMeta("Notes", "Warning: battery test enabled! Behavior from CCU may differ. Review settings & discuss with end user.", true);
   }
   const commonAlarmEnabled = zeroOne(reactiveData.CM_Enabled);
   const mfEvtDef = { // mains out-of-range

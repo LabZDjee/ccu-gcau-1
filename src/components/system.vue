@@ -38,7 +38,14 @@
                 <vyw-select-input data-key="meta_alarmAcknowledgmentInput" label="Alarm ack. (X9.4)" :item-list="selectChoices.spareInputs"></vyw-select-input>
               </div>
             </div>
-
+            <div class="d-flex">
+              <div>
+                <vyw-switch data-key="meta_displayAmbientTemperature" :labels="['Don\'t display ambiant temperature on LCD', 'Display ambiant temperature on LCD']"></vyw-switch>
+              </div>
+              <div>
+                <vyw-switch data-key="meta_displayBatteryTemperature" :labels="['Don\'t display battery temperature on LCD', 'Display battery temperature on LCD']"></vyw-switch>
+              </div>
+            </div>
           </v-card-text>
         </v-card>
         <v-card class="mt-1">
@@ -46,10 +53,18 @@
           <v-card-text>
             <div class="d-flex">
               <div>
-                <vyw-numeric-input data-key="Edit_ENV_TA" label="Room temperature" suffix="C" :bottom="Number(-30)" :top="Number(60)" hint="[-30~+60]" />
+                <vyw-numeric-input data-key="Edit_ENV_TA" label="Ambient temperature" suffix="C" :bottom="Number(-30)" :top="Number(60)" hint="[-30~+60]" />
               </div>
               <div>
-                <vyw-numeric-input data-key="Edit_ENV_ALT" label="Altitude" suffix="m" :bottom="Number(0)" :top="Number(8000)" hint="[0~8,000]" />
+                <vyw-numeric-input data-key="Edit_ENV_ALT" label="Altitude" suffix="m" :bottom="Number(0)" :top="Number(5000)" hint="[0~5,000]" />
+              </div>
+            </div>
+            <div class="d-flex">
+              <div>
+                <vyw-numeric-input data-key="Label_Derating_temp" label="Temperature derating" suffix="%" :bottom="Number(0)" :top="Number(50)" hint="[0~50]" />
+              </div>
+              <div>
+                <vyw-numeric-input data-key="Label_Derating_ALT" label="Altitude derating" suffix="%" :bottom="Number(0)" :top="Number(50)" hint="[0~50]" />
               </div>
             </div>
           </v-card-text>
@@ -91,7 +106,7 @@
             <div class="d-flex">
               <div class="pr-1">
                 <vyw-integer-input data-key="UacNom" label="AC voltage" :bottom="Number(1)" :top="Number(700)" hint="[1~700]" suffix="Vac"></vyw-integer-input>
-               </div>
+              </div>
               <div>
                 <vyw-integer-input data-key="IdcNom" label="DC current" :bottom="Number(1)" :top="Number(9999)" hint="[1~9,999]" suffix="Adc"></vyw-integer-input>
               </div>
@@ -241,11 +256,37 @@ export default {
     },
   },
   methods: {
-    updateMiscStuff() {
+    updateMiscStuff(v, o, k) {
       this.adjustDisabled = reactiveData.ManCurrAdjust === "false" && reactiveData.ManVoltAdjust === "false";
+      if (k === "Edit_ENV_ALT") {
+        v = parseFloat(v);
+        if (v > 5000) {
+          v = 5000;
+        }
+        if (v >= 1000 && v <= 5000) {
+          v = (28 - 7) / (4000 - 1000) * (v - 1000) + 7;
+        } else {
+          v = 0;
+        }
+        v = Math.round(10 * v) / 10;
+        reactiveData.Label_Derating_ALT = v.toString();
+      }
+      if (k === "Edit_ENV_TA") {
+        v = parseFloat(v);
+        if (v > 60) {
+          v = 60;
+        }
+        if (v >= 40) {
+          v = 12.5 / 10 * (v - 40);
+        } else {
+          v = 0;
+        }
+        v = Math.round(10 * v) / 10;
+        reactiveData.Label_Derating_temp = v.toString();
+      }
     },
     reactSources() {
-      return ["ManCurrAdjust", "ManVoltAdjust"];
+      return ["ManCurrAdjust", "ManVoltAdjust", "Edit_ENV_ALT", "Edit_ENV_TA"];
     },
   },
   mixins: [reactiveStuffAttach],

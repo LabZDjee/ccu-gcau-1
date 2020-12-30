@@ -3,8 +3,8 @@ Check_DEF_CET	Battery	Temperature compensation enable	x------x	TempComp	x------x
 Check_SHUNT_SB	Battery	Battery shunt installed	x------x	BattShunt	x------x	6	Boolean	0;1	11	Shunt	bool16	20	20	6	6	battShunt	Integer
 Combo_DEF_TDB	Battery	Battery type	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_BattName	Battery	Battery name	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DEF_CDCC	Battery	Short circuit current	kA	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DEF_CET	Battery	Temperature compensation	mV/°C/cell	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DEF_CDCC	Battery	Short circuit current	kA	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DEF_CET	Battery	Temperature compensation	mV/°C/cell	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DEF_CET2	Battery	Temperature compensation	%/°C	CompPerC	x------x	43	Float	0.1~0.4	85	Temperature Compensation	float	127	125	43	43	compPerC	Float:2
 Edit_DEF_TDFDDPE	Battery	Battery discharge end voltage	V/cell	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DEF_TDFLPE	Battery	Floating charge voltage per cell	V/cell	UflPerCell	x------x	16	Float	1~2.3	27	Charge Mode	float	50	48	16	16	uflPerCell	Float:2
@@ -75,15 +75,15 @@ Frame_AR	Conditions for stopping rectifier	Frame that encompasses rect. stop con
 Edit_DC_CURA	Customer data	Current when mains if off	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DC_CURP	Customer data	Current when mains is on	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DC_DDLPDC	Customer data	Peak current duration	s	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DC_PDC	Customer data	Peak current	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DC_VMAXDLT	Customer data	High voltage limit	V	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DC_VMINDLT	Customer data	Low voltage limit	V	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DC_PDC	Customer data	Peak current	Amps	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DC_VMAXDLT	Customer data	High voltage limit	V	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DC_VMINDLT	Customer data	Low voltage limit	V	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Frame_DC	Customer data	Frame that encompasses customer data	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_ENV_ALT	Environment	Altitude	m	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_ENV_TA	Environment	Room temperature	°C	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_ENV_ALT	Environment	Altitude	m	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_ENV_TA	Environment	Room temperature	°C	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Frame_ENV	Environment	Frame that encompasses environment parameters	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Label_Derating_ALT	Environment	Altitude derating	x------x	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Label_Derating_temp	Environment	Room temperature derating	x------x	x------x	Only calculated	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Label_Derating_ALT	Environment	Altitude derating	x------x	x------x	Only calculated	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Label_Derating_temp	Environment	Room temperature derating	x------x	x------x	Only calculated	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_CBH_NH	High bat current alarm	Current threshold	Amps	HB_UpperLimit	x------x	126	Float	0~9999	319	High Battery Current Alarm	float	529	511	130	123	HB_upper	Float:1
 Edit_CBH_TEMPS	High bat current alarm	Delay	s	HB_Delay	x------x	127	Dword	0~59	323	High Battery Current Alarm	word	533	515	131	124	HB_delay	Integer
 Check_CBH	High bat. current alarm	Enable alarm	x------x	HB_Enabled	x------x	125	Boolean	0;1	314	High Battery Current Alarm	bool16	525	507	129	122	HB_enabled	Integer

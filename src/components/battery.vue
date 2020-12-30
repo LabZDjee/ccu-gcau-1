@@ -295,6 +295,15 @@ export default {
       } else if (reactiveData.Option_6_elemt === "1") {
         multiplier = 6;
       }
+      if (k === "Combo_DEF_TDB") {
+        const displayTemps = v === "VO" ? "true" : "false";
+        let displayAmbiantTemp = displayTemps;
+        if (displayAmbiantTemp === "false") {
+          displayAmbiantTemp = reactiveData.TempComp;
+        }
+        reactiveData.meta_displayAmbientTemperature = displayAmbiantTemp;
+        reactiveData.meta_displayBatteryTemperature = displayTemps;
+      }
       const nbOfCells = Number(reactiveData.Edit_QDB_NDB) * multiplier;
       reactiveData.NrOfCells = nbOfCells.toString();
       reactiveData["Label_DEF_TDFLPETOT2"] = scrapDecimalsAsString(Number(reactiveData.UflPerCell) * nbOfCells, 4);
@@ -326,8 +335,12 @@ export default {
         }
       }
       this.voDisabled = reactiveData.VoApplEnable === "false";
-      if (!this.voDisabled)
-        this.highrateDisabled =
+      if (this.voDisabled) {
+        if (k === "Check_DEF_CET") {
+          reactiveData.meta_displayAmbientTemperature = v;
+        }
+      }
+      this.highrateDisabled =
         reactiveData.ManHrEnable === "false" &&
         reactiveData.PeriodicHr === "None" &&
         reactiveData.ClHrEnable === "false" &&
@@ -354,6 +367,7 @@ export default {
         "MfHrEnable",
         "CommEnable",
         "BattTestEnable",
+        "TempComp",
       ];
     },
   },
