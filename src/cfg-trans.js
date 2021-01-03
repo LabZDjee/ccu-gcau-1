@@ -215,7 +215,7 @@ export function translateCcu2gcau() {
     alterMeta("Notes", str, true);
   });
   alterMeta("AmbTemp", (Math.round(reactiveData.Edit_ENV_TA * 10) / 10).toString());
-  alterMeta("MaxAltitude", Math.round(reactiveData.Edit_ENV_ALT)).toString();
+  alterMeta("MaxAltitude", Math.round(reactiveData.Edit_ENV_ALT).toString());
   alterMeta("DerateTemp", (-parseFloat(reactiveData.Label_Derating_temp)).toString());
   alterMeta("DerateAltitude", (-parseFloat(reactiveData.Label_Derating_ALT)).toString());
   const language = selectChoicesAgcMap.languages[reactiveData.Language];

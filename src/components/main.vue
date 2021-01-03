@@ -63,7 +63,7 @@
             <vyw-alarms />
           </v-tab-item>
         </v-tabs>
-        <vyw-react-test v-if="nodeEnv === 'development'" />
+        <vyw-react-test v-if="nodeEnv !== 'development'" />
       </div>
     </v-flex>
     <v-dialog v-model="agcFileErrorDialog" max-width="400">
