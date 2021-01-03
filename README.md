@@ -17,6 +17,14 @@ The `onChanged` callback described above is expected _custom events_ to be trigg
 
 Attempt to come up with a sticky menu bar on scroll down lead to quite tricky CSS interaction with _Vuetify_ layout as can be seen in `main.vue`
 
+### Versioning
+
+The application version is split into three different places which cannot be combined (except to write a script which we haven't done so far). So whenever a new version should be published, three things to do:
+
+- upgrade `applicationVersion` string in `src/data.js`, e.g. `"1.2.4"`
+- do the same in `package.json` under `version`, e.g. `"version": "1.2.4",`
+- with git add lightweight tag with a `v` prefix, e.g. `git tag v1.2.4`, as a reminder, one way to refresh tags in remote repository is `git push origin --tags`
+
 ## Project Setup
 
 ```
@@ -47,7 +55,7 @@ For convenience, this project is served by [GiHub Pages](https://pages.github.co
 
 The app can be access from this link: [https://labzdjee.github.io/ccu-gcau-1](https://labzdjee.github.io/ccu-gcau-1)
 
-### How To
+### How This Was Done
 
 It takes `npm run build` to store output in the `docs` folder. This is done by having `vue.config.js` look like this before running for build:
 
