@@ -19,7 +19,7 @@
                 <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
               </div>
               <div>
-                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermosat (X9.5)', 'Shutdown bridge thermosat (X9.5)']"></vyw-switch>
+                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermosat (X9.6)', 'Shutdown bridge thermosat (X9.5)']"></vyw-switch>
               </div>
             </div>
             <div class="d-flex">

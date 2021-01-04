@@ -329,7 +329,7 @@ function postProcessDataGotFromP0orApp(nbOfCells) {
   reactiveData.Edit_BattName = "--";
   reactiveData.Edit_COMMENT = `Import from ${importedFileName.extension} file type`;
   reactiveData.Edit_ENV_TA = "25";
-  reactiveData.Edit_ENV_ALT = "2000";
+  reactiveData.Edit_ENV_ALT = "0";
 }
 
 function setNoBatteryTest() {

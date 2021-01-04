@@ -72,7 +72,7 @@ export default {
     },
     alarmHC() {
       return {
-        title: "High charge voltage",
+        title: "High charger voltage",
         params: {
           enabledId: "HC_Enabled",
           relayNbId: "HC_RelayOutput",
@@ -99,7 +99,7 @@ export default {
     },
     alarmLC() {
       return {
-        title: "Low charge voltage",
+        title: "Low charger voltage",
         params: {
           enabledId: "LC_Enabled",
           relayNbId: "LC_RelayOutput",
@@ -237,7 +237,7 @@ export default {
     },
     alarmHT() {
       return {
-        title: "High temperature",
+        title: "High temperature (X9.5)",
         params: {
           enabledId: "HT_Enabled",
           relayNbId: "HT_RelayOutput",
