@@ -21,8 +21,12 @@
               <input v-show="false" ref="inputAgc" type="file" accept=".agc" @change="loadAgc" />
             </v-flex>
             <v-flex xs2>
-              <v-btn small @click="saveOutputFile()" :disabled="agcFileName === null">Save AGC</v-btn>
+              <v-btn small @click="saveOutputFile()" :disabled="agcFileName === null">Download AGC</v-btn>
               <!-- <a ref="outputSave" v-show="false" href download="sample.agc">Save</a> -->
+            </v-flex>
+            <v-flex xs2>
+              <v-btn small @click="saveTdsFile()">Download TDS</v-btn>
+              <!-- <a ref="outputTDSSave" v-show="false" href download="sample.tds">Save</a> -->
             </v-flex>
           </v-layout>
         </v-container>
@@ -63,7 +67,8 @@
             <vyw-alarms />
           </v-tab-item>
         </v-tabs>
-        <span v-if="nodeEnv === 'development'"><vyw-react-test  /></span>
+        <span v-if="nodeEnv === 'development'">
+          <vyw-react-test /></span>
       </div>
     </v-flex>
     <v-dialog v-model="agcFileErrorDialog" max-width="400">
@@ -91,7 +96,19 @@ import VywSystem from "./system";
 import VywBattery from "./battery";
 import VywAlarms from "./alarms";
 import VywReactTest from "./react-test";
-import { eventBus, processTdsFile, reactiveData, processAgcFile, processP0File, processAppFile, agcFileData, tdsAlias, setImportedFileName, applicationVersion } from "../data";
+import {
+  eventBus,
+  processTdsFile,
+  reactiveData,
+  processAgcFile,
+  processP0File,
+  processAppFile,
+  agcFileData,
+  tdsAlias,
+  setImportedFileName,
+  applicationVersion,
+  makeTdsFile,
+} from "../data";
 import { translateCcu2gcau } from "../cfg-trans";
 
 export default {
@@ -202,6 +219,14 @@ export default {
       download(fileContents, agcFileName, "text/plain");
       agcFileData.lines = agcFileData.refLines.map(l => l);
       agcFileData.struct = analyzeAgcFile(agcFileData.lines);
+    },
+    saveTdsFile() {
+      const importedFileName = setImportedFileName(null);
+      const fileContents = makeTdsFile();
+      const fileName = importedFileName.shortFileName.length ? importedFileName.shortFileName : "unknown";
+      const fileNameExtension = reactiveData.Check_APP === "true" ? "tdsa" : "tdsn";
+      download(fileContents, `${fileName}.${fileNameExtension}`, "text/plain");
+      this.contentsAltered = false;
     },
   },
   created() {

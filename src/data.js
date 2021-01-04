@@ -15,7 +15,7 @@ import {
   isBetween,
 } from "./utils";
 
-export const applicationVersion = "0.9.0";
+export const applicationVersion = "0.9.2";
 
 export const tsvMap = {};
 // property is this SetupParm and value is the associated TDSTag, e.g.:
@@ -123,16 +123,20 @@ const _metaData = {
 };
 
 function initMeta() {
-  reactiveData.meta_hasLedBox = "false";
-  reactiveData.meta_duplicateRelays = "false";
-  reactiveData.meta_earthFaultThreshold = "250";
-  reactiveData.meta_shutdownThermostat = "false";
-  reactiveData.meta_forcedFloatInput = selectChoices.spareInputs[0];
-  reactiveData.meta_highrateInput = selectChoices.spareInputs[0];
-  reactiveData.meta_commissioningInput = selectChoices.spareInputs[0];
-  reactiveData.meta_alarmAcknowledgmentInput = selectChoices.spareInputs[0];
-  reactiveData.meta_displayAmbientTemperature = "false";
-  reactiveData.meta_displayBatteryTemperature = "false";
+  function initOneMeta(name, value) {
+    reactiveData[`meta_${name}`] = value;
+    reactiveData.$watchers[`meta_${name}`].push(updateMetaNotes);
+  }
+  initOneMeta("hasLedBox", "false");
+  initOneMeta("duplicatedRelays", "false");
+  initOneMeta("earthFaultThreshold", "250");
+  initOneMeta("shutdownThermostat", "false");
+  initOneMeta("forcedFloatInput", selectChoices.spareInputs[0]);
+  initOneMeta("highrateInput", selectChoices.spareInputs[0]);
+  initOneMeta("commissioningInput", selectChoices.spareInputs[0]);
+  initOneMeta("alarmAcknowledgmentInput", selectChoices.spareInputs[0]);
+  initOneMeta("displayAmbientTemperature", "false");
+  initOneMeta("displayBatteryTemperature", "false");
 }
 
 const importedFileName = {
@@ -163,14 +167,96 @@ Object.keys(_metaData).forEach((key) => {
 
 initMeta();
 
+const metaNotesRegex = /[ ]*{meta}\n((?:.|\n)*){\/meta}\n?/;
+
+function getMetaNotes() {
+  const metaValues = reactiveData.Edit_COMMENT.match(metaNotesRegex);
+  if (metaValues != null) {
+    const metaPairs = metaValues[1].split("\n");
+    metaPairs.forEach(pair => {
+      const mv = pair.match(/\$(\S+)\s*=\s="(.*)"/);
+      if (mv != null) {
+        reactiveData[`meta_${mv[1]}`] = mv[2];
+      }
+    });
+  }
+  return metaValues !== null;
+}
+
+function updateMetaNotes() {
+  if (typeof reactiveData.Edit_COMMENT !== "string") {
+    return;
+  }
+  const notes = reactiveData.Edit_COMMENT.replace(/[ ]*{meta}(.|\n)*{\/meta}\n?/, "");
+  const notesHasClosingNL = notes.indexOf("\n") === notes.length - 1;
+  reactiveData.Edit_COMMENT = `${notes}${notesHasClosingNL?"":"\n"}{meta}
+ $hasLedBox = "${reactiveData.meta_hasLedBox}"
+ $duplicatedRelays = "${reactiveData.meta_duplicatedRelays}"
+ $earthFaultThreshold = "${reactiveData.meta_earthFaultThreshold}"
+ $shutdownThermostat = "${reactiveData.meta_shutdownThermostat}"
+ $forcedFloatInput = "${reactiveData.meta_forcedFloatInput}"
+ $highrateInput = "${reactiveData.meta_highrateInput}"
+ $commissioningInput = "${reactiveData.meta_commissioningInput}"
+ $alarmAcknowledgmentInput = "${reactiveData.meta_alarmAcknowledgmentInput}"
+ $displayAmbientTemperature = "${reactiveData.meta_displayAmbientTemperature}"
+ $displayBatteryTemperature = "${reactiveData.meta_displayBatteryTemperature}"
+{/meta}`;
+}
+
+const tdsLabelsInSequence = [];
+
+export function makeTdsFile() {
+  updateMetaNotes();
+  let contents = `<Projet>\r\n`;
+  tdsLabelsInSequence.forEach(label => {
+    contents += '  <Objet>\r\n';
+    contents += `    <Label>${label}</Label>\r\n`;
+    let value = reactiveData[label];
+    if (label.startsWith("Check_")) {
+      value = value === "true" ? "1" : "0";
+    }
+    if (label === "Edit_TFB_TEMPS" || label === "Edit_TEOTDFL_TEMPS") {
+      try {
+        const t = Math.round(parseFloat(value, 10) / 60);
+        value = t.toString();
+      } catch (e) {}
+    }
+    if (tsvMap[label].P0Type.toLowerCase() === "float" || tsvMap[label].SetupType.toLowerCase() === "float") {
+      value = parseFloat(value);
+      if (isNaN(value)) {
+        value = "0.0";
+      } else {
+        const multiplier = 1e5;
+        value = (Math.round(value * multiplier) / multiplier).toString();
+      }
+      const matches = value.match(/\s*(\d*).(\d*)\s*/);
+      if (matches) {
+        if (matches[1] === "") {
+          matches[1] = "0";
+        }
+        if (matches[2] === "") {
+          matches[2] = "0";
+        }
+        value = `${matches[1]},${matches[2]}`;
+      }
+    }
+    value = value.replace(/\n/g, "\r\n");
+    contents += `    <Donnee>${value}</Donnee>\r\n`;
+    contents += '  </Objet>\r\n';
+  });
+  contents += `</Projet>\r\n`;
+  return contents;
+}
+
 export function processTdsFile(fileContents) {
   const lines = fileContents.toString().split("\n");
   const pattLabel = /<Label>(.*)<\/Label>/i;
   const pattData = /<Donnee>(.*)<\/Donnee>/i;
   const pattDataStart = /<Donnee>(.*)/i;
   const pattDataEnd = /(.*)<\/Donnee>/i;
-  const commaFloatPattern = /(\d*),(\d*)/;
+  const commaFloatPattern = /\s*(\d*),(\d*)\s*/;
   const rightTrimPattern = /\s*$/;
+  const shouldRecordLabelSequence = tdsLabelsInSequence.length === 0;
   let label;
   let data;
   let partial;
@@ -180,6 +266,9 @@ export function processTdsFile(fileContents) {
     const resultLabel = trimmedLine.match(pattLabel);
     if (resultLabel) {
       label = resultLabel[1];
+      if (shouldRecordLabelSequence) {
+        tdsLabelsInSequence.push(label);
+      }
       partial = false;
     }
     const resultData = trimmedLine.match(pattData);
@@ -221,6 +310,9 @@ export function processTdsFile(fileContents) {
       }
     }
   });
+  if (!getMetaNotes()) {
+    updateMetaNotes();
+  }
 }
 
 export let agcFileData = {
