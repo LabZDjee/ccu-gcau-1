@@ -19,7 +19,7 @@
                 <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
               </div>
               <div>
-                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermosat (X9.6)', 'Shutdown bridge thermosat (X9.5)']"></vyw-switch>
+                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermostat (X9.6)', 'Shutdown bridge thermosat (X9.5)']"></vyw-switch>
               </div>
             </div>
             <div class="d-flex">
@@ -32,7 +32,7 @@
             </div>
             <div class="d-flex">
               <div class="pr-1">
-                <vyw-select-input data-key="meta_commissioningInput" label="Commissioning (X9.3)" :item-list="selectChoices.spareInputs"></vyw-select-input>
+                <vyw-select-input data-key="meta_commissioningInput" label="Commissioning (X9.3)" :item-list="selectChoices.commissioningInput"></vyw-select-input>
               </div>
               <div>
                 <vyw-select-input data-key="meta_alarmAcknowledgmentInput" label="Alarm ack. (X9.4)" :item-list="selectChoices.spareInputs"></vyw-select-input>

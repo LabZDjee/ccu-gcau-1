@@ -8,7 +8,6 @@ import {
   agcFileData,
   reactiveData,
   selectChoices,
-  selectChoicesAgcMap,
 } from "./data";
 import {
   toIntAsStr,
@@ -20,6 +19,77 @@ import {
 let debugOn = false; // will print on console every translated item when this one is on
 
 const nodeEnv = process.env.NODE_ENV;
+
+const selectChoicesAgcMap = {
+  languages: {
+    English: {
+      upload: "French",
+      nominal: "E",
+    },
+    Dutch: {
+      upload: "Dutch",
+      nominal: "L",
+    },
+    Spanish: {
+      upload: "Spanish",
+      nominal: "L",
+    },
+    Italian: {
+      upload: "Italian",
+      nominal: "L",
+    },
+    Finnish: {
+      upload: "French",
+      nominal: "E",
+    },
+    Swedish: {
+      upload: "Swedish",
+      nominal: "L",
+    },
+    French: {
+      upload: "French",
+      nominal: "L",
+    },
+    German: {
+      upload: "German",
+      nominal: "L",
+    },
+    Slovakian: {
+      upload: "French",
+      nominal: "E",
+    },
+    USA: {
+      upload: "French",
+      nominal: "E",
+    },
+    Norwegian: {
+      upload: "French",
+      nominal: "E",
+    },
+    "Portuguese CCU_N": {
+      upload: "Portuguese",
+      nominal: "L",
+    },
+    "Free1 CCU_N": {
+      upload: "French",
+      nominal: "E",
+    },
+    "Free2 CCU_N": {
+      upload: "French",
+      nominal: "E",
+    },
+  },
+  batteryType: {
+    "None": "0",
+    "VO": "3",
+    "Ni CD (SBH-SBM)": "1",
+    "Ni CD (SBL)": "2",
+    "Ni CD (SPH)": "2",
+    "Ni CD (SLM)": "2",
+    "Sealed lead acid": "0",
+    "Open lead acid": "1",
+  },
+};
 
 // given an object string and an attribute string in agcFileData will alter its value
 // if value is undefined nothing happens, otherwise value should be a string
@@ -169,6 +239,11 @@ function setEvt(num, evtDef, updateSysvar = true) {
     evtDef.RelayNumber = "0";
   }
   for (const attribute in evtDef) {
+    if (attribute === "Text" || attribute === "LocalText") {
+      if (evtDef.Function === "OF" && updateSysvar) {
+        continue;
+      }
+    }
     if (attribute === "RelayNumber") {
       setRelay(evtName, (evtDef.Function === "OF" && updateSysvar) ? "0" : evtDef[attribute]);
     } else {
@@ -218,8 +293,10 @@ export function translateCcu2gcau() {
   alterMeta("MaxAltitude", Math.round(reactiveData.Edit_ENV_ALT).toString());
   alterMeta("DerateTemp", (-parseFloat(reactiveData.Label_Derating_temp)).toString());
   alterMeta("DerateAltitude", (-parseFloat(reactiveData.Label_Derating_ALT)).toString());
-  const language = selectChoicesAgcMap.languages[reactiveData.Language];
-  alterMeta("Lang2Ctrl", language);
+  alterMeta("Lang2Ctrl", selectChoicesAgcMap.languages[reactiveData.Language].upload);
+  alterObjAttr("NOMINAL", "Language", selectChoicesAgcMap.languages[reactiveData.Language].nominal);
+  alterObjAttr("REGISTRY", "LocalLanguage", selectChoicesAgcMap.languages[reactiveData.Language].upload);
+  alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
   alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
   alterObjAttr("SYSVAR", "BatteryMenuEnable", "001F");
   alterObjAttr("SYSVAR", "NominalSetMenuEnable", "0067");
@@ -260,8 +337,6 @@ export function translateCcu2gcau() {
         break;
     }
   }
-  alterObjAttr("NOMINAL", "Language", language === "English" ? "E" : "L");
-  alterObjAttr("REGISTRY", "LocalLanguage", language);
   alterMeta("Frequency", reactiveData.Combo_RN_FREQ);
   alterMeta("InrushCurrent", reactiveData.Edit_RN_CN);
   const chargerShunt = 0.1 / parseFloat(reactiveData.RectShuntVal);
@@ -602,6 +677,17 @@ export function translateCcu2gcau() {
     cmd,
     select,
   }, idx) => {
+    let inv;
+    let msg = `INPUT X9.${idx+1}`;
+    if (cmd === "CC") {
+      if (select === selectChoices.commissioningInput[3] || select === selectChoices.commissioningInput[4]) {
+        cmd = "AL";
+        msg = "COMMISS.";
+        inv = select === selectChoices.commissioningInput[4] ? "true" : "false";
+      }
+    } else {
+      inv = select === selectChoices.commissioningInput[2] ? "true" : "false";
+    }
     setEvt(idx + 14, {
       LCDLatch: "0",
       RelayLatch: "0",
@@ -609,12 +695,16 @@ export function translateCcu2gcau() {
       CommonAlarm: "0",
       RelayNumber: "0",
       Delay: "1",
-      Text: `INPUT X9.${idx+1}`,
-      LocalText: `INPUT X9.${idx+1}`,
+      Text: msg,
+      LocalText: msg,
       Function: select === selectChoices.spareInputs[0] ? "OF" : cmd,
     }, false);
-    setHexBitField(select === selectChoices.spareInputs[2] ? "true" : "false", "SYSTEM", "InRevPol", idx + 4);
+    setHexBitField(inv, "SYSTEM", "InRevPol", idx + 4);
     setHexBitField("true", "SYSVAR", "EventEnable", idx + 13);
+    if (cmd === "AL") {
+      setHexBitField("true", "SYSVAR", "CommissionMenuEnable", 8);
+    }
+    alterObjAttr("COMMISS", "AllowedFromSpare", cmd === "AL" ? "7" : "0");
   });
 
   alterObjAttr("SYSTEM", "ShutdownInput", zeroOne(reactiveData.meta_shutdownThermostat));

@@ -37,20 +37,62 @@ export const eventBus = new Vue({
 
 export const selectChoicesAgcMap = {
   languages: {
-    English: "French",
-    Dutch: "Dutch",
-    Spanish: "Spanish",
-    Italian: "Italian",
-    Finnish: "French",
-    Swedish: "Swedish",
-    French: "French",
-    German: "German",
-    Slovakian: "French",
-    USA: "French",
-    Norwegian: "French",
-    "Portuguese CCU_N": "Portuguese",
-    "Free1 CCU_N": "French",
-    "Free2 CCU_N": "French",
+    English: {
+      upload: "French",
+      nominal: "E",
+    },
+    Dutch: {
+      upload: "Dutch",
+      nominal: "L",
+    },
+    Spanish: {
+      upload: "Spanish",
+      nominal: "L",
+    },
+    Italian: {
+      upload: "Italian",
+      nominal: "L",
+    },
+    Finnish: {
+      upload: "French",
+      nominal: "E",
+    },
+    Swedish: {
+      upload: "Swedish",
+      nominal: "L",
+    },
+    French: {
+      upload: "French",
+      nominal: "L",
+    },
+    German: {
+      upload: "German",
+      nominal: "L",
+    },
+    Slovakian: {
+      upload: "French",
+      nominal: "E",
+    },
+    USA: {
+      upload: "French",
+      nominal: "E",
+    },
+    Norwegian: {
+      upload: "French",
+      nominal: "E",
+    },
+    "Portuguese CCU_N": {
+      upload: "Portuguese",
+      nominal: "L",
+    },
+    "Free1 CCU_N": {
+      upload: "French",
+      nominal: "E",
+    },
+    "Free2 CCU_N": {
+      upload: "French",
+      nominal: "E",
+    },
   },
   batteryType: {
     "None": "0",
@@ -84,6 +126,7 @@ export const selectChoices = {
   relayNumbers: generateNumericArray(17, x => x.toString()),
   hrPeriodicTimes: ["None", "1", "6", "12"],
   spareInputs: ["no", "active low", "active high"],
+  commissioningInput: ["no", "active low", "active high", "allowed low", "allowed high"],
 };
 
 let initTdsDataDone = false;
@@ -133,7 +176,7 @@ function initMeta() {
   initOneMeta("shutdownThermostat", "false");
   initOneMeta("forcedFloatInput", selectChoices.spareInputs[0]);
   initOneMeta("highrateInput", selectChoices.spareInputs[0]);
-  initOneMeta("commissioningInput", selectChoices.spareInputs[0]);
+  initOneMeta("commissioningInput", selectChoices.commissioningInput[0]);
   initOneMeta("alarmAcknowledgmentInput", selectChoices.spareInputs[0]);
   initOneMeta("displayAmbientTemperature", "false");
   initOneMeta("displayBatteryTemperature", "false");
