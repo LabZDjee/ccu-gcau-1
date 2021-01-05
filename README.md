@@ -2,7 +2,7 @@
 
 This [SPA](https://en.wikipedia.org/wiki/Single-page_application) project is a revised version of the CCU to GCAU configuration converter based on [Vue.js](https://vuejs.org) (bootstrapped with [@vue/cli](https://cli.vuejs.org) ^3.8.0) components with [Vuetify](https://vuetifyjs.com) framework visual elements
 
-It is combined with [@labzdjee/reac-ter](https://www.npmjs.com/package/@labzdjee/reac-ter) to bind _Vuetify_ [UI](https://en.wikipedia.org/wiki/User_interface) components on a bi-directional basis with external _ECMAscript_ data
+It is combined with [@labzdjee/reac-ter](https://www.npmjs.com/package/@labzdjee/reac-ter) to bind _Vuetify_ [UI](https://en.wikipedia.org/wiki/User_interface) components on a bi-directional basis with external _ECMAScript_ data
 
 ## Implementation Notes
 
