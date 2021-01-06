@@ -693,7 +693,7 @@
 	</Objet>
 	<Objet>
 		<Label>Text_Origine</Label>
-		<Donnee></Donnee>
+		<Donnee>AEG Power Solutions</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Text_Projet</Label>

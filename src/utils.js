@@ -256,7 +256,40 @@ export function evaluateFloat32Endianess() {
 
 export const float32Endianess = evaluateFloat32Endianess();
 
-// returns true onsly if value sits between min and max
+// returns true only if value sits between min and max
 export function isBetween(min, value, max) {
   return value >= Math.min(min, max) && value <= Math.max(min, max);
+}
+
+// rounds off value to nearest value with one digit and all zeroes
+// examples: 456 => 400, 0 => 0, -0.2 => -0, 1.5 => 2, -456 => -500, -5200 => -5000
+export function roundOffToZeroes(v) {
+  const negMult = Math.sign(v);
+  v = Math.abs(v);
+  if (v < 1) {
+    return Math.round(v) * negMult;
+  }
+  const log = Math.log10(v);
+  let multiplier = Math.pow(10, Math.trunc(log));
+  return Math.round(v / multiplier) * multiplier * negMult;
+}
+
+// estimate battery capacity given battCurrentLimit
+// takes a constant for number of expected hours: averageTime (in hours)
+// take take a string as battCurrentLimit
+// returns a numeric value
+export function estimateAh(battCurrentLimit) {
+  const averageTime = 8; // hours
+  const defaultValue = 1;
+  if (typeof battCurrentLimit === "string") {
+    battCurrentLimit = parseFloat(battCurrentLimit);
+  }
+  if (!isNaN(battCurrentLimit) || battCurrentLimit > 0) {
+    const rawAh = battCurrentLimit * averageTime;
+    if (rawAh < 1) {
+      return defaultValue;
+    }
+    return roundOffToZeroes(rawAh);
+  }
+  return defaultValue;
 }

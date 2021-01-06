@@ -3,51 +3,6 @@
   <v-container pt-3>
     <v-layout wrap>
       <v-flex xs12 sm6 px-1 align-content-center>
-        <v-card>
-          <v-card-title class="headline blue lighten-4">Hardware configuration</v-card-title>
-          <v-card-text>
-            <div class="d-flex">
-              <div>
-                <vyw-switch data-key="meta_hasLedBox" :labels="['No LED box', 'LED box']"></vyw-switch>
-              </div>
-              <div>
-                <vyw-switch data-key="meta_duplicatedRelays" :labels="['Relays not duplicated', 'Relays duplicated']"></vyw-switch>
-              </div>
-            </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
-              </div>
-              <div>
-                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermostat (X9.6)', 'Shutdown bridge thermosat (X9.5)']"></vyw-switch>
-              </div>
-            </div>
-            <div class="d-flex">
-              <div class="pr-1">
-                <vyw-select-input data-key="meta_forcedFloatInput" label="Forced float (X9.1)" :item-list="selectChoices.spareInputs"></vyw-select-input>
-              </div>
-              <div>
-                <vyw-select-input data-key="meta_highrateInput" label="Highrate (X9.2)" :item-list="selectChoices.spareInputs"></vyw-select-input>
-              </div>
-            </div>
-            <div class="d-flex">
-              <div class="pr-1">
-                <vyw-select-input data-key="meta_commissioningInput" label="Commissioning (X9.3)" :item-list="selectChoices.commissioningInput"></vyw-select-input>
-              </div>
-              <div>
-                <vyw-select-input data-key="meta_alarmAcknowledgmentInput" label="Alarm ack. (X9.4)" :item-list="selectChoices.spareInputs"></vyw-select-input>
-              </div>
-            </div>
-            <div class="d-flex">
-              <div>
-                <vyw-switch data-key="meta_displayAmbientTemperature" :labels="['Don\'t display ambiant temperature on LCD', 'Display ambiant temperature on LCD']"></vyw-switch>
-              </div>
-              <div>
-                <vyw-switch data-key="meta_displayBatteryTemperature" :labels="['Don\'t display battery temperature on LCD', 'Display battery temperature on LCD']"></vyw-switch>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
         <v-card class="mt-1">
           <v-card-title class="headline">Environment</v-card-title>
           <v-card-text>
@@ -134,6 +89,56 @@
       </v-flex>
       <v-flex xs12 sm6 px-1 align-content-center>
         <v-card>
+          <v-card-title class="headline blue lighten-4">Hardware configuration</v-card-title>
+          <v-card-text>
+            <div class="d-flex">
+              <div>
+                <vyw-switch data-key="meta_hasLedBox" :labels="['No LED box', 'LED box']"></vyw-switch>
+              </div>
+              <div>
+                <vyw-switch data-key="meta_duplicatedRelays" :labels="['Relays not duplicated', 'Relays duplicated']"></vyw-switch>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div>
+                <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
+              </div>
+              <div>
+                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermostat (X9.6)', 'Shutdown bridge thermostat (X9.6)']"></vyw-switch>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="pr-1">
+                <vyw-select-input data-key="meta_forcedFloatInput" label="Forced float (X9.1)" :item-list="selectChoices.spareInputs"></vyw-select-input>
+              </div>
+              <div>
+                <vyw-select-input data-key="meta_highrateInput" label="Highrate (X9.2)" :item-list="selectChoices.spareInputs"></vyw-select-input>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="pr-1">
+                <vyw-select-input data-key="meta_commissioningInput" label="Commissioning (X9.3)" :item-list="selectChoices.commissioningInput"></vyw-select-input>
+              </div>
+              <div>
+                <vyw-select-input data-key="meta_alarmAcknowledgmentInput" label="Alarm ack. (X9.4)" :item-list="selectChoices.spareInputs"></vyw-select-input>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div>
+                <vyw-switch data-key="meta_displayAmbientTemperature" :labels="['Don\'t display ambiant temperature on LCD', 'Display ambiant temperature on LCD']"></vyw-switch>
+              </div>
+              <div>
+                <vyw-switch data-key="meta_displayBatteryTemperature" :labels="['Don\'t display battery temperature on LCD', 'Display battery temperature on LCD']"></vyw-switch>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div>
+                <vyw-select-input data-key="meta_extendedLocalMenu" label="Local menus" :item-list="selectChoices.extendedLocalMenu"></vyw-select-input>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+        <v-card class="mt-1">
           <v-card-title class="headline">Meter selection</v-card-title>
           <v-card-text>
             <div class="d-flex">

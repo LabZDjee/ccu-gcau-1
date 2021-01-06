@@ -13,9 +13,10 @@ import {
   generateNumericArray,
   float32Endianess,
   isBetween,
+  estimateAh,
 } from "./utils";
 
-export const applicationVersion = "0.9.2";
+export const applicationVersion = "0.9.4";
 
 export const tsvMap = {};
 // property is this SetupParm and value is the associated TDSTag, e.g.:
@@ -56,6 +57,7 @@ export const selectChoices = {
   hrPeriodicTimes: ["None", "1", "6", "12"],
   spareInputs: ["no", "active low", "active high"],
   commissioningInput: ["no", "active low", "active high", "allowed low", "allowed high"],
+  extendedLocalMenu: ["don't extend", "extend"],
 };
 
 let initTdsDataDone = false;
@@ -92,6 +94,7 @@ const _metaData = {
   alarmAcknowledgmentInput: null,
   displayAmbientTemperature: null,
   displayBatteryTemperature: null,
+  extendedLocalMenu: null,
 };
 
 function initMeta() {
@@ -109,6 +112,7 @@ function initMeta() {
   initOneMeta("alarmAcknowledgmentInput", selectChoices.spareInputs[0]);
   initOneMeta("displayAmbientTemperature", "false");
   initOneMeta("displayBatteryTemperature", "false");
+  initOneMeta("extendedLocalMenu", selectChoices.extendedLocalMenu[0]);
 }
 
 const importedFileName = {
@@ -143,11 +147,11 @@ const metaNotesRegex = /[ ]*{meta}\n((?:.|\n)*){\/meta}\n?/;
 
 function getMetaNotes() {
   const metaValues = reactiveData.Edit_COMMENT.match(metaNotesRegex);
-  if (metaValues != null) {
+  if (metaValues !== null) {
     const metaPairs = metaValues[1].split("\n");
     metaPairs.forEach(pair => {
-      const mv = pair.match(/\$(\S+)\s*=\s="(.*)"/);
-      if (mv != null) {
+      const mv = pair.match(/\$(\S+)\s*=\s*'(.*)'/);
+      if (mv !== null) {
         reactiveData[`meta_${mv[1]}`] = mv[2];
       }
     });
@@ -159,20 +163,22 @@ function updateMetaNotes() {
   if (typeof reactiveData.Edit_COMMENT !== "string") {
     return;
   }
-  const notes = reactiveData.Edit_COMMENT.replace(/[ ]*{meta}(.|\n)*{\/meta}\n?/, "");
-  const notesHasClosingNL = notes.indexOf("\n") === notes.length - 1;
+  const notes = reactiveData.Edit_COMMENT.replace(/[ ]*{meta}(.|\n)*{\/meta}\n/, "");
+  const notesHasClosingNL = notes.substring(notes.length - 1) === "\n";
   reactiveData.Edit_COMMENT = `${notes}${notesHasClosingNL?"":"\n"}{meta}
- $hasLedBox = "${reactiveData.meta_hasLedBox}"
- $duplicatedRelays = "${reactiveData.meta_duplicatedRelays}"
- $earthFaultThreshold = "${reactiveData.meta_earthFaultThreshold}"
- $shutdownThermostat = "${reactiveData.meta_shutdownThermostat}"
- $forcedFloatInput = "${reactiveData.meta_forcedFloatInput}"
- $highrateInput = "${reactiveData.meta_highrateInput}"
- $commissioningInput = "${reactiveData.meta_commissioningInput}"
- $alarmAcknowledgmentInput = "${reactiveData.meta_alarmAcknowledgmentInput}"
- $displayAmbientTemperature = "${reactiveData.meta_displayAmbientTemperature}"
- $displayBatteryTemperature = "${reactiveData.meta_displayBatteryTemperature}"
-{/meta}`;
+ $hasLedBox = '${reactiveData.meta_hasLedBox}'
+ $duplicatedRelays = '${reactiveData.meta_duplicatedRelays}'
+ $earthFaultThreshold = '${reactiveData.meta_earthFaultThreshold}'
+ $shutdownThermostat = '${reactiveData.meta_shutdownThermostat}'
+ $forcedFloatInput = '${reactiveData.meta_forcedFloatInput}'
+ $highrateInput = '${reactiveData.meta_highrateInput}'
+ $commissioningInput = '${reactiveData.meta_commissioningInput}'
+ $alarmAcknowledgmentInput = '${reactiveData.meta_alarmAcknowledgmentInput}'
+ $displayAmbientTemperature = '${reactiveData.meta_displayAmbientTemperature}'
+ $displayBatteryTemperature = '${reactiveData.meta_displayBatteryTemperature}'
+ $extendedLocalMenu = '${reactiveData.meta_extendedLocalMenu}'
+{/meta}
+`;
 }
 
 const tdsLabelsInSequence = [];
@@ -201,8 +207,8 @@ export function makeTdsFile() {
         const multiplier = 1e5;
         value = (Math.round(value * multiplier) / multiplier).toString();
       }
-      const matches = value.match(/\s*(\d*).(\d*)\s*/);
-      if (matches) {
+      const matches = value.match(/\s*(\d*)\.(\d*)\s*/);
+      if (matches !== null) {
         if (matches[1] === "") {
           matches[1] = "0";
         }
@@ -361,6 +367,9 @@ const app2Language2tdsIndex = {
 // note: nbOfCells necessary because of the reactive system, as it is, involving Option_x_elemnt, Edit_QDB_NDB
 //       needs a bulk refresh of them all in order to work well...
 function postProcessDataGotFromP0orApp(nbOfCells) {
+  if (reactiveData.BattCapacity === "0") {
+    reactiveData.BattCapacity = estimateAh(reactiveData.IbattNom).toString();
+  }
   reactiveData.Option_6_elemnt = "false";
   reactiveData.Option_3_elemnt = "false";
   reactiveData.Option_2_elemnt = "false";
@@ -418,6 +427,7 @@ function floatValueFromArrayBuffer(byteArrayBuffer, offset) {
 export function processP0File(fileContentsAsArrayBuffer) {
   axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
     processTdsFile(reply.data);
+    reactiveData.BattCapacity = "0";
     let nbOfCells;
     const byteArray = new Uint8Array(fileContentsAsArrayBuffer);
     const p0OffsetFieldName = byteArray.length === 600 ? "P0Offset" : "P0V1Offset";
@@ -547,6 +557,7 @@ function getAppHrPostOrDirect(value) {
 export function processAppFile(fileContents) {
   axios.get(`${process.env.BASE_URL}/template.tdsa`).then((reply) => {
     processTdsFile(reply.data);
+    reactiveData.BattCapacity = "0";
     let nbOfCells = "1";
     const lines = fileContents.toString().split("\n");
     const pattern = /^\W*(\d+):\W+(.+)\W{2,}(.*)\r?$/;

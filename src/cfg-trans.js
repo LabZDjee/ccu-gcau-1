@@ -215,7 +215,7 @@ function setRelay(object, relayNumber, attributes /* ["RelayNumber", "NumberOfRe
 // with object 'evtDef' made of strings (all properties are optional):
 //  {Function="OF", LCDLatch="0", RelayLatch="0", Shutdown="0", CommonAlarm="0", RelayNumber="0",
 //   Delay=undefined, Value=undefined, Text=undefined, LocalText=undefined}
-//   undefined properties do not set anything in the vent definition (left untouched)
+//   undefined properties do not set anything in the event definition (left untouched)
 // updateSysvar: will turn corresponding bit in SYSVAR.EventEnable to 0 or 1 depending on
 //  FUNCTION being "OF" or not
 function setEvt(num, evtDef, updateSysvar = true) {
@@ -296,21 +296,23 @@ export function translateCcu2gcau() {
   alterMeta("Lang2Ctrl", selectChoicesAgcMap.languages[reactiveData.Language].upload);
   alterObjAttr("NOMINAL", "Language", selectChoicesAgcMap.languages[reactiveData.Language].nominal);
   alterObjAttr("REGISTRY", "LocalLanguage", selectChoicesAgcMap.languages[reactiveData.Language].upload);
-  alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
-  alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
-  alterObjAttr("SYSVAR", "BatteryMenuEnable", "001F");
-  alterObjAttr("SYSVAR", "NominalSetMenuEnable", "0067");
-  alterObjAttr("SYSVAR", "MeterMenuEnable", "3F");
-  alterObjAttr("SYSVAR", "HighrateMenuEnable", "11FF");
-  alterObjAttr("SYSVAR", "CommissionMenuEnable", "001F");
-  alterObjAttr("SYSVAR", "ManualAdjustMenuEnable", "0F");
-  alterObjAttr("SYSVAR", "VOApplicationMenuEnable", "7F");
-  alterObjAttr("SYSVAR", "BattTestMenuEnable", "027FF");
-  alterObjAttr("SYSVAR", "CompensationMenuEnable", "0F");
-  alterObjAttr("SYSVAR", "CommunicationMenuEnable", "17");
-  alterObjAttr("SYSVAR", "PasswordMenuEnable", "03");
-  alterObjAttr("SYSVAR", "MeterEnable", "07");
-  alterObjAttr("SYSVAR", "SuperUserMenus", "7FFF");
+  if (reactiveData.meta_extendedLocalMenu !== selectChoices.extendedLocalMenu[0]) {
+    alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
+    alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
+    alterObjAttr("SYSVAR", "BatteryMenuEnable", "001F");
+    alterObjAttr("SYSVAR", "NominalSetMenuEnable", "0067");
+    alterObjAttr("SYSVAR", "MeterMenuEnable", "3F");
+    alterObjAttr("SYSVAR", "HighrateMenuEnable", "11FF");
+    alterObjAttr("SYSVAR", "CommissionMenuEnable", "001F");
+    alterObjAttr("SYSVAR", "ManualAdjustMenuEnable", "0F");
+    alterObjAttr("SYSVAR", "VOApplicationMenuEnable", "7F");
+    alterObjAttr("SYSVAR", "BattTestMenuEnable", "027FF");
+    alterObjAttr("SYSVAR", "CompensationMenuEnable", "0F");
+    alterObjAttr("SYSVAR", "CommunicationMenuEnable", "17");
+    alterObjAttr("SYSVAR", "PasswordMenuEnable", "03");
+    alterObjAttr("SYSVAR", "MeterEnable", "07");
+    alterObjAttr("SYSVAR", "SuperUserMenus", "7FFF");
+  }
   for (let i = 1; i <= 32; i++) {
     switch (i) {
       case 23: // TEMP SENSE ERROR
@@ -413,7 +415,9 @@ export function translateCcu2gcau() {
   alterObjAttr("VOAPPL", "Timer", toIntAsStr(reactiveData.VoChargeTime, 60));
   if (isVOBatteryType) {
     const voCurrentLimit = parseFloat(reactiveData.IbattLow);
-    setHexBitField("true", "SYSVAR", "MenuGroupEnable", 6);
+    if (reactiveData.meta_extendedLocalMenu !== selectChoices.extendedLocalMenu[0]) {
+      setHexBitField("true", "SYSVAR", "MenuGroupEnable", 6);
+    }
     let voSecurityTimer = 3 * (batteryCapacity / voCurrentLimit + parseFloat(reactiveData.VoChargeTime));
     if (voSecurityTimer > 36) {
       voSecurityTimer = 36;
@@ -433,7 +437,9 @@ export function translateCcu2gcau() {
   alterObjAttr("BATTTEST", "Percentage", toIntAsStr(reactiveData.DischrgPercent));
   alterObjAttr("BATTTEST", "EndVoltage", toIntAsStr(reactiveData.TestEndVoltage, 10));
   if (batteryTestEnabled) {
-    setHexBitField("true", "SYSVAR", "MenuGroupEnable", 7);
+    if (reactiveData.meta_extendedLocalMenu !== selectChoices.extendedLocalMenu[0]) {
+      setHexBitField("true", "SYSVAR", "MenuGroupEnable", 7);
+    }
     alterMeta("Notes", "Warning: battery test enabled! Behavior from CCU may differ. Review settings & discuss with end user.", true);
   }
   const commonAlarmEnabled = zeroOne(reactiveData.CM_Enabled);
