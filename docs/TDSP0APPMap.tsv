@@ -220,7 +220,7 @@ Combo_R4_REL	Spare alarm #4	Relay number	x------x	S4_RelayOutput	x------x	117	By
 Edit_R4_TDA	Spare alarm #4	Alarm text	x------x	S4_Text	x------x	142	String[17]	x------x	413	Spare 4 Alarm	string:17	479	461	119	112	S4_name	Default
 Edit_R4_TEMPS	Spare alarm #4	Delay	s	S4_Delay	x------x	116	Dword	0~59	291	Spare 4 Alarm	word	496	478	120	113	S4_delay	Integer
 Frame_R4	Spare alarm #4	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_OPBVO_CL	VO management	Current limit	Amps	IbattLow	x------x	34	Word	1~9999	64	VO Application	word	96	94	34	34	IbattLow	Integer
+Edit_OPBVO_CL	VO management	Current limit	Amps	IbattLow	x------x	34	Float	1~9999	64	VO Application	word	96	94	34	34	IbattLow	Integer
 Edit_OPBVO_DELTA	VO management	Differential temperature min threshold	°C	DTmin	x------x	36	Byte	0~20	67	VO Application	byte	99	97	36	36	dTmin	Integer
 Edit_OPBVO_TDC	VO management	Extra time	h:3600:s	VoChargeTime	x------x	37	Dword	0~14400	68	VO Application	dword	100	98	37	37	VoChargeTime	Integer:s2h
 Edit_OPBVO_TETA	VO management	Differential temperature max threshold	°C	DTmax	x------x	35	Byte	0~20	66	VO Application	byte	98	96	35	35	dTmax	Integer

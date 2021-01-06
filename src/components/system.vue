@@ -32,7 +32,7 @@
                 <vyw-integer-input data-key="SlaveAddress" label="Slave number" :bottom="Number(1)" :top="Number(255)" hint="[1~255]"></vyw-integer-input>
               </div>
               <div>
-                <vyw-select-input data-key="Baudrate" label="Communication velocity (bps)" :item-list="baudrates" hint="bauds"></vyw-select-input>
+                <vyw-select-input data-key="Baudrate" label="Velocity (bps, ignored)" :item-list="baudrates" hint="bauds"></vyw-select-input>
               </div>
             </div>
           </v-card-text>

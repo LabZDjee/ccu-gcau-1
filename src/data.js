@@ -16,7 +16,7 @@ import {
   estimateAh,
 } from "./utils";
 
-export const applicationVersion = "0.9.6";
+export const applicationVersion = "0.9.8";
 
 export const tsvMap = {};
 // property is a SetupParm (if defined) and value is the associated TDSTag, e.g.:
@@ -126,12 +126,10 @@ const importedFileName = {
 
 // used by battery capacity evaluator
 function ahMultiplier() {
-  const batteryType = (reactiveData.Combo_DEF_TDB).toLowerCase();
-  console.log(batteryType);
-
   function find(x) {
     return batteryType.indexOf(x) >= 0;
   }
+  const batteryType = (reactiveData.Combo_DEF_TDB).toLowerCase();
   if (find("vo") || find("cd")) {
     return 5;
   }

@@ -309,9 +309,9 @@ export function translateCcu2gcau() {
     alterObjAttr("SYSVAR", "BattTestMenuEnable", "027FF");
     alterObjAttr("SYSVAR", "CompensationMenuEnable", "0F");
     alterObjAttr("SYSVAR", "PasswordMenuEnable", "03");
-    alterObjAttr("SYSVAR", "MeterEnable", "07");
     alterObjAttr("SYSVAR", "SuperUserMenus", "7FFF");
   }
+  alterObjAttr("SYSVAR", "MeterEnable", "02");
   for (let i = 1; i <= 32; i++) {
     switch (i) {
       case 23: // TEMP SENSE ERROR
@@ -395,7 +395,11 @@ export function translateCcu2gcau() {
   alterObjAttr("SYSTEM", "BattShuntVolt", "100");
   alterObjAttr("SYSTEM", "InRevPol", "0000");
   alterObjAttr("NOMINAL", "BatteryCurrent", toIntAsStr(reactiveData.IbattNom, 10));
-  alterObjAttr("NOMINAL", "HighrateVolts", toIntAsStr(reactiveData.UhrPerCell, nbOfCells * 10));
+  let uhrPerCell = parseFloat(reactiveData.UhrPerCell);
+  if (isNaN(uhrPerCell) || uhrPerCell <= 0) {
+    uhrPerCell = parseFloat(reactiveData.UflPerCell);
+  }
+  alterObjAttr("NOMINAL", "HighrateVolts", toIntAsStr(uhrPerCell, nbOfCells * 10));
   alterObjAttr("HIGHRATE", "TimerMode", reactiveData.ChrgTimerMode === "1" ? "D" : "P");
   alterObjAttr("HIGHRATE", "ManualHighrate", zeroOne(reactiveData.ManHrEnable));
   alterObjAttr("HIGHRATE", "Periodic", reactiveData.PeriodicHr === "None" ? "0" : reactiveData.PeriodicHr);
@@ -412,8 +416,9 @@ export function translateCcu2gcau() {
   alterObjAttr("VOAPPL", "dTMax", toIntAsStr(reactiveData.DTmax));
   alterObjAttr("VOAPPL", "BattCurrentDetection", toIntAsStr(reactiveData.IbattLow, 10));
   alterObjAttr("VOAPPL", "Timer", toIntAsStr(reactiveData.VoChargeTime, 60));
+  alterObjAttr("VOAPPL", "AhMinDetection", "0");
   if (isVOBatteryType) {
-    const voCurrentLimit = parseFloat(reactiveData.IbattLow);
+    const voCurrentLimit = parseFloat(reactiveData.IbattNom);
     if (reactiveData.meta_extendedLocalMenu !== selectChoices.extendedLocalMenu[0]) {
       setHexBitField("true", "SYSVAR", "MenuGroupEnable", 6);
     }
@@ -426,7 +431,11 @@ export function translateCcu2gcau() {
   }
   alterObjAttr("COMMISS", "Manual", reactiveData.CommEnable === "true" ? "1" : "0");
   setRelay("COMMISS", reactiveData.CommRelayOutput, ["RelayNb", "NumberOfRelays", "LedNb"]);
-  alterObjAttr("COMMISS", "Voltage", toIntAsStr(reactiveData.UcommPerCell, nbOfCells * 10));
+  let ucommPerCell = parseFloat(reactiveData.UcommPerCell);
+  if (isNaN(ucommPerCell) || ucommPerCell <= 0) {
+    ucommPerCell = parseFloat(reactiveData.UflPerCell);
+  }
+  alterObjAttr("COMMISS", "Voltage", toIntAsStr(ucommPerCell, nbOfCells * 10));
   alterObjAttr("COMMISS", "Current", toIntAsStr(reactiveData.CommCurrent, 10));
   alterObjAttr("COMMISS", "Duration", toIntAsStr(reactiveData.CommTime, 60));
   const batteryTestEnabled = reactiveData.BattTestEnable === "true";
@@ -730,6 +739,7 @@ export function translateCcu2gcau() {
   }
   setHexBitField("true", "SYSVAR", "MenuGroupEnable", 11);
   alterObjAttr("SYSVAR", "CommunicationMenuEnable", "17");
+  alterObjAttr("COMMUN", "SlaveNumber", reactiveData.SlaveAddress);
   switch (reactiveData.meta_communicationType) {
     case selectChoices.communicationType[0]:
       setHexBitField("false", "SYSVAR", "MenuGroupEnable", 11);
