@@ -21,11 +21,11 @@
               <input v-show="false" ref="inputAgc" type="file" accept=".agc" @change="loadAgc" />
             </v-flex>
             <v-flex xs2>
-              <v-btn small @click="saveOutputFile()" :disabled="agcFileName === null">Download AGC</v-btn>
+              <v-btn small @click="saveOutputFile()" :disabled="agcFileName === null">Save AGC</v-btn>
               <!-- <a ref="outputSave" v-show="false" href download="sample.agc">Save</a> -->
             </v-flex>
             <v-flex xs2>
-              <v-btn small @click="saveTdsFile()">Download TDS</v-btn>
+              <v-btn small @click="saveTdsFile()">Save TDS</v-btn>
               <!-- <a ref="outputTDSSave" v-show="false" href download="sample.tds">Save</a> -->
             </v-flex>
           </v-layout>

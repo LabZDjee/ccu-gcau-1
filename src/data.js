@@ -16,10 +16,10 @@ import {
   estimateAh,
 } from "./utils";
 
-export const applicationVersion = "0.9.4";
+export const applicationVersion = "0.9.6";
 
 export const tsvMap = {};
-// property is this SetupParm and value is the associated TDSTag, e.g.:
+// property is a SetupParm (if defined) and value is the associated TDSTag, e.g.:
 //  TempComp: "Check_DEF_CET"
 export const tdsAlias = {};
 
@@ -58,6 +58,7 @@ export const selectChoices = {
   spareInputs: ["no", "active low", "active high"],
   commissioningInput: ["no", "active low", "active high", "allowed low", "allowed high"],
   extendedLocalMenu: ["don't extend", "extend"],
+  communicationType: ["None", "WinSparc", "2-wire RTU-Modbus", "NCS (ASCII-Modbus+SPG)"],
 };
 
 let initTdsDataDone = false;
@@ -95,6 +96,7 @@ const _metaData = {
   displayAmbientTemperature: null,
   displayBatteryTemperature: null,
   extendedLocalMenu: null,
+  communicationType: null,
 };
 
 function initMeta() {
@@ -113,6 +115,7 @@ function initMeta() {
   initOneMeta("displayAmbientTemperature", "false");
   initOneMeta("displayBatteryTemperature", "false");
   initOneMeta("extendedLocalMenu", selectChoices.extendedLocalMenu[0]);
+  initOneMeta("communicationType", selectChoices.communicationType[0]);
 }
 
 const importedFileName = {
@@ -120,6 +123,23 @@ const importedFileName = {
   shortFileName: "", // example: abcdef.efg
   extension: "", // example: .tdsa
 };
+
+// used by battery capacity evaluator
+function ahMultiplier() {
+  const batteryType = (reactiveData.Combo_DEF_TDB).toLowerCase();
+  console.log(batteryType);
+
+  function find(x) {
+    return batteryType.indexOf(x) >= 0;
+  }
+  if (find("vo") || find("cd")) {
+    return 5;
+  }
+  if ((find("lead") || find("acid"))) {
+    return 10;
+  }
+  return 7.5;
+}
 
 export function setImportedFileName(fileName) {
   if (typeof fileName === "string") {
@@ -177,6 +197,7 @@ function updateMetaNotes() {
  $displayAmbientTemperature = '${reactiveData.meta_displayAmbientTemperature}'
  $displayBatteryTemperature = '${reactiveData.meta_displayBatteryTemperature}'
  $extendedLocalMenu = '${reactiveData.meta_extendedLocalMenu}'
+ $communicationType = '${reactiveData.meta_communicationType}'
 {/meta}
 `;
 }
@@ -367,9 +388,6 @@ const app2Language2tdsIndex = {
 // note: nbOfCells necessary because of the reactive system, as it is, involving Option_x_elemnt, Edit_QDB_NDB
 //       needs a bulk refresh of them all in order to work well...
 function postProcessDataGotFromP0orApp(nbOfCells) {
-  if (reactiveData.BattCapacity === "0") {
-    reactiveData.BattCapacity = estimateAh(reactiveData.IbattNom).toString();
-  }
   reactiveData.Option_6_elemnt = "false";
   reactiveData.Option_3_elemnt = "false";
   reactiveData.Option_2_elemnt = "false";
@@ -403,6 +421,9 @@ function postProcessDataGotFromP0orApp(nbOfCells) {
   reactiveData.Edit_COMMENT = `Import from ${importedFileName.extension} file type`;
   reactiveData.Edit_ENV_TA = "25";
   reactiveData.Edit_ENV_ALT = "0";
+  if (reactiveData.BattCapacity === "0") {
+    reactiveData.BattCapacity = estimateAh(reactiveData.IbattNom, ahMultiplier()).toString();
+  }
 }
 
 function setNoBatteryTest() {

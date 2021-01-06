@@ -82,7 +82,7 @@ const selectChoicesAgcMap = {
   batteryType: {
     "None": "0",
     "VO": "3",
-    "Ni CD (SBH-SBM)": "1",
+    "Ni CD (SBH-SBM)": "2",
     "Ni CD (SBL)": "2",
     "Ni CD (SPH)": "2",
     "Ni CD (SLM)": "2",
@@ -308,7 +308,6 @@ export function translateCcu2gcau() {
     alterObjAttr("SYSVAR", "VOApplicationMenuEnable", "7F");
     alterObjAttr("SYSVAR", "BattTestMenuEnable", "027FF");
     alterObjAttr("SYSVAR", "CompensationMenuEnable", "0F");
-    alterObjAttr("SYSVAR", "CommunicationMenuEnable", "17");
     alterObjAttr("SYSVAR", "PasswordMenuEnable", "03");
     alterObjAttr("SYSVAR", "MeterEnable", "07");
     alterObjAttr("SYSVAR", "SuperUserMenus", "7FFF");
@@ -667,6 +666,7 @@ export function translateCcu2gcau() {
     ...hrEvtDef,
     Function: reactiveData.HR_Enabled === "true" ? "AL" : "OF",
   });
+  alterObjAttr("COMMISS", "AllowedFromSpare", "0");
   [{
     cmd: "FF",
     select: reactiveData.meta_forcedFloatInput,
@@ -709,10 +709,9 @@ export function translateCcu2gcau() {
     setHexBitField("true", "SYSVAR", "EventEnable", idx + 13);
     if (cmd === "AL") {
       setHexBitField("true", "SYSVAR", "CommissionMenuEnable", 8);
+      alterObjAttr("COMMISS", "AllowedFromSpare", "7");
     }
-    alterObjAttr("COMMISS", "AllowedFromSpare", cmd === "AL" ? "7" : "0");
   });
-
   alterObjAttr("SYSTEM", "ShutdownInput", zeroOne(reactiveData.meta_shutdownThermostat));
   if (reactiveData.meta_hasLedBox && usedLeds.length > 0) {
     alterMeta("Notes", `Has one LED box with LEDs: ${extractListFromSortedArrayOfInts(usedLeds)}`, true);
@@ -728,5 +727,30 @@ export function translateCcu2gcau() {
     alterMeta("Notes", `Used relays: ${extractListFromSortedArrayOfInts(usedRelays)}`, true);
   } else {
     alterMeta("NbRelayCards", "0");
+  }
+  setHexBitField("true", "SYSVAR", "MenuGroupEnable", 11);
+  alterObjAttr("SYSVAR", "CommunicationMenuEnable", "17");
+  switch (reactiveData.meta_communicationType) {
+    case selectChoices.communicationType[0]:
+      setHexBitField("false", "SYSVAR", "MenuGroupEnable", 11);
+      break;
+    case selectChoices.communicationType[1]:
+      alterObjAttr("COMMUN", "Protocol", "S");
+      alterObjAttr("COMMUN", "Baudrate", "38400");
+      alterObjAttr("COMMUN", "Hardware", "2");
+      alterObjAttr("COMMUN", "Format", "8N1");
+      break;
+    case selectChoices.communicationType[2]:
+      alterObjAttr("COMMUN", "Protocol", "RM");
+      alterObjAttr("COMMUN", "Baudrate", "9600");
+      alterObjAttr("COMMUN", "Hardware", "4");
+      alterObjAttr("COMMUN", "Format", "8N1");
+      break;
+    case selectChoices.communicationType[3]:
+      alterObjAttr("COMMUN", "Protocol", "SAM");
+      alterObjAttr("COMMUN", "Baudrate", "38400");
+      alterObjAttr("COMMUN", "Hardware", "N");
+      alterObjAttr("COMMUN", "Format", "8N1");
+      break;
   }
 }

@@ -132,8 +132,11 @@
               </div>
             </div>
             <div class="d-flex">
-              <div>
+              <div class="pr-1">
                 <vyw-select-input data-key="meta_extendedLocalMenu" label="Local menus" :item-list="selectChoices.extendedLocalMenu"></vyw-select-input>
+              </div>
+              <div>
+                <vyw-select-input data-key="meta_communicationType" label="Communications" :item-list="selectChoices.communicationType"></vyw-select-input>
               </div>
             </div>
           </v-card-text>

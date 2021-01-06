@@ -262,24 +262,25 @@ export function isBetween(min, value, max) {
 }
 
 // rounds off value to nearest value with one digit and all zeroes
-// examples: 456 => 400, 0 => 0, -0.2 => -0, 1.5 => 2, -456 => -500, -5200 => -5000
-export function roundOffToZeroes(v) {
+// examples: 456 => 500, 0 => 0, -0.2 => -0, 1.5 => 2, -456 => -500, -5200 => -5000
+// parameter 'roundFct' is rounding lambda function (float => float), normally Math.ceil or Math.floor
+//  beware 'roundFct' works on the absolute value of 'v': roundOffToZeroes(-416, Math.ceil) => -500
+export function roundOffToZeroes(v, roundFct = Math.round) {
   const negMult = Math.sign(v);
   v = Math.abs(v);
   if (v < 1) {
-    return Math.round(v) * negMult;
+    return roundFct(v) * negMult;
   }
   const log = Math.log10(v);
   let multiplier = Math.pow(10, Math.trunc(log));
-  return Math.round(v / multiplier) * multiplier * negMult;
+  return roundFct(v / multiplier) * multiplier * negMult;
 }
 
 // estimate battery capacity given battCurrentLimit
 // takes a constant for number of expected hours: averageTime (in hours)
 // take take a string as battCurrentLimit
 // returns a numeric value
-export function estimateAh(battCurrentLimit) {
-  const averageTime = 8; // hours
+export function estimateAh(battCurrentLimit, averageTime = 7.5) {
   const defaultValue = 1;
   if (typeof battCurrentLimit === "string") {
     battCurrentLimit = parseFloat(battCurrentLimit);
@@ -289,7 +290,7 @@ export function estimateAh(battCurrentLimit) {
     if (rawAh < 1) {
       return defaultValue;
     }
-    return roundOffToZeroes(rawAh);
+    return roundOffToZeroes(rawAh, Math.ceil);
   }
   return defaultValue;
 }
