@@ -3,14 +3,14 @@ Check_DEF_CET	Battery	Temperature compensation enable	x------x	TempComp	x------x
 Check_SHUNT_SB	Battery	Battery shunt installed	x------x	BattShunt	x------x	6	Boolean	0;1	11	Shunt	bool16	20	20	6	6	battShunt	Integer
 Combo_DEF_TDB	Battery	Battery type	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_BattName	Battery	Battery name	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DEF_CDCC	Battery	Short circuit current	kA	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DEF_CET	Battery	Temperature compensation	mV/°C/cell	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DEF_CET2	Battery	Temperature compensation	%/°C	CompPerC	x------x	43	Float	0.1~0.4	85	Temperature Compensation	float	127	125	43	43	compPerC	Float:2
-Edit_DEF_TDFDDPE	Battery	Battery discharge end voltage	V/cell	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DEF_CDCC	Battery	Short circuit current	kA	x------x	Float	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DEF_CET	Battery	Temperature compensation	mV/°C/cell	x------x	Float	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DEF_CET2	Battery	Temperature compensation	%/°C	CompPerC	Float	43	x------x	0.1~0.4	85	Temperature Compensation	float	127	125	43	43	compPerC	Float:2
+Edit_DEF_TDFDDPE	Battery	Battery discharge end voltage	V/cell	x------x	Float	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DEF_TDFLPE	Battery	Floating charge voltage per cell	V/cell	UflPerCell	x------x	16	Float	1~2.3	27	Charge Mode	float	50	48	16	16	uflPerCell	Float:2
 Edit_QDB_NDB	Battery	Number of groups	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_QDB_NDC	Battery	Number of cells	x------x	NrOfCells	x------x	15	Byte	1~600	26	35:35:Charge Mode	word	48	46	15	15	nrOfCells	Integer
-Edit_SHUNT_CN	Battery	Battery current limit	Amps	IbattNom	x------x	7	Word	1~9999	12	Shunt	word	26	26	7	7	ibattNom	Integer
+Edit_SHUNT_CN	Battery	Battery current limit	Amps	IbattNom	x------x	7	Float	1~9999	12	Shunt	word	26	26	7	7	ibattNom	Integer
 Edit_SHUNT_SB	Battery	Battery shunt value	Amps	BattShuntVal	x------x	8	Float	0.5~9999	14	Shunt	float	22	22	8	8	battShuntVal	Float:1
 Frame_DEF	Battery	Frame that encompasses battery definition	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Frame_QDB	Battery	Frame that encompasses battery cell organisation	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
@@ -47,9 +47,9 @@ Option_DEF_DIRECT	Battery highrate	Highrate 'direct' option	x------x	ChrgTimerMo
 Option_DEF_POST	Battery highrate	Highrate 'post' option	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Check_TB	Battery test	Test enable	x------x	BattTestEnable	x------x	45	Boolean	0;1	90	0:14:Battery Test	bool16	133	9999	45	148	Battery test is	Integer
 Combo_TB_TP	Battery test	Periodic battery test	months	AutoTestPeriod	x------x	50	Byte	0~12	102	Battery Test	byte	146	9999	50	153	Periodic battery test	Integer:02
-Edit_DEF_CB	Battery test	Capacity	Ah	BattCapacity	x------x	46	Word	0~9999	91	Battery Test	word	135	9999	46	149	Battery capacity	Integer:03
+Edit_DEF_CB	Battery test	Capacity	Ah	BattCapacity	Float	46	Word	0~9999	91	Battery Test	word	135	9999	46	149	Battery capacity	Integer:03
 Edit_TB_NTA	Battery test	End voltage alarm threshold	V	EndVoltageAlarm	x------x	49	Float	0~650	98	Battery Test	float	142	9999	49	152	Discharge alarm voltage	Float:1
-Edit_TB_PDD	Battery test	Discharge percentage	%	DischrgPercent	x------x	47	Byte	0~30	93	Battery Test	byte	137	9999	47	150	Discharge percentage	Integer
+Edit_TB_PDD	Battery test	Discharge percentage	%	DischrgPercent	Float	47	Byte	0~30	93	Battery Test	byte	137	9999	47	150	Discharge percentage	Integer
 Edit_TB_TMT	Battery test	Discharge end voltage	V	TestEndVoltage	x------x	48	Float	0~650	94	Battery Test	float	138	9999	48	151	Discharge end voltage	Float:1
 Frame_TB	Battery test	Frame that encompasses battery test parameters	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 x------x	Calibration	Battery current factor	x------x	IbattCalibration	x------x	143	Float	0.8~1.2	430	44:44:Calibration	float	154	136	143	136	ibattCalibration	Float:2
@@ -72,9 +72,9 @@ Check_AR_DRED	Conditions for stopping rectifier	On rectifier fault	x------x	RfSh
 Check_AR_DRES	Conditions for stopping rectifier	On mains fail	x------x	MfShtdnEnable	x------x	40	Boolean	0;1	82	6:6:Shutdown	bool16	117	115	40	40	mfShtdnEnable	Integer
 Check_AR_TMDC	Conditions for stopping rectifier	On high DC voltage	x------x	HvShtdnEnable	x------x	41	Boolean	0;1	83	Shutdown	bool16	121	119	41	41	hvShtdnEnable	Integer
 Frame_AR	Conditions for stopping rectifier	Frame that encompasses rect. stop conditions	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DC_CURA	Customer data	Current when mains if off	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DC_CURP	Customer data	Current when mains is on	Amps	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_DC_DDLPDC	Customer data	Peak current duration	s	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DC_CURA	Customer data	Current when mains if off	Amps	x------x	Float	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DC_CURP	Customer data	Current when mains is on	Amps	x------x	Float	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_DC_DDLPDC	Customer data	Peak current duration	s	x------x	Float	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DC_PDC	Customer data	Peak current	Amps	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DC_VMAXDLT	Customer data	High voltage limit	V	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Edit_DC_VMINDLT	Customer data	Low voltage limit	V	x------x	x------x	9999	Float	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
@@ -160,12 +160,12 @@ Edit_DTM_TEMPS	Negative earthfault alarm	Delay	s	EFM_Delay	x------x	96	Dword	0~5
 Frame_DTM	Negative earthfault alarm	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Combo_RN_FREQ	Nominal settings	Mains frequency	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Combo_RN_IDC	Nominal settings	DC current	Amps	IdcNom	x------x	4	Word	1~9999	5	Nominal	word	12	12	4	4	idcNom	Integer
-Combo_RN_NDP	Nominal settings	Number of phases	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Combo_RN_NDP	Nominal settings	Number of phases	x------x	x------x	Byte	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Combo_RN_UAC	Nominal settings	AC voltage	V	UacNom	x------x	2	Word	1~700	2	6:6:Nominal	word	8	8	2	2	uacNom	Integer
 Combo_RN_UDC	Nominal settings	DC voltage	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_RN_CN	Nominal settings	AC inrush current	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
+Edit_RN_CN	Nominal settings	AC inrush current	x------x	x------x	Float	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
 Frame_RN	Nominal settings	Frame that encompasses nominal settings	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Label_CCU_Jumper	Nominal settings	UDC nominal setting in CCU	V	UdcNom	Only calculated	3	Byte	12;24;32;48;60;110;125;220;250	4	Nominal	word	10	10	3	3	udcNom	Integer
+Label_CCU_Jumper	Nominal settings	UDC nominal setting in CCU	V	UdcNom	x------x	3	Byte	12;24;32;48;60;110;125;220;250	4	Nominal	word	10	10	3	3	udcNom	Integer
 Check_DTP	Positive earthfault alarm	Enable alarm	x------x	EFP_Enabled	x------x	90	Boolean	0;1	202	Earth Fault Plus Alarm	bool16	350	332	90	83	EFP_enabled	Integer
 Check_DTP_AFF	Positive earthfault alarm	Enable display latch	x------x	EFP_LcdLatch	x------x	93	Boolean	0;1	216	Earth Fault Plus Alarm	word:bf:0	352	334	93	86	EFP_lcdLatch	Integer
 Check_DTP_REL	Positive earthfault alarm	Enable relay latch	x------x	EFP_RelayLatch	x------x	94	Boolean	0;1	217	Earth Fault Plus Alarm	word:bf:1	352	334	94	87	EFP_relayLatch	Integer
@@ -220,8 +220,8 @@ Combo_R4_REL	Spare alarm #4	Relay number	x------x	S4_RelayOutput	x------x	117	By
 Edit_R4_TDA	Spare alarm #4	Alarm text	x------x	S4_Text	x------x	142	String[17]	x------x	413	Spare 4 Alarm	string:17	479	461	119	112	S4_name	Default
 Edit_R4_TEMPS	Spare alarm #4	Delay	s	S4_Delay	x------x	116	Dword	0~59	291	Spare 4 Alarm	word	496	478	120	113	S4_delay	Integer
 Frame_R4	Spare alarm #4	Frame that encompasses alarm	x------x	x------x	x------x	9999	x------x	x------x	474	x------x	x------x	600	582	9999	9999	x------x	x------x
-Edit_OPBVO_CL	VO management	Current limit	Amps	IbattLow	x------x	34	Float	1~9999	64	VO Application	word	96	94	34	34	IbattLow	Integer
-Edit_OPBVO_DELTA	VO management	Differential temperature min threshold	°C	DTmin	x------x	36	Byte	0~20	67	VO Application	byte	99	97	36	36	dTmin	Integer
+Edit_OPBVO_CL	VO management	Current limit	Amps	IbattLow	Float	34	Word	1~9999	64	VO Application	word	96	94	34	34	IbattLow	Integer
+Edit_OPBVO_DELTA	VO management	Differential temperature min threshold	°C	DTmin	Float	36	Byte	0~20	67	VO Application	byte	99	97	36	36	dTmin	Integer
 Edit_OPBVO_TDC	VO management	Extra time	h:3600:s	VoChargeTime	x------x	37	Dword	0~14400	68	VO Application	dword	100	98	37	37	VoChargeTime	Integer:s2h
-Edit_OPBVO_TETA	VO management	Differential temperature max threshold	°C	DTmax	x------x	35	Byte	0~20	66	VO Application	byte	98	96	35	35	dTmax	Integer
+Edit_OPBVO_TETA	VO management	Differential temperature max threshold	°C	DTmax	Float	35	Byte	0~20	66	VO Application	byte	98	96	35	35	dTmax	Integer
 Frame_OPBV	VO management	Frame that encompasses battery VO definition	x------x	VoApplEnable	x------x	33	Boolean	0;1	63	10:10:VO Application	bool16	94	92	33	33	voAppl	Integer

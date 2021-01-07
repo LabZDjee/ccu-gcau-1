@@ -1,8 +1,14 @@
 /*jshint esversion: 6 */
 /* eslint-disable no-undef */
 
-import { reactiveData, eventBus, tdsAlias } from "./data";
-import { removeEltInArray } from "./utils";
+import {
+  reactiveData,
+  eventBus,
+  tdsAlias,
+} from "./data";
+import {
+  removeEltInArray,
+} from "./utils";
 
 export const reacterAttach = {
   created() {
@@ -51,7 +57,7 @@ export const reactiveStuffAttach = {
     this.reactSources().forEach((source) => {
       removeEltInArray(watcherFct, reactiveData.$watchers[source]);
       const otherName = tdsAlias[source];
-      if (otherName != undefined) {
+      if (otherName !== undefined) {
         removeEltInArray(watcherFct, reactiveData.$watchers[otherName]);
       }
     });

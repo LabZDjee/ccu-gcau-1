@@ -16,7 +16,7 @@ import {
   estimateAh,
 } from "./utils";
 
-export const applicationVersion = "0.9.8";
+export const applicationVersion = "0.9.10";
 
 export const tsvMap = {};
 // property is a SetupParm (if defined) and value is the associated TDSTag, e.g.:
@@ -130,15 +130,17 @@ function ahMultiplier() {
     return batteryType.indexOf(x) >= 0;
   }
   const batteryType = (reactiveData.Combo_DEF_TDB).toLowerCase();
-  if (find("vo") || find("cd")) {
+  if (find("vo") || find("ni") || find("cd")) {
     return 5;
   }
-  if ((find("lead") || find("acid"))) {
+  if (find("lead") || find("acid")) {
     return 10;
   }
   return 7.5;
 }
 
+// sets 'importedFileName' from 'fileName' (a file name without any path)
+// a way to get 'importedFileName' is to call this function without arguments
 export function setImportedFileName(fileName) {
   if (typeof fileName === "string") {
     const matches = /^(.*)(\..*)$/.exec(fileName);
@@ -202,6 +204,16 @@ function updateMetaNotes() {
 
 const tdsLabelsInSequence = [];
 
+function numericTypeOfLabel(label) {
+  if (["Note", "SetupType", "P0Type"].some(prop => tsvMap[label][prop].toLowerCase() === "float")) {
+    return "float";
+  }
+  if (["Note", "SetupType"].some(prop => ["boolean", "byte", "word", "dword"].some(type => tsvMap[label][prop].toLowerCase() === type))) {
+    return "integer";
+  }
+  return "non-numeric";
+}
+
 export function makeTdsFile() {
   updateMetaNotes();
   let contents = `<Projet>\r\n`;
@@ -218,7 +230,7 @@ export function makeTdsFile() {
         value = t.toString();
       } catch (e) {}
     }
-    if (tsvMap[label].P0Type.toLowerCase() === "float" || tsvMap[label].SetupType.toLowerCase() === "float") {
+    if (numericTypeOfLabel(label) === "float") {
       value = parseFloat(value);
       if (isNaN(value)) {
         value = "0.0";
@@ -284,11 +296,21 @@ export function processTdsFile(fileContents) {
           data = "false";
         }
       }
-      if (tsvMap[label].P0Type.toLowerCase() === "float" || tsvMap[label].SetupType.toLowerCase() === "float") {
-        const matches = data.match(commaFloatPattern);
-        if (matches) {
-          data = `${matches[1]}.${matches[2]}`;
-        }
+      const matches = data.match(commaFloatPattern);
+      switch (numericTypeOfLabel(label)) {
+        case "float":
+          if (matches) {
+            data = `${matches[1]}.${matches[2]}`;
+          }
+          break;
+        case "integer":
+          if (matches) {
+            data = Math.round(`${matches[1]}.${matches[2]}`).toString();
+          }
+          break;
+      }
+      if (["Note", "SetupType", "P0Type"].some(prop => tsvMap[label][prop].toLowerCase() === "float")) {
+
       }
       reactiveData[label] = data;
     } else {
@@ -505,7 +527,7 @@ export function processP0File(fileContentsAsArrayBuffer) {
             }
             break;
         }
-        if (value != null) {
+        if (value !== null) {
           if (tsvEntry.TDSUnitAndScale === ":language") {
             value = selectChoices.languages[parseInt(value, 10)];
           }

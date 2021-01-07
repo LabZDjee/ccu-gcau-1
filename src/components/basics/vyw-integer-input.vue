@@ -10,7 +10,7 @@
     :error-messages="errorMessages"
     :hint="hint"
     :append-icon="stepperIcon"
-    @click:append="stpperIconClicked"
+    @click:append="stepperIconClicked"
     class="mw"
   />
 </template>
@@ -87,7 +87,7 @@ export default {
       if (isNaN(v)) {
         return { msg: "Not a number!", def: this.initialValue };
       }
-      if (this.isAnInt(Number(v)) == false) {
+      if (this.isAnInt(Number(v)) === false) {
         return { msg: `Only integer values!`, def: this.numToInt(Number(v)) };
       }
       if (this.min !== undefined && Number(v) < this.min) {
@@ -135,7 +135,7 @@ export default {
       return Math.round(num);
     },
     isAnInt(num) {
-      return isNaN(num) == false && Math.floor(num) === num;
+      return isNaN(num) === false && Math.floor(num) === num;
     },
     cropDown(value) {
       return typeof this.min === "number" ? Math.max(this.min, value) : value;
@@ -143,7 +143,7 @@ export default {
     cropUp(value) {
       return typeof this.max === "number" ? Math.min(this.max, value) : value;
     },
-    stpperIconClicked(event) {
+    stepperIconClicked(event) {
       let n = Number(this.editedValue);
       if (isNaN(n)) {
         return;
