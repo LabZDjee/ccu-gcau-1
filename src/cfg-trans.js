@@ -381,6 +381,7 @@ export function translateCcu2gcau() {
   alterMeta("BatteryName", reactiveData.Edit_BattName);
   const nbOfCells = parseInt(reactiveData.NrOfCells, 10);
   alterObjAttr("BATTSEL", "NumberOfElements", reactiveData.NrOfCells);
+  alterObjAttr("BATTSEL", "SymmProbePosition", toIntAsStr(reactiveData.NrOfCells, 0.5));
   alterMeta("BattnBCells", reactiveData.NrOfCells);
   const batteryCapacity = parseFloat(reactiveData.BattCapacity);
   alterObjAttr("BATTSEL", "Capacity", reactiveData.BattCapacity);
