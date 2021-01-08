@@ -297,8 +297,7 @@ export function translateCcu2gcau() {
   alterObjAttr("NOMINAL", "Language", selectChoicesAgcMap.languages[reactiveData.Language].nominal);
   alterObjAttr("REGISTRY", "LocalLanguage", selectChoicesAgcMap.languages[reactiveData.Language].upload);
   if (reactiveData.meta_extendedLocalMenu !== selectChoices.extendedLocalMenu[0]) {
-    alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
-    alterObjAttr("SYSVAR", "MenuGroupEnable", "2B3F");
+    alterObjAttr("SYSVAR", "MenuGroupEnable", "293F");
     alterObjAttr("SYSVAR", "BatteryMenuEnable", "001F");
     alterObjAttr("SYSVAR", "NominalSetMenuEnable", "0067");
     alterObjAttr("SYSVAR", "MeterMenuEnable", "3F");
@@ -311,6 +310,7 @@ export function translateCcu2gcau() {
     alterObjAttr("SYSVAR", "PasswordMenuEnable", "03");
     alterObjAttr("SYSVAR", "SuperUserMenus", "7FFF");
   }
+  setHexBitField("false", "SYSVAR", "MenuGroupEnable", 9);
   alterObjAttr("SYSVAR", "MeterEnable", "02");
   for (let i = 1; i <= 32; i++) {
     switch (i) {
@@ -494,7 +494,7 @@ export function translateCcu2gcau() {
     CommonAlarm: commonAlarmEnabled,
     RelayNumber: reactiveData.HC_RelayOutput,
     Delay: reactiveData.HC_Delay,
-    Value: toIntAsStr(reactiveData.HC_UpperLimit, 10),
+    Value: toIntAsStr(reactiveData.HC_LowerLimit, 10),
   };
   setEvt(4, {
     ...hcEvtDef,

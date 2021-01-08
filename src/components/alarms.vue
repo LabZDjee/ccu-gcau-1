@@ -80,7 +80,7 @@ export default {
           latch: { displayId: "HC_LcdLatch", relayId: "HC_RelayLatch" },
           th1: {
             id: "HC_LowerLimit",
-            title: "Highrate",
+            title: "Floating",
             unit: "Vdc",
             hint: "threshold",
             min: "16",
@@ -88,7 +88,7 @@ export default {
           },
           th2: {
             id: "HC_UpperLimit",
-            title: "Floating",
+            title: "Highrate",
             unit: "Vdc",
             hint: "threshold",
             min: "16",
