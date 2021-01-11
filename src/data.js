@@ -16,7 +16,7 @@ import {
   estimateAh,
 } from "./utils";
 
-export const applicationVersion = "0.9.12";
+export const applicationVersion = "0.9.14";
 
 export const tsvMap = {};
 // property is a SetupParm (if defined) and value is the associated TDSTag, e.g.:

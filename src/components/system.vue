@@ -86,6 +86,35 @@
             </div>
           </v-card-text>
         </v-card>
+        <v-card class="mt-1">
+          <v-card-title class="headline">Customer information</v-card-title>
+          <v-card-text>
+            <div class="d-flex">
+              <div>
+                <vyw-numeric-input data-key="Edit_DC_VMINDLT" label="Low voltage limit" suffix="V" :bottom="Number(0)" :top="Number(999)" />
+              </div>
+              <div>
+                <vyw-numeric-input data-key="Edit_DC_VMAXDLT" label="High voltage limit" suffix="V" :bottom="Number(0)" :top="Number(999)" />
+              </div>
+            </div>
+            <div class="d-flex">
+              <div>
+                <vyw-numeric-input data-key="Edit_DC_CURA" label="Current when mains off" suffix="A" :bottom="Number(0)" :top="Number(1000)" />
+              </div>
+              <div>
+                <vyw-numeric-input data-key="Edit_DC_CURP" label="Current when mains on" suffix="A" :bottom="Number(0)" :top="Number(1000)" />
+              </div>
+            </div>
+            <div class="d-flex">
+              <div>
+                <vyw-numeric-input data-key="Edit_DC_PDC" label="Peak current" suffix="A" :bottom="Number(0)" />
+              </div>
+              <div>
+                <vyw-numeric-input data-key="Edit_DC_DDLPDC" label="Duration of peak current" suffix="s" :bottom="Number(0)" />
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
       </v-flex>
       <v-flex xs12 sm6 px-1 align-content-center>
         <v-card>
@@ -101,10 +130,15 @@
             </div>
             <div class="d-flex">
               <div>
-                <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
+                <vyw-switch data-key="HT_Enabled" :labels="['No temp. alarm (bridge thermostat, X9.5)', 'Temperature alarm (bridge thermostat, X9.5)']"></vyw-switch>
               </div>
               <div>
                 <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermostat (X9.6)', 'Shutdown bridge thermostat (X9.6)']"></vyw-switch>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div>
+                <vyw-numeric-input data-key="meta_earthFaultThreshold" label="Earth fault threshold" suffix="Ω/V" :bottom="Number(20)" :top="Number(2000)" hint="20~2,000"></vyw-numeric-input>
               </div>
             </div>
             <div class="d-flex">
@@ -137,6 +171,22 @@
               </div>
               <div>
                 <vyw-select-input data-key="meta_communicationType" label="Communications" :item-list="selectChoices.communicationType"></vyw-select-input>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+        <v-card class="mt-1">
+          <v-card-title class="headline">Rectifier off</v-card-title>
+          <v-card-text>
+            <div class="d-flex">
+              <div class="oneThird">
+                <vyw-switch data-key="RfShtdnEnable" :labels="['Not on rectifier failure', 'On rectifier failure']" />
+              </div>
+              <div class="oneThird">
+                <vyw-switch data-key="MfShtdnEnable" :labels="['Not on mains failure', 'On mains failure']" />
+              </div>
+              <div class="oneThird">
+                <vyw-switch data-key="HvShtdnEnable" :labels="['Not on high DC voltage', 'On high DC voltage']" />
               </div>
             </div>
           </v-card-text>
@@ -175,51 +225,6 @@
               </div>
               <div class="oneThird">
                 <vyw-numeric-input data-key="VoltAdjustMax" label="Max voltage" suffix="V" :bottom="Number(0)" :top="Number(650)" hint="[0~650]" />
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-card class="mt-1">
-          <v-card-title class="headline">Rectifier off</v-card-title>
-          <v-card-text>
-            <div class="d-flex">
-              <div class="oneThird">
-                <vyw-switch data-key="RfShtdnEnable" :labels="['Not on rectifier failure', 'On rectifier failure']" />
-              </div>
-              <div class="oneThird">
-                <vyw-switch data-key="MfShtdnEnable" :labels="['Not on mains failure', 'On mains failure']" />
-              </div>
-              <div class="oneThird">
-                <vyw-switch data-key="HvShtdnEnable" :labels="['Not on high DC voltage', 'On high DC voltage']" />
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-card class="mt-1">
-          <v-card-title class="headline">Customer information</v-card-title>
-          <v-card-text>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input data-key="Edit_DC_VMINDLT" label="Low voltage limit" suffix="V" :bottom="Number(0)" :top="Number(999)" />
-              </div>
-              <div>
-                <vyw-numeric-input data-key="Edit_DC_VMAXDLT" label="High voltage limit" suffix="V" :bottom="Number(0)" :top="Number(999)" />
-              </div>
-            </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input data-key="Edit_DC_CURA" label="Current when mains off" suffix="A" :bottom="Number(0)" :top="Number(1000)" />
-              </div>
-              <div>
-                <vyw-numeric-input data-key="Edit_DC_CURP" label="Current when mains on" suffix="A" :bottom="Number(0)" :top="Number(1000)" />
-              </div>
-            </div>
-            <div class="d-flex">
-              <div>
-                <vyw-numeric-input data-key="Edit_DC_PDC" label="Peak current" suffix="A" :bottom="Number(0)" />
-              </div>
-              <div>
-                <vyw-numeric-input data-key="Edit_DC_DDLPDC" label="Duration of peak current" suffix="s" :bottom="Number(0)" />
               </div>
             </div>
           </v-card-text>
