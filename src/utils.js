@@ -294,3 +294,13 @@ export function estimateAh(battCurrentLimit, averageTime = 7.5) {
   }
   return defaultValue;
 }
+
+// returns time-stamp (YYYY/MM/DD HH:MM:SS) of now
+// parameters:
+//  dateSeparator (defaults to /)
+//  timeSeparator (defaults to :)
+export function getTimestampOfNow(dateSeparator = "/", timeSeparator = ":") {
+  const d = new Date();
+  const pad = x => x.toString().padStart(2, "0");
+  return `${d.getFullYear()}${dateSeparator}${pad(d.getMonth()+1)}${dateSeparator}${pad(d.getDate())} ${pad(d.getHours())}${timeSeparator}${pad(d.getMinutes())}${timeSeparator}${pad(d.getSeconds())}`;
+}

@@ -8,12 +8,14 @@ import {
   agcFileData,
   reactiveData,
   selectChoices,
+  disabledFunctions,
 } from "./data";
 import {
   toIntAsStr,
   setBitInHexString,
   insertIntInSortedArray,
   extractListFromSortedArrayOfInts,
+  getTimestampOfNow,
 } from "./utils";
 
 let debugOn = false; // will print on console every translated item when this one is on
@@ -80,7 +82,7 @@ const selectChoicesAgcMap = {
     },
   },
   batteryType: {
-    "None": "0",
+    "None": "2",
     "VO": "3",
     "Ni CD (SBH-SBM)": "2",
     "Ni CD (SBL)": "2",
@@ -90,6 +92,32 @@ const selectChoicesAgcMap = {
     "Open lead acid": "1",
   },
 };
+
+function getBatterySubType() {
+  const {
+    highrate,
+  } = disabledFunctions();
+  switch (reactiveData.Combo_DEF_TDB) {
+    case "None":
+      return "";
+    case "VO":
+      return "VOM battery";
+    case "Ni CD (SBH-SBM)":
+      return "SBH (SNH) or SBM (SNM)";
+    case "Ni CD (SBL)":
+      return "SBL (SNL)";
+    case "Ni CD (SPH)":
+      return "SPH";
+    case "Ni CD (SLM)":
+      return "SLM";
+    case "Sealed lead acid":
+      return highrate ? "Single rate charge" : "Generic";
+    case "Open lead acid":
+      return highrate ? "Generic" : "Dual rate charge (OPZS)";
+    default:
+      return "";
+  }
+}
 
 // given an object string and an attribute string in agcFileData will alter its value
 // if value is undefined nothing happens, otherwise value should be a string
@@ -266,11 +294,21 @@ export function translateCcu2gcau() {
   }
   alterMeta("ProjectName", reactiveData.Text_Nom);
   alterMeta("Origin", reactiveData.Text_Origine);
+  if (reactiveData.Text_Origine.toLowerCase().indexOf("saft power system") >= 0) {
+    alterMeta("Origin", "AEG Power Solutions");
+  }
   alterMeta("Quotation", reactiveData.Text_Devis);
   alterMeta("Customer", reactiveData.Text_Client);
   alterMeta("Approved", zeroOne(reactiveData.Check_APP));
   alterMeta("ApproveName", reactiveData.Edit_CONTROL);
   alterMeta("Order", reactiveData.Text_Commande);
+  const projectReferenceDef = {
+    object: "REGISTRY",
+    attribute: "ProjectReference",
+  };
+  if (findInAgcFileStruct(projectReferenceDef, agcFileData.struct) !== null) {
+    alterObjAttr(projectReferenceDef.object, projectReferenceDef.attribute, reactiveData.Text_Commande.substring(0, 16));
+  }
   alterMeta("Project", reactiveData.Text_Projet);
   alterMeta("EndUser", reactiveData.Text_ClientFinal);
   alterMeta("IDNum", reactiveData.SystemId);
@@ -305,7 +343,7 @@ export function translateCcu2gcau() {
     alterObjAttr("SYSVAR", "CommissionMenuEnable", "001F");
     alterObjAttr("SYSVAR", "ManualAdjustMenuEnable", "0F");
     alterObjAttr("SYSVAR", "VOApplicationMenuEnable", "7F");
-    alterObjAttr("SYSVAR", "BattTestMenuEnable", "027FF");
+    alterObjAttr("SYSVAR", "BattTestMenuEnable", "03FF");
     alterObjAttr("SYSVAR", "CompensationMenuEnable", "0F");
     alterObjAttr("SYSVAR", "PasswordMenuEnable", "03");
     alterObjAttr("SYSVAR", "SuperUserMenus", "7FFF");
@@ -377,7 +415,7 @@ export function translateCcu2gcau() {
   alterMeta("ILoadMOn", reactiveData.Edit_DC_CURP);
   alterObjAttr("BATTSEL", "BatteryType", selectChoicesAgcMap.batteryType[reactiveData.Combo_DEF_TDB]);
   const isVOBatteryType = reactiveData.Combo_DEF_TDB === "VO";
-  alterMeta("BattSubType", reactiveData.Combo_DEF_TDB);
+  alterMeta("BattSubType", getBatterySubType());
   alterMeta("BatteryName", reactiveData.Edit_BattName);
   const nbOfCells = parseInt(reactiveData.NrOfCells, 10);
   alterObjAttr("BATTSEL", "NumberOfElements", reactiveData.NrOfCells);
@@ -391,8 +429,15 @@ export function translateCcu2gcau() {
   alterObjAttr("SYSTEM", "TempCompOnBattSens", "0"); // legacy
   setHexBitField(reactiveData.meta_displayAmbientTemperature, "SYSVAR", "MeterEnable", 3);
   setHexBitField(reactiveData.meta_displayBatteryTemperature, "SYSVAR", "MeterEnable", 4);
-  const batteryShunt = reactiveData.BattShunt === "true" ? 0.1 / parseFloat(reactiveData.BattShuntVal) : 0;
-  alterObjAttr("SYSTEM", "BatteryShunt", Math.floor(batteryShunt * 1e6).toString());
+  setHexBitField(reactiveData.meta_displayAmbientTemperature, "SYSVAR", "MeterMenuEnable", 3);
+  setHexBitField(reactiveData.meta_displayBatteryTemperature, "SYSVAR", "MeterMenuEnable", 4);
+  setHexBitField("true", "SYSVAR", "MeterMenuEnable", 5);
+  const battShuntValInAmps = parseFloat(reactiveData.BattShuntVal);
+  let batteryShunt = null;
+  if (!isNaN(battShuntValInAmps) && battShuntValInAmps > 0 && reactiveData.BattShunt === "true") {
+    batteryShunt = 0.1 / battShuntValInAmps;
+  }
+  alterObjAttr("SYSTEM", "BatteryShunt", batteryShunt !== null ? Math.floor(batteryShunt * 1e6).toString() : "0");
   alterObjAttr("SYSTEM", "BattShuntVolt", "100");
   alterObjAttr("SYSTEM", "InRevPol", "0000");
   alterObjAttr("NOMINAL", "BatteryCurrent", toIntAsStr(reactiveData.IbattNom, 10));
@@ -764,4 +809,48 @@ export function translateCcu2gcau() {
       alterObjAttr("COMMUN", "Format", "8N1");
       break;
   }
+  const disabled = disabledFunctions();
+  if (disabled.highrate) {
+    setHexBitField("false", "SYSVAR", "MenuGroupEnable", 3);
+    setHexBitField("false", "SYSVAR", "NominalSetMenuEnable", 2);
+  }
+  if (batteryShunt === null) {
+    setHexBitField("false", "SYSVAR", "NominalSetMenuEnable", 6);
+  }
+  if (disabled.commissionning) {
+    setHexBitField("false", "SYSVAR", "MenuGroupEnable", 4);
+  }
+  if (disabled.vo) {
+    setHexBitField("false", "SYSVAR", "MenuGroupEnable", 6);
+  }
+  if (disabled.batteryTest) {
+    setHexBitField("false", "SYSVAR", "MenuGroupEnable", 7);
+  }
+  if (disabled.manualAdjust) {
+    setHexBitField("false", "SYSVAR", "MenuGroupEnable", 5);
+  }
+  // reset calibration
+  const calibr = findInAgcFileStruct({
+    section: "GCAUCalibrationData",
+    object: "CALIBR",
+  }, agcFileData.struct);
+  if (calibr !== null) {
+    const defaultValue = "1024";
+    calibr.attributes.forEach(attribute => {
+      const newLineValue = `CALIBR.${attribute.readOnly?"!":""}${attribute.name} = "${defaultValue}"`;
+      attribute.value = defaultValue;
+      agcFileData.lines[attribute.line - 1] = newLineValue;
+    });
+  }
+  const timeStampOfNow = getTimestampOfNow("-", ":");
+  const calibrUpdateStamp = findInAgcFileStruct({
+    section: "GCAUCalibrationData",
+    metaTag: "Update",
+  }, agcFileData.struct);
+  if (calibrUpdateStamp !== null && calibrUpdateStamp.length === 1) {
+    const newLineValue = `$Update = "${timeStampOfNow}"`;
+    calibrUpdateStamp[0].value = timeStampOfNow;
+    agcFileData.lines[calibrUpdateStamp[0].line - 1] = newLineValue;
+  }
+  alterMeta("Update", timeStampOfNow);
 }

@@ -461,7 +461,7 @@
 	</Objet>
 	<Objet>
 		<Label>Edit_DEF_TDFOPE</Label>
-		<Donnee>1,5</Donnee>
+		<Donnee>1</Donnee>
 	</Objet>
 	<Objet>
 		<Label>Edit_DEF_TDREE</Label>

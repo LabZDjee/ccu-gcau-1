@@ -185,6 +185,7 @@ export default {
           processTdsFile(fileContents);
         }
         this.contentsAltered = false;
+        this.$refs.inputTds.value = null; // necessary if same filename required again
       };
     },
     loadAgc(event) {
@@ -208,6 +209,7 @@ export default {
         } else {
           this.agcFileName = file.name;
         }
+        this.$refs.inputAgc.value = null; // necessary if same filename required again
       };
     },
     saveOutputFile() {

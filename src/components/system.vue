@@ -24,7 +24,7 @@
             </div>
           </v-card-text>
         </v-card>
-        <v-card class="mt-1">
+        <v-card class="mt-1" :class="{grey: commDisabled, 'lighten-3': commDisabled}">
           <v-card-title class="headline">Communications</v-card-title>
           <v-card-text>
             <div class="d-flex">
@@ -208,7 +208,7 @@
           </v-card-text>
         </v-card>
         <v-card class="mt-1" :class="{grey: adjustDisabled, 'lighten-3': adjustDisabled}">
-          <v-card-title class="headline">Adjust</v-card-title>
+          <v-card-title class="headline">Manual adjust (power supply)</v-card-title>
           <v-card-text>
             <div class="d-flex">
               <div>
@@ -240,7 +240,7 @@ import VywNumericInput from "./basics/vyw-numeric-input";
 import VywIntegerInput from "./basics/vyw-integer-input";
 import VywSelectInput from "./basics/vyw-default-select";
 import VywSwitch from "./basics/vyw-switch";
-import { selectChoices, reactiveData } from "../data";
+import { selectChoices, reactiveData, disabledFunctions } from "../data";
 import { reactiveStuffAttach } from "../mixins";
 
 export default {
@@ -253,6 +253,7 @@ export default {
   data: () => ({
     selectChoices,
     adjustDisabled: false,
+    commDisabled: false,
   }),
   computed: {
     baudrates() {
@@ -270,7 +271,12 @@ export default {
   },
   methods: {
     updateMiscStuff(v, o, k) {
-      this.adjustDisabled = reactiveData.ManCurrAdjust === "false" && reactiveData.ManVoltAdjust === "false";
+      const disabled = disabledFunctions();
+      this.adjustDisabled = disabled.manualAdjust;
+      this.commDisabled = disabled.communications;
+      if (k === "Combo_RN_UDC") {
+        reactiveData.UdcNom = v;
+      }
       if (k === "Edit_ENV_ALT") {
         v = parseFloat(v);
         if (v > 5000) {
@@ -299,7 +305,7 @@ export default {
       }
     },
     reactSources() {
-      return ["ManCurrAdjust", "ManVoltAdjust", "Edit_ENV_ALT", "Edit_ENV_TA"];
+      return ["ManCurrAdjust", "ManVoltAdjust", "Edit_ENV_ALT", "Edit_ENV_TA", "meta_communicationType", "Combo_RN_UDC" ];
     },
   },
   mixins: [reactiveStuffAttach],

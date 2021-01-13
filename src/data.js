@@ -16,7 +16,7 @@ import {
   estimateAh,
 } from "./utils";
 
-export const applicationVersion = "0.9.14";
+export const applicationVersion = "0.9.16";
 
 export const tsvMap = {};
 // property is a SetupParm (if defined) and value is the associated TDSTag, e.g.:
@@ -123,6 +123,38 @@ const importedFileName = {
   shortFileName: "", // example: abcdef.efg
   extension: "", // example: .tdsa
 };
+
+export function disabledFunctions() {
+  function getValue(k) {
+    const v = parseFloat(reactiveData[k]);
+    if (isNaN(v)) {
+      return 0;
+    }
+    return v;
+  }
+  const flVoltagePerCell = getValue("UflPerCell");
+  const hrVoltagePerCell = getValue("UhrPerCell");
+  const commVoltagePerCell = getValue("UcommPerCell");
+  const highrate = hrVoltagePerCell < flVoltagePerCell || (reactiveData.ManHrEnable === "false" &&
+    reactiveData.PeriodicHr === "None" &&
+    reactiveData.ClHrEnable === "false" &&
+    reactiveData.MfHrEnable === "false" &&
+    reactiveData.meta_highrateInput === selectChoices.spareInputs[0]);
+  const commissionning = commVoltagePerCell < flVoltagePerCell ||
+    (reactiveData.CommEnable === "false" && reactiveData.meta_commissioningInput === selectChoices.commissioningInput[0]);
+  const vo = reactiveData.VoApplEnable === "false";
+  const batteryTest = reactiveData.BattTestEnable === "false";
+  const manualAdjust = reactiveData.ManCurrAdjust === "false" && reactiveData.ManVoltAdjust === "false";
+  const communications = reactiveData.meta_communicationType === selectChoices.communicationType[0];
+  return {
+    highrate,
+    commissionning,
+    vo,
+    batteryTest,
+    manualAdjust,
+    communications,
+  };
+}
 
 // used by battery capacity evaluator
 function ahMultiplier() {
@@ -419,6 +451,7 @@ function postProcessDataGotFromP0orApp(nbOfCells) {
   reactiveData.Combo_RN_UDC = reactiveData.UdcNom;
   reactiveData.Edit_DC_VMAXDLT = reactiveData.HC_UpperLimit;
   reactiveData.Edit_DC_VMINDLT = reactiveData.LC_LowerLimit;
+  reactiveData.Combo_RN_NDP = parseFloat(reactiveData.UacNom) < 280 ? "1" : "3";
   const fltPerCell = parseFloat(reactiveData.UflPerCell);
   if (reactiveData.VoApplEnable === "true") {
     reactiveData.Combo_DEF_TDB = "VO";
@@ -601,7 +634,7 @@ export function processAppFile(fileContents) {
     reactiveData.BattCapacity = "0";
     let nbOfCells = "1";
     const lines = fileContents.toString().split("\n");
-    const pattern = /^\W*(\d+):\W+(.+)\W{2,}(.*)\r?$/;
+    const pattern = /^\s*(\d+):\s+(.+)\s{2,}(.*)\r?$/;
     lines.forEach((line, offset) => {
       const match = pattern.exec(line);
       if (match !== null) {
@@ -613,7 +646,7 @@ export function processAppFile(fileContents) {
         for (const k in tsvMap) {
           if (tsvMap[k].AppNum === appNum) {
             const tsvRowObjet = tsvMap[k];
-            // console.log(`${appName} = ${appValue} (${appTransformValueIfNum(tsvRowObjet, appValue)})`);
+            //console.log(`${appName} = ${appValue} (${appTransformValueIfNum(tsvRowObjet, appValue)})`);
             switch (appName.toLowerCase()) {
               case "language":
                 reactiveData.Language = selectChoices.languages[app2Language2tdsIndex[appValue]];
@@ -629,6 +662,12 @@ export function processAppFile(fileContents) {
                 // no break on purpose: we need to assign value to reactiveData in this case too
                 /* falls through */
                 // eslint-disable-next-line
+              case "S1_name":
+              case "S2_name":
+              case "S3_name":
+              case "S4_name":
+                reactiveData[tsvRowObjet.SetupParam] = appValue.substring(0, 16);
+                break;
               default:
                 reactiveData[tsvRowObjet.SetupParam.startsWith("x--") ? tsvRowObjet.TDSTag : tsvRowObjet.SetupParam] = appTransformValueIfNum(tsvRowObjet, appValue);
                 break;

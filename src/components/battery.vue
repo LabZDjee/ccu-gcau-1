@@ -225,7 +225,7 @@ import VywTextInput from "./basics/vyw-text-input";
 import VywReadOnlyText from "./basics/vyw-read-only-text";
 import VywDefaultSelect from "./basics/vyw-default-select";
 import VywSwitch from "./basics/vyw-switch";
-import { reactiveData, selectChoices } from "../data";
+import { reactiveData, selectChoices, disabledFunctions } from "../data";
 import { scrapDecimalsAsString } from "../utils";
 import { reactiveStuffAttach } from "../mixins";
 
@@ -334,19 +334,16 @@ export default {
           reactiveData.VoApplEnable = v === "VO" ? "true" : "false";
         }
       }
-      this.voDisabled = reactiveData.VoApplEnable === "false";
+      const disabled = disabledFunctions();
+      this.voDisabled = disabled.vo;
       if (this.voDisabled) {
         if (k === "Check_DEF_CET") {
           reactiveData.meta_displayAmbientTemperature = v;
         }
       }
-      this.highrateDisabled =
-        reactiveData.ManHrEnable === "false" &&
-        reactiveData.PeriodicHr === "None" &&
-        reactiveData.ClHrEnable === "false" &&
-        reactiveData.MfHrEnable === "false";
-      this.commissioningDisabled = reactiveData.CommEnable === "false";
-      this.battTestDisabled = reactiveData.BattTestEnable === "false";
+      this.highrateDisabled = disabled.highrate;
+      this.commissioningDisabled = disabled.commissionning;
+      this.battTestDisabled = disabled.batteryTest;
     },
     reactSources() {
       return [
@@ -368,6 +365,8 @@ export default {
         "CommEnable",
         "BattTestEnable",
         "TempComp",
+        "meta_highrateInput",
+        "meta_commissioningInput",
       ];
     },
   },

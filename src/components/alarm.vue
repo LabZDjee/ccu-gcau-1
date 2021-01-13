@@ -43,7 +43,6 @@ import VywSwitch from "./basics/vyw-switch";
 import VywDefaultSelect from "./basics/vyw-default-select";
 import { selectChoices, reactiveData, tdsAlias } from "../data";
 import { reactiveStuffAttach } from "../mixins";
-import { removeEltInArray } from "../utils";
 
 export default {
   name: "vyw-alarm",
@@ -82,10 +81,13 @@ export default {
           this.relayNumberLabelUpdate();
         }
       }
+      else if(k==="meta_hasLedBox") {
+        this.relayNumberLabelUpdate();
+      }
     },
     reactSources() {
       if (typeof this.params.relayNbId === "string") {
-        return [this.params.relayNbId, this.params.enabledId];
+        return [this.params.relayNbId, this.params.enabledId, "meta_hasLedBox"];
       }
       return [];
     },
@@ -93,7 +95,7 @@ export default {
       const relayNb = parseInt(reactiveData[this.params.relayNbId], 10);
       const hasLedBoxTicked = reactiveData.meta_hasLedBox === "true";
       if (relayNb > 8) {
-        this.relayNumberLabel = `LED number${!hasLedBoxTicked && reactiveData[this.params.enabledId] === "true"? "!!!" : ""}`;
+        this.relayNumberLabel = `LED number${!hasLedBoxTicked && reactiveData[this.params.enabledId] === "true"? "‼‼‼" : ""}`;
       } else {
         this.relayNumberLabel = hasLedBoxTicked ? "Relay/LED number" : "Relay number";
       }
@@ -110,16 +112,6 @@ export default {
     VywNumericInput,
     VywSwitch,
     VywDefaultSelect,
-  },
-  created() {
-    const reactiveFunction = this.relayNumberLabelUpdate.bind(this);
-    reactiveData.$watchers.meta_hasLedBox.push(reactiveFunction);
-  },
-  beforeDestroy() {
-    // clean up of reactive hook
-    const reactiveFunction = this.relayNumberLabelUpdate.bind(this);
-    const watcherArray = reactiveData.$watchers.meta_hasLedBox;
-    removeEltInArray(reactiveFunction, watcherArray);
   },
   mixins: [reactiveStuffAttach],
 };
