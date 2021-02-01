@@ -121,15 +121,27 @@ function getBatterySubType() {
 
 // given an object string and an attribute string in agcFileData will alter its value
 // if value is undefined nothing happens, otherwise value should be a string
+// if value is an object, supported properties:
+//  warn: if false (default to true), will not display error on console in case nothing is hit
+//  value: after properties are extracted, value is assigned to value.value 
 // in any case returns the value (before alteration)
 function alterObjAttr(object, attribute, value) {
+  let warn = true;
+  if (typeof value === "object") {
+    if (value.warn !== undefined) {
+      warn = value.warn;
+      value = value.value;
+    }
+  }
   const hit = findInAgcFileStruct({
     object,
     attribute,
   }, agcFileData.struct);
   if (hit === null) {
-    // eslint-disable-next-line
-    console.log(`cannot locate ${object}.${attribute} in GCAUConfigurationData of agcFileData!`);
+    if (warn) {
+      // eslint-disable-next-line
+      console.log(`cannot locate ${object}.${attribute} in GCAUConfigurationData of agcFileData!`);
+    }
     return null;
   }
   const previousValue = hit.value;
@@ -146,9 +158,12 @@ function alterObjAttr(object, attribute, value) {
 }
 
 // given a metaTag string located in GCAUConfigurationData within agcFileData
-// will change its value. If meta tag in .agc file is $Order foe example,
-// metaTag should be "Order"
-// if value is undefined nothing happens, otherwise it should be a string
+// will change its value. If meta tag in .agc file is $Order for example,
+// metaTag should simply be "Order"
+// if value is undefined nothing happens, otherwise it should be a string or an object
+// if value is an object, supported properties:
+//  warn: if false (default to true), will not display error on console in case nothing is hit
+//  value: after properties are extracted, value is assigned to value.value 
 // parameter insert:
 //  if true, will insert metaTag and value after the last existing metaTag (not altered)
 //   also if value in composed LF substrings, each substring will be distributed as
@@ -156,17 +171,29 @@ function alterObjAttr(object, attribute, value) {
 //  if false, value will simply replace the first defined metaTag
 // in any case returns the array returned by findInAgcFileStruct (after a potential alteration)
 function alterMeta(metaTag, value, insert = false) {
+  let warn = true;
+  if (typeof value === "object") {
+    if (value.warn !== undefined) {
+      warn = value.warn;
+      value = value.value;
+    }
+  }
   const hit = findInAgcFileStruct({
     metaTag,
   }, agcFileData.struct);
   if (hit === null) {
-    // eslint-disable-next-line
-    console.log(`cannot locate $${metaTag} in GCAUConfigurationData of agcFileData!`);
+    if (warn) {
+      // eslint-disable-next-line
+      console.log(`cannot locate $${metaTag} in GCAUConfigurationData of agcFileData!`);
+    }
     return null;
   }
   const firstHit = hit[0];
   const lastHit = hit[hit.length - 1];
   if (value !== undefined && value !== null) {
+    if (typeof value !== "string") {
+      value = value.toString();
+    }
     const lineValues = value.split("\n").map(v => {
       const contents = `$${metaTag} = "${v}"`;
       if (nodeEnv === 'development' && debugOn) {
@@ -302,13 +329,10 @@ export function translateCcu2gcau() {
   alterMeta("Approved", zeroOne(reactiveData.Check_APP));
   alterMeta("ApproveName", reactiveData.Edit_CONTROL);
   alterMeta("Order", reactiveData.Text_Commande);
-  const projectReferenceDef = {
-    object: "REGISTRY",
-    attribute: "ProjectReference",
-  };
-  if (findInAgcFileStruct(projectReferenceDef, agcFileData.struct) !== null) {
-    alterObjAttr(projectReferenceDef.object, projectReferenceDef.attribute, reactiveData.Text_Commande.substring(0, 16));
-  }
+  alterObjAttr("REGISTRY", "ProjectReference", {
+    value: reactiveData.Text_Commande.substring(0, 16),
+    warn: false,
+  });
   alterMeta("Project", reactiveData.Text_Projet);
   alterMeta("EndUser", reactiveData.Text_ClientFinal);
   alterMeta("IDNum", reactiveData.SystemId);
@@ -436,6 +460,8 @@ export function translateCcu2gcau() {
   let batteryShunt = null;
   if (!isNaN(battShuntValInAmps) && battShuntValInAmps > 0 && reactiveData.BattShunt === "true") {
     batteryShunt = 0.1 / battShuntValInAmps;
+    setHexBitField("false", "SYSVAR", "MeterEnable", 2);
+    setHexBitField("false", "SYSVAR", "MeterMenuEnable", 2);
   }
   alterObjAttr("SYSTEM", "BatteryShunt", batteryShunt !== null ? Math.floor(batteryShunt * 1e6).toString() : "0");
   alterObjAttr("SYSTEM", "BattShuntVolt", "100");
@@ -828,6 +854,71 @@ export function translateCcu2gcau() {
   }
   if (disabled.manualAdjust) {
     setHexBitField("false", "SYSVAR", "MenuGroupEnable", 5);
+  }
+  const eqCtrlObj = findInAgcFileStruct({
+    object: "EQCTRL",
+  }, agcFileData.struct);
+  const reportAboutCommonRelayLatch = truthness => `${truthness ? "Could" : "Could not"} inject equation to manage relay latch on common alarm`;
+  const findNotes = () => {
+    const hit = findInAgcFileStruct({
+      metaTag: "Notes",
+    }, agcFileData.struct);
+    return hit !== null ? hit : [];
+  };
+  if (reactiveData.CM_Enabled === "true" &&
+    reactiveData.CM_RelayLatch === "true" &&
+    reactiveData.meta_alarmAcknowledgmentInput !== selectChoices.spareInputs[0] &&
+    !findNotes().some(v => v === reportAboutCommonRelayLatch(true))) {
+    // attempt to inject equation to manage relay latch on common alarm
+    let couldInjectEqu = false;
+    if (eqCtrlObj != null &&
+      eqCtrlObj.attributes[12].name === "OnCommonRelay" &&
+      eqCtrlObj.attributes[12].value === "0") {
+      const maxEvtNumber = 24;
+      let eqNumber;
+      for (eqNumber = 1; eqNumber <= maxEvtNumber; eqNumber++) {
+        const equationName = `EQ_${eqNumber}`;
+        const equationRpnExpression = alterObjAttr(equationName, "RpnExpression", {
+          warn: false,
+        });
+        switch (equationRpnExpression.trim()) {
+          case "":
+          case "0":
+          case "1":
+            if (eqCtrlObj !== null) {
+              if (eqCtrlObj.attributes.some(attribute => attribute.value === eqNumber.toString())) {
+                break;
+              }
+            }
+            alterObjAttr(equationName, "RpnExpression", `EV65 EV${eqNumber+32} IN8 && ||`);
+            alterObjAttr(equationName, "Label", "");
+            alterObjAttr(equationName, "Unit", "");
+            alterObjAttr(equationName, "ModbusMultiplier", "1");
+            setEvt(eqNumber + 32, {
+              Function: "OF",
+              LCDLatch: "0",
+              RelayLatch: "1",
+              Shutdown: "0",
+              CommonAlarm: "1",
+              RelayNumber: "0",
+              NumberOfRelays: "1",
+              LedNumber: "0",
+              Delay: "1",
+              Value: (0xee00).toString(),
+              Text: "COMMON LATCH",
+              LocalText: "COMMON LATCH",
+            }, false);
+            setHexBitField("true", "SYSVAR", "EventEnable", eqNumber + 31);
+            alterObjAttr("EQCTRL", "OnCommonRelay", eqNumber.toString());
+            eqNumber = maxEvtNumber;
+            couldInjectEqu = true;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    alterMeta("Notes", reportAboutCommonRelayLatch(couldInjectEqu));
   }
   // reset calibration
   const calibr = findInAgcFileStruct({

@@ -130,10 +130,10 @@
             </div>
             <div class="d-flex">
               <div>
-                <vyw-switch data-key="HT_Enabled" :labels="['No temp. alarm (bridge thermostat, X9.5)', 'Temperature alarm (bridge thermostat, X9.5)']"></vyw-switch>
+                <vyw-switch data-key="HT_Enabled" :labels="['No bridge thermostat alarm (X9.5)', 'Bridge thermostat alarm (X9.5)']"></vyw-switch>
               </div>
               <div>
-                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No shutdown bridge thermostat (X9.6)', 'Shutdown bridge thermostat (X9.6)']"></vyw-switch>
+                <vyw-switch data-key="meta_shutdownThermostat" :labels="['No bridge thermostat shutdown (X9.6)', 'Bridge thermostat shutdown (X9.6)']"></vyw-switch>
               </div>
             </div>
             <div class="d-flex">
